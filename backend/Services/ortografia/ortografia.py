@@ -28,8 +28,9 @@ class SpellChecker:
         return ntext
 
     def _load_files(self, path:str):
+        print(path)
         filelist = os.walk(path)
-
+        print(filelist)
         for root, dirs, files in filelist:
             for file in files:
                 print('Cargando: ',file)
