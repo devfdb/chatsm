@@ -64,7 +64,7 @@ class Users extends CI_Controller
 
                     $this->session->set_userdata('isUserLoggedIn', TRUE);
                     $this->session->set_userdata('userId', $checkLogin['id']);
-                    redirect('instances');
+                    redirect('Taskinstances');
                 } else {
                     $data['error_msg'] = 'Wrong email or password, please try again.';
                 }
