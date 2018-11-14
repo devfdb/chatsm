@@ -1,10 +1,10 @@
 <div class="col-12 grid-margin">
     <div class="card">
         <div class="card-body">
-            <h4 class="card-title">Crear instancia</h4>
-            <?php echo form_open(base_url() . 'task-instances/create', array('class', 'email')); ?>
+            <h4 class="card-title">Actualizar instancia</h4>
+            <?php echo form_open(base_url() . 'instances/edit', array('class', 'email')); ?>
             <p class="card-description">
-                Crea una instancia a partir de la configuración de un modelo.
+                Edita una instancia a partir de su identificador.
             </p>
             <div class="row">
                 <div class="col-md-6">
@@ -21,7 +21,7 @@
                         <label class="col-sm-3 col-form-label">Tipo</label>
 
                         <div class="col-sm-9">
-                            <?php echo form_dropdown('type_id', $list_types, 'large', array('class'=>'form-control')); ?>
+                            <?php echo form_dropdown('shirts', $list_types, 'large', array('class'=>'form-control')); ?>
                         </div>
                     </div>
                 </div>
