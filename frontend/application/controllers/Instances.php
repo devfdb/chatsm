@@ -14,11 +14,13 @@ class Instances extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-		$this->load->library('rabbitmq_client');
+		//$this->load->library('rabbitmq_client');
     }
 
     public function index()
     {
-        $this->rabbitmq_client->push('hello', 'Hello Worldaaaaaaaaaaaaaaaaaaaaaaaa !');
+        //$this->rabbitmq_client->push('hello', 'Hello Worldaaaaaaaaaaaaaaaaaaaaaaaa !');
+        $this->load->view('instances/instance_create');
+
     }
 }
