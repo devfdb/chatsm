@@ -25,7 +25,9 @@ class Task_instances extends CI_Controller
     public function index()
     {
         //$this->rabbitmq_client->push('hello', 'Hello Worldaaaaaaaaaaaaaaaaaaaaaaaa !');
-        $this->load->view('instances/instance_create');
+        $data['instance_table'] = $this->select_task_instance();
+        $data['type_table'] = $this->select_task_type();
+        $this->template->load('layout_admin', 'instances/instance_index', $data);
 
     }
 
@@ -35,6 +37,16 @@ class Task_instances extends CI_Controller
         $arr = array();
         foreach($types as $item) {
             $arr[$item['inst_id']] = $item['inst_name'];
+        }
+        return $arr;
+    }
+
+    private function select_task_instance()
+    {
+        $instances = $this->task_instance->table();
+        $arr = array();
+        foreach($instances as $item) {
+            $arr[$item['ins_id']] = $item;
         }
         return $arr;
     }
@@ -73,10 +85,11 @@ class Task_instances extends CI_Controller
         }
     }
 
-    public function edit()
+    public function edit($id)
     {
         if ($this->input->server('REQUEST_METHOD') == 'GET') {
-            $this->template->load('layout_admin', 'instances/instance_edit', $data);
+            $try = $this->task_instance->read();
+            
         } else if ($this->input->server('REQUEST_METHOD') == 'POST') {
 
         }
