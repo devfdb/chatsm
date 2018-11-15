@@ -15,6 +15,8 @@
     <!-- End plugin css for this page -->
     <!-- inject:css -->
     <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/custom.css">
+
     <!-- endinject -->
     <link rel="shortcut icon" href="/assets/images/favicon.png"/>
 </head>

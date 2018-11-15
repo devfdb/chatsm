@@ -1,5 +1,5 @@
 <?php
-class Task_instance extends CI_Model
+class Project extends CI_Model
 {
     function __construct()
     {
@@ -8,7 +8,7 @@ class Task_instance extends CI_Model
 
     public function insert($data)
     {
-        $this->db->insert('task_instance', $data);
+        $this->db->insert('Project', $data);
 
         if ($this->db->affected_rows() > 0) {
             return $this->db->insert_id();
@@ -20,12 +20,12 @@ class Task_instance extends CI_Model
     public function read($id)
     {
         $this->db->select('*');
-        $this->db->from('task_instance');
+        $this->db->from('Project');
         $this->db->where('ins_id', $id);
 
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
-            return $query->result_array()[0];
+            return $query->result_array();
         } else {
             return null;
         }
@@ -34,14 +34,24 @@ class Task_instance extends CI_Model
     public function table()
     {
         $this->db->select('*');
-        $this->db->from('task_instance');
+        $this->db->from('project');
 
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
             return $query->result_array();
         } else {
-            return null;
+            return [];
         }
+    }
+
+    public function table_select()
+    {
+        $instances = $this->table();
+        $arr = array();
+        foreach($instances as $item) {
+            $arr[$item['prj_id']] = $item['prj_name'];
+        }
+        return $arr;
     }
 
     public function update($id, $data)
@@ -56,16 +66,9 @@ class Task_instance extends CI_Model
         }
     }
 
-    public function delete($id)
+    public function delete($where)
     {
-        $this->db->where('ins_id', $id);
-        $this->db->delete('task_instance');
 
-        if ($this->db->affected_rows() > 0) {
-            return $this->db->insert_id();
-        } else {
-            return null;
-        }
     }
 
     public function parse_to_db($data)
