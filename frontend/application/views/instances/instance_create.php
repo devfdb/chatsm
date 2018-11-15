@@ -62,7 +62,7 @@
             </div>
             <div class="row">
                 <?php echo form_submit('submit', 'Crear instancia', array('class'=>'btn btn-success mr-2')) ?>
-                <button class="btn btn-light">Cancelar</button>
+                <a href="/task-instances/index" class="btn btn-light">Cancelar</a>
             </div>
             <?php echo form_close(); ?>
         </div>
