@@ -1,4 +1,38 @@
 <div class="col-12 grid-margin">
+
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Bootstrap Maxlength</h4>
+            <div class="form-group row">
+                <div class="col-lg-3">
+                    <label class="col-form-label">Default usage</label>
+                </div>
+                <div class="col-lg-8">
+                    <input class="form-control" maxlength="25" name="defaultconfig" id="defaultconfig" type="text" placeholder="Type Something.."> </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-lg-3">
+                    <label class="col-form-label">Few options</label>
+                </div>
+                <div class="col-lg-8">
+                    <input class="form-control" maxlength="20" name="defaultconfig-2" id="defaultconfig-2" type="text" placeholder="Type Something.."> </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-lg-3">
+                    <label class="col-form-label">All the options</label>
+                </div>
+                <div class="col-lg-8">
+                    <input class="form-control" maxlength="10" name="defaultconfig-3" id="defaultconfig-3" type="text" placeholder="Type Something.."> </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-lg-3">
+                    <label class="col-form-label">Text Area</label>
+                </div>
+                <div class="col-lg-8"> <textarea id="maxlength-textarea" class="form-control" maxlength="100" rows="2" placeholder="This textarea has a limit of 100 chars."></textarea> </div>
+            </div>
+        </div>
+    </div>
+
     <div class="card">
         <div class="card-body">
             <h4 class="card-title">Crear instancia</h4>
