@@ -1,6 +1,6 @@
 <?php
 
-class Projects extends CI_Controller
+class Processes extends CI_Controller
 {
 
     function __construct()
@@ -11,13 +11,13 @@ class Projects extends CI_Controller
         $this->load->helper('form');
         $this->load->library('form_validation');
         $this->load->model('user');
-        $this->load->model('project');
-
+        $this->load->model('process');
     }
 
     public function index()
     {
-        echo 'no se ha hecho';
+        $data['process_table'] = $this->process->table();
+        $this->template->load('layout_admin', 'processes/process_index', $data);
     }
 
     public function define()

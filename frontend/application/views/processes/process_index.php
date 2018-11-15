@@ -1,9 +1,9 @@
 <div class="card">
     <div class="card-body">
-        <h4 class="card-title">Instancias</h4>
+        <h4 class="card-title">Procesos</h4>
         <div class="card-description">
             <div class="actions">
-            <a class="btn btn-primary" href="/task-instances/create">CREAR NUEVO</a>
+            <a class="btn btn-primary" href="/task-instances/create">Crear nuevo proceso</a>
         </div>
         </p>
         <div class="table-responsive">
@@ -28,8 +28,8 @@
                 </tr>
                 </thead>
                 <tbody>
-                <?php if ($instance_table) { ?>
-                    <?php foreach ($instance_table as $item) { ?>
+                <?php if ($process_table) { ?>
+                    <?php foreach ($process_table as $item) { ?>
                         <tr>
                             <td><?php echo $item['ins_name'] ?></td>
                             <td><?php echo $type_table[$item['ins_type_id']] ?></td>

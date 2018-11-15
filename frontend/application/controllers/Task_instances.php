@@ -74,11 +74,11 @@ class Task_instances extends CI_Controller
                 );
                 $result = $this->task_instance->insert($data);
                 if ($result == TRUE) {
-                    $data['message_display'] = 'Ruta insertada exitosamente';
+                    $data['message'] = json_encode(array('title'=> 'Instancia creada exitosamente', 'type' => 'success' ));
                     $data['list_types'] = $this->select_task_type();
                     $this->template->load('layout_admin', 'instances/instance_create', $data);
                 } else {
-                    $data['message_display'] = 'Error al insertar ruta';
+                    $data['message'] = json_encode(array('title'=> 'No se pudo crear la instancia', 'type' => 'error' ));
                     $data['list_types'] = $this->select_task_type();
                     $this->template->load('layout_admin', 'instances/instance_create', $data);
                 }
@@ -111,12 +111,12 @@ class Task_instances extends CI_Controller
                 );
                 $result = $this->task_instance->update($id, $data);
                 if ($result == TRUE) {
-                    $data['message_display'] = 'Instancia actualizada exitosamente.';
+                    $data['message'] = json_encode(array('title'=> 'Instancia actualizada exitosamente', 'type' => 'success' ));
                     $data['instance'] = $this->task_instance->read($id);
                     $data['list_types'] = $this->select_task_type();
                     $this->template->load('layout_admin', 'instances/instance_edit', $data);
                 } else {
-                    $data['message_display'] = 'Error al actualizar instancia.';
+                    $data['message'] = json_encode(array('title'=> 'Error al actualizar instancia', 'type' => 'error' ));
                     $data['instance'] = $this->task_instance->read($id);
                     $data['list_types'] = $this->select_task_type();
                     $this->template->load('layout_admin', 'instances/instance_edit', $data);
