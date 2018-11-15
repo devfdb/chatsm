@@ -1,7 +1,7 @@
 import json
 
 task2 = {
-    "project": "Proy",
+    "project": "proy",
     "input": "algo.csv",
     "processes": [{
         "id": 1,
