@@ -32,41 +32,50 @@ def process(proc, epoch, project, _input, first):
         if first:
             rout = 'input'
         else:
-            rout = 'output'
+            rout = os.path.join('output', str(epoch))
+        # Creacion del directorio objetivo
+        # Si no existe la carpeta 'epoch'
+        if not os.path.isdir(os.path.join('..', 'repository', project, 'output', str(epoch))):
+            # Si no existe la carpeta 'output', en caso de primera ejecución
+            if not os.path.isdir(os.path.join('..', 'repository', project, 'output')):
+                os.mkdir(os.path.join('..', 'repository', project, 'output'))
+            os.mkdir(os.path.join('..', 'repository', project, 'output', str(epoch)))
+
         # Definicion de la ruta de obtencion del archivo.
         rout = os.path.join('..', 'repository', project, rout, _input)
 
-        # Definicion de la ruta de guardado del archivo.
-        output = os.path.join('..', 'repository', project, 'output', epoch, 'clean_' + str(proc['id']) + '.csv')
+        # Definicion del nombre y la ruta de guardado del archivo.
+        output_route = os.path.join('..', 'repository', project, 'output', str(epoch))
+        output_name = 'clean_' + str(proc['id']) + '.csv'
 
         # Dado que proc no se None, obtiene la tarea de este.
         task = proc['task']
         # Llama la tarea correspondiente a la tarea especificada.
         if task['name'] == 'clean':
             print('Cleaning...')
-            c = service.Cleaner(rout, output, task['params'])
+            c = service.Cleaner(rout, os.path.join(output_route, output_name), task['params'])
             del c
             # Adjunta el nombre del archivo generado al json, en el campo 'output'
-            task['output'] = output
+            task['output'] = output_name
             # Reemplaza la variable _input con el valor de output, en caso de que existiese una tarea hija
-            _input = output
+            _input = output_name
             print(_input)
         if task['name'] == 'replace':
             print(os.getcwd())
             print('Replacing...')
-            output = 'replace_' + str(proc['id']) + '.csv'
-            r = service.Replacer(rout, output, task['params'])
+            output_name = 'replace_' + str(proc['id']) + '.csv'
+            r = service.Replacer(rout, os.path.join(output_route, output_name), task['params'])
             del r
-            task['output'] = output
-            _input = output
+            task['output'] = output_name
+            _input = output_name
             print(_input)
         if task['name'] == 'spellcheck':
             print('Spellchecking...')
-            output = 'spellcheck_' + str(proc['id']) + '.csv'
-            s = service.SpellChecker(rout, output, task['params'])
+            output_name = 'spellcheck_' + str(proc['id']) + '.csv'
+            s = service.SpellChecker(rout, os.path.join(output_route, output_name), task['params'])
             del s
-            task['output'] = output
-            _input = output
+            task['output'] = output_name
+            _input = output_name
             print(_input)
         if 'children' in proc:
             # Si existen hijos, se llama a si misma, con el nuevo _input como _input y con el subjson del hijo como proc

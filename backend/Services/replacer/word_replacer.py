@@ -22,7 +22,7 @@ class Replacer:
     def _load_files(self):
         print('Cargando Archivos')
         print(os.getcwd())
-        with open(os.path.join('Services', 'replacer', self.file_path), 'r', encoding='utf8') as csvfile:
+        with open(os.path.join(self.file_path), 'r', encoding='utf8') as csvfile:
             reader = csv.reader(csvfile)
             for row in reader:
                 self.words_to_replace[row[0]] = row[1]
