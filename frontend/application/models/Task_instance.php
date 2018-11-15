@@ -9,6 +9,7 @@ class Task_instance extends CI_Model
     public function insert($data)
     {
         $this->db->insert('task_instance', $data);
+
         if ($this->db->affected_rows() > 0) {
             return $this->db->insert_id();
         } else {
@@ -30,11 +31,10 @@ class Task_instance extends CI_Model
         }
     }
 
-    public function table($id)
+    public function table()
     {
         $this->db->select('*');
         $this->db->from('task_instance');
-        $this->db->where('ins_id', $id);
 
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
@@ -48,6 +48,12 @@ class Task_instance extends CI_Model
     {
         $this->db->where('ins_id', $id);
         $this->db->update('task_instance', $data);
+
+        if ($this->db->affected_rows() > 0) {
+            return $this->db->insert_id();
+        } else {
+            return null;
+        }
     }
 
     public function delete($where)
