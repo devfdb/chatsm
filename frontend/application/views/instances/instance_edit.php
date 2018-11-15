@@ -19,7 +19,6 @@
                 <div class="col-md-6">
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label">Tipo</label>
-
                         <div class="col-sm-9">
                             <?php echo form_dropdown('type_id', $list_types, $instance['ins_type_id'], array('class'=>'form-control')); ?>
                         </div>
@@ -28,7 +27,7 @@
             </div>
             <div class="row">
                 <?php echo form_submit('submit', 'Actualizar instancia', array('class'=>'btn btn-success mr-2')) ?>
-                <button class="btn btn-light">Cancelar</button>
+                <a href="/task-instances/index" class="btn btn-light">Cancelar</a>
             </div>
             <?php echo form_close(); ?>
         </div>

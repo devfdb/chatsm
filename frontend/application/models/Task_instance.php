@@ -56,9 +56,16 @@ class Task_instance extends CI_Model
         }
     }
 
-    public function delete($where)
+    public function delete($id)
     {
+        $this->db->where('ins_id', $id);
+        $this->db->delete('task_instance');
 
+        if ($this->db->affected_rows() > 0) {
+            return $this->db->insert_id();
+        } else {
+            return null;
+        }
     }
 
     public function parse_to_db($data)

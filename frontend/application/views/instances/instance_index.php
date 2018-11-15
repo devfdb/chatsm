@@ -1,4 +1,5 @@
 <table style="width:100%">
+    <a href="/task-instances/create">CREAR NUEVO
     <tr>
         <th>ID</th>
         <th>Nombre</th>
@@ -6,8 +7,8 @@
         <th></th>
         <th></th>
     </tr>
-    <?php foreach($instance_table as $item) {
-        ?>
+    <?php if($instance_table) {?>
+        <?php foreach($instance_table as $item) {?>
         <tr>
             <td><?php echo $item['ins_id'] ?></td>
             <td><?php echo $item['ins_name'] ?></td>
@@ -15,5 +16,5 @@
             <td><a href="/task-instances/edit/<?php echo $item['ins_id'] ?>">Editar</td>
             <td><a href="/task-instances/destroy/<?php echo $item['ins_id'] ?>">Eliminar</td>
         </tr>
-    <?php } ?>
+    <?php } } ?>
 </table>

@@ -35,8 +35,11 @@ class Task_instances extends CI_Controller
     {
         $types = $this->task_type->table();
         $arr = array();
-        foreach($types as $item) {
-            $arr[$item['inst_id']] = $item['inst_name'];
+
+        if($types) {
+            foreach($types as $item) {
+                $arr[$item['inst_id']] = $item['inst_name'];
+            }
         }
         return $arr;
     }
@@ -45,8 +48,11 @@ class Task_instances extends CI_Controller
     {
         $instances = $this->task_instance->table();
         $arr = array();
-        foreach($instances as $item) {
-            $arr[$item['ins_id']] = $item;
+
+        if($instances) {
+            foreach($instances as $item) {
+                $arr[$item['ins_id']] = $item;
+            }
         }
         return $arr;
     }
@@ -134,7 +140,14 @@ class Task_instances extends CI_Controller
             else $this->template->load('layout_admin', 'instances/instance_destroy', $data);
 
         } else if ($this->input->server('REQUEST_METHOD') == 'POST') {
-
+            $result = $this->task_instance->delete($id);
+            if ($result == TRUE) {
+                $data['message_display'] = 'Instancia eliminada exitosamente.';
+                $this->index();
+            } else {
+                $data['message_display'] = 'Error al eliminar instancia.';
+                $this->index();
+            }
         }
     }
 }
