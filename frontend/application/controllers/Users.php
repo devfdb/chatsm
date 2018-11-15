@@ -46,8 +46,8 @@ class Users extends CI_Controller
             if ($this->form_validation->run() == true) {
                 $con['returnType'] = 'single';
                 $con['conditions'] = array(
-                    'email' => $this->input->post('email'),
-                    'password' => md5($this->input->post('password')),
+                    'usr_mail' => $this->input->post('email'),
+                    'usr_' => md5($this->input->post('password')),
                     'status' => '1'
                 );
                 $checkLogin = $this->user->getRows($con);
@@ -118,6 +118,7 @@ class Users extends CI_Controller
     {
         $this->session->unset_userdata('isUserLoggedIn');
         $this->session->unset_userdata('userId');
+        $this->session->unset_userdata('projectId');
         $this->session->sess_destroy();
         redirect('users/login/');
     }
