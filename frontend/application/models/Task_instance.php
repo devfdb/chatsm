@@ -25,7 +25,7 @@ class Task_instance extends CI_Model
 
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
-            return $query->result_array();
+            return $query->result_array()[0];
         } else {
             return null;
         }

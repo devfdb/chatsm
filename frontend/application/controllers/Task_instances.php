@@ -88,16 +88,50 @@ class Task_instances extends CI_Controller
     public function edit($id)
     {
         if ($this->input->server('REQUEST_METHOD') == 'GET') {
-            $try = $this->task_instance->read();
-            
-        } else if ($this->input->server('REQUEST_METHOD') == 'POST') {
+            $data['instance'] = $this->task_instance->read($id);
+            $data['list_types'] = $this->select_task_type();
 
+            if(!$data['instance']) redirect('/task-instances/index', 'location');
+            else $this->template->load('layout_admin', 'instances/instance_edit', $data);
+
+        } else if ($this->input->server('REQUEST_METHOD') == 'POST') {
+            $this->form_validation->set_rules('name', 'nombre', 'trim|required');
+            $this->form_validation->set_rules('type_id', 'tipo', 'trim|required');
+            $this->form_validation->set_error_delimiters('<div class="alert alert-danger alert-dismissible">','</div>');
+
+            if ($this->form_validation->run()) {
+                $data = array(
+                    'ins_name' => $this->input->post('name'),
+                    'ins_type_id' => $this->input->post('type_id'),
+                );
+                $result = $this->task_instance->update($id, $data);
+                if ($result == TRUE) {
+                    $data['message_display'] = 'Instancia actualizada exitosamente.';
+                    $data['instance'] = $this->task_instance->read($id);
+                    $data['list_types'] = $this->select_task_type();
+                    $this->template->load('layout_admin', 'instances/instance_edit', $data);
+                } else {
+                    $data['message_display'] = 'Error al actualizar instancia.';
+                    $data['instance'] = $this->task_instance->read($id);
+                    $data['list_types'] = $this->select_task_type();
+                    $this->template->load('layout_admin', 'instances/instance_edit', $data);
+                }
+            } else {
+                $data['message_display'] = validation_errors();
+                $data['instance'] = $this->task_instance->read($id);
+                $data['list_types'] = $this->select_task_type();
+                $this->template->load('layout_admin', 'instances/instance_edit', $data);
+            }
         }
     }
 
-    public function destroy()
+    public function destroy($id)
     {
         if ($this->input->server('REQUEST_METHOD') == 'GET') {
+            $data['instance'] = $this->task_instance->read($id);
+
+            if(!$data['instance']) redirect('/task-instances/index', 'location');
+            else $this->template->load('layout_admin', 'instances/instance_destroy', $data);
 
         } else if ($this->input->server('REQUEST_METHOD') == 'POST') {
 
