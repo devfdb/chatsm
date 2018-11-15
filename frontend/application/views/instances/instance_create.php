@@ -36,7 +36,7 @@
     <div class="card">
         <div class="card-body">
             <h4 class="card-title">Crear instancia</h4>
-            <?php echo form_open(base_url() . 'instances/create', array('class', 'email')); ?>
+            <?php echo form_open(base_url() . 'task-instances/create', array('class', 'email')); ?>
             <p class="card-description">
                 Crea una instancia a partir de la configuración de un modelo.
             </p>
@@ -48,7 +48,6 @@
                             <?php echo form_input(array('name' => 'name', 'class' => 'form-control')) ?>
                         </div>
                         <?php echo form_error('name'); ?>
-
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -56,25 +55,16 @@
                         <label class="col-sm-3 col-form-label">Tipo</label>
 
                         <div class="col-sm-9">
-                            <?php echo form_dropdown('shirts', $list_types, 'large', array('class'=>'form-control')); ?>
-
+                            <?php echo form_dropdown('type_id', $list_types, 'large', array('class'=>'form-control')); ?>
                         </div>
                     </div>
                 </div>
             </div>
-
-
             <div class="row">
                 <?php echo form_submit('submit', 'Crear instancia', array('class'=>'btn btn-success mr-2')) ?>
                 <button class="btn btn-light">Cancelar</button>
             </div>
             <?php echo form_close(); ?>
         </div>
-
     </div>
 </div>
-
-
-
-
-
