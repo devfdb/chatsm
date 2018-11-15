@@ -16,7 +16,6 @@ class Task_instances extends CI_Controller
         parent::__construct();
         $this->load->library('Template');
         $this->load->library('form_validation');
-        //$this->load->library('rabbitmq_client');
         $this->load->helper('form');
         $this->load->model('task_instance');
         $this->load->model('task_type');

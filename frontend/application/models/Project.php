@@ -1,5 +1,5 @@
 <?php
-class Projects extends CI_Model
+class Project extends CI_Model
 {
     function __construct()
     {
@@ -34,17 +34,17 @@ class Projects extends CI_Model
     public function table()
     {
         $this->db->select('*');
-        $this->db->from('Project');
+        $this->db->from('project');
 
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
             return $query->result_array();
         } else {
-            return null;
+            return [];
         }
     }
 
-    private function table_select()
+    public function table_select()
     {
         $instances = $this->table();
         $arr = array();
