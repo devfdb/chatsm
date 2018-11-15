@@ -4,16 +4,16 @@ import os.path
 
 
 class Replacer:
-    
     input = ''
     output = ''
     tokenizer = ToktokTokenizer()
     words_to_replace = {}
     
-    def __init__(self, input_path: str, output_path: str, params: dict):
+    def __init__(self, input_path: str, output_path: str, project, params: dict):
+        self.project = project
         self.input = input_path
-        self.output = output_path
-        self.file_path = params['file_path']
+        self.output = output_path  # Ruta completa, al depender del epoch
+        self.file_path = params['file_path']  # Ruta relativa a input
         self._load_files()
         text = self._load_csv()
         text = self._process(text)
@@ -22,7 +22,7 @@ class Replacer:
     def _load_files(self):
         print('Cargando Archivos')
         print(os.getcwd())
-        with open(os.path.join(self.file_path), 'r', encoding='utf8') as csvfile:
+        with open(os.path.join("..", "repository", self.project, "input", self.file_path), 'r', encoding='utf8') as csvfile:
             reader = csv.reader(csvfile)
             for row in reader:
                 self.words_to_replace[row[0]] = row[1]

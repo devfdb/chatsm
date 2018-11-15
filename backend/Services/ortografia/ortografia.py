@@ -3,12 +3,13 @@ import csv
 from .symspell import SymSpell
 from nltk.tokenize import ToktokTokenizer
 
+
 class SpellChecker:
-    
     tokenizer = ToktokTokenizer()
     spell = SymSpell(3)
     
-    def __init__(self, input_path:str, output_path:str, params:dict):
+    def __init__(self, input_path: str, output_path: str, project, params: dict):
+        self.project = project
         try:
             self._load_files(params['corpus_path'])
         except KeyError:
@@ -18,18 +19,18 @@ class SpellChecker:
         self._save(output_path, text)
         
         
-    def _load_csv(self, path:str):
+    def _load_csv(self, path: str):
         print('Cargando Texto')
         ntext = []
-        with open(path, 'r', encoding='utf8') as csvfile:
+        with open(os.path.join("..", "repository", self.project, "input", path), 'r', encoding='utf8') as csvfile:
             reader = csv.reader(csvfile)
             for line in reader:
                 ntext.append(line[0])
         return ntext
 
-    def _load_files(self, path:str):
+    def _load_files(self, path: str):
         print(path)
-        filelist = os.walk(path)
+        filelist = os.walk(os.path.join("..", "repository", self.project, "input", path))
         print(filelist)
         for root, dirs, files in filelist:
             for file in files:
@@ -38,8 +39,8 @@ class SpellChecker:
             self.spell.purge_below_threshold_words()
         print('Listo')
 
-    def _load_dictionary(self, path:str):
-        filelist = os.walk(path)
+    def _load_dictionary(self, path: str):
+        filelist = os.walk(os.path.join("..", "repository", self.project, "input", path))
 
         for root, dirs, files in filelist:
             for file in files:
@@ -47,7 +48,7 @@ class SpellChecker:
                 self.spell.load_dictionary(path + file)
         print('Listo')
 
-    def _check(self, text:str):
+    def _check(self, text: str):
         text = self.tokenizer.tokenize(text)
         for i, t in enumerate(text):
             if t.isalpha():
@@ -59,7 +60,7 @@ class SpellChecker:
 
         return ' '.join(text)
     
-    def _process(self, text:list):
+    def _process(self, text: list):
         print('Procesando...')
         ntext = []
         for line in text:
@@ -69,7 +70,7 @@ class SpellChecker:
                 print(line)
         return ntext
     
-    def _save(self, path:str, text:list):
+    def _save(self, path:str, text: list):
         print('Guardando')
         with open(path, 'w', encoding='utf8', newline='\n') as file:
             writer = csv.writer(file)

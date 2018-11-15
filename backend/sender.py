@@ -17,7 +17,7 @@ task2 = {
                 "task": {
                     "name": "spellcheck",
                     "params": {
-                        "corpus_path": "..//repository//proy//input//V1"
+                        "corpus_path": "V1" # ..//repository//proy//input// tiene que ser manejado por ortografia
                     }
                 },
                 "children": []
@@ -27,7 +27,7 @@ task2 = {
                 "task": {
                     "name": "replace",
                     "params": {
-                        "file_path": "..//repository//proy//input//remplazo2.csv"
+                        "file_path": "remplazo2.csv" # ..//repository//proy//input//
                     }
                 },
                 "children": []
