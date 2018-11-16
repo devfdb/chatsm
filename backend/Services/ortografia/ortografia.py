@@ -22,7 +22,7 @@ class SpellChecker:
     def _load_csv(self, path: str):
         print('Cargando Texto')
         ntext = []
-        with open(os.path.join("..", "repository", self.project, "input", path), 'r', encoding='utf8') as csvfile:
+        with open(path, 'r', encoding='utf8') as csvfile:
             reader = csv.reader(csvfile)
             for line in reader:
                 ntext.append(line[0])

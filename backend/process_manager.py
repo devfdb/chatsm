@@ -64,7 +64,7 @@ def process(proc, epoch, project, _input, first):
             print(os.getcwd())
             print('Replacing...')
             output_name = 'replace_' + str(proc['id']) + '.csv'
-            r = service.Replacer(rout, os.path.join(output_route, output_name), task['params'])
+            r = service.Replacer(rout, os.path.join(output_route, output_name), project, task['params'])
             del r
             task['output'] = output_name
             _input = output_name
@@ -72,7 +72,7 @@ def process(proc, epoch, project, _input, first):
         if task['name'] == 'spellcheck':
             print('Spellchecking...')
             output_name = 'spellcheck_' + str(proc['id']) + '.csv'
-            s = service.SpellChecker(rout, os.path.join(output_route, output_name), task['params'])
+            s = service.SpellChecker(rout, os.path.join(output_route, output_name), project, task['params'])
             del s
             task['output'] = output_name
             _input = output_name
@@ -84,7 +84,7 @@ def process(proc, epoch, project, _input, first):
         return proc
 
 
-def callback(ch, method, props, body):
+def callback(ch, method, props, bodys):
     """
     callback se encarga de manejar las entradas y salidas entre el servidor y el cliente.
     :param ch:
@@ -93,19 +93,48 @@ def callback(ch, method, props, body):
     :param body: json recibido del cliente.
     :return: nada
     """
-    body = json.loads(body)
+
+    print(bodys)
+    print('HOLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL')
+    parsedbody = str(bodys).replace("\\'", '"')
+    parsedbody = parsedbody[3:]
+    parsedbody = parsedbody[:-2]
+
+
+    print(parsedbody)
+
+    text_file = open("Output.txt", "w")
+    text_file.write(parsedbody)
+    # parsedbody = parsedbody[1:]
+    # parsedbody = parsedbody[:-1]
+
+    text_file.close()
+
+    body = json.loads(parsedbody)
+
+    print('HOLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL')
+    print(body)
+    print('CHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
+    print(type(body))
+    print('chuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu')
+
     _input = body['input']
     project = body['project']
-    print(_input)
+    # print(_input)
     for proc in body['processes']:
         process(proc, timegm(gmtime()), project, _input, True)
     print('Listo')
-    
-    ch.basic_publish(exchange='',
-                     routing_key=props.reply_to,
-                     properties=pika.BasicProperties(correlation_id=props.correlation_id),
-                     body=json.dumps(body))
-    ch.basic_ack(delivery_tag=method.delivery_tag)
+    print(body)
+    json_body = json.dumps(str(body))
+    if props:
+        if not props.reply_to:
+            print('require reply_to')
+            props.reply_to = 'tasks'
+        ch.basic_publish(exchange='',
+                         routing_key=props.reply_to,
+                         properties=pika.BasicProperties(correlation_id=props.correlation_id),
+                         body=json_body)
+        ch.basic_ack(delivery_tag=method.delivery_tag)
 
 
 channel.basic_qos(prefetch_count=1)
