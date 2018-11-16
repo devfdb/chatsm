@@ -60,6 +60,7 @@
 <!-- plugins:js -->
 <script src="/assets/vendors/js/vendor.bundle.base.js"></script>
 <script src="/assets/vendors/js/vendor.bundle.addons.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.29.0/dist/sweetalert2.all.min.js"></script>
 <!-- endinject -->
 <!-- Plugin js for this page-->
 <!-- End plugin js for this page-->

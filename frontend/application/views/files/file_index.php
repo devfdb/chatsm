@@ -1,9 +1,9 @@
 <div class="card">
     <div class="card-body">
-        <h4 class="card-title">Instancias</h4>
+        <h4 class="card-title">Archivos</h4>
         <div class="card-description">
             <div class="actions">
-            <a class="btn btn-primary" href="/task-instances/create">CREAR NUEVO</a>
+            <a class="btn btn-primary" href="/files/create">Subir archivo</a>
         </div>
         </p>
         <div class="table-responsive">
@@ -19,23 +19,32 @@
                     <th>
                         Fecha
                     </th>
-                    <th>
-                        Autor
-                    </th>
+
                     <th>
                         Operaciones
                     </th>
                 </tr>
                 </thead>
                 <tbody>
-                <?php if ($instance_table) { ?>
-                    <?php foreach ($instance_table as $item) { ?>
+                <?php if ($list_files) { ?>
+                    <?php foreach ($list_files as $item) { ?>
                         <tr>
-                            <td><?php echo $item['ins_name'] ?></td>
-                            <td><?php echo $type_table[$item['ins_type_id']] ?></td>
-                            <td><?php echo $item['ins_creation_date'] ?></td>
-                            <td><?php echo $item['ins_creator_id'] ?></td>
+                            <td width="50px">
+                                <i class="mdi <?php
+                                if($item['filetype'] == 'dir'){
+                                    echo 'mdi-folder';
+
+                                }else{
+                                    echo 'mdi-file';
+
+                                }
+                                ?>"></i>
+                            </td>
+
+                            <td><a href="/files?path=<?php echo $current_dir.$item['filename']; ?>"><?php echo $item['filename'] ?></a></td>
+                            <td><?php echo  $item['filetype'] ?></td>
                             <td>
+                            <!--
                                 <div class="btn-group" role="group" aria-label="Operaciones">
                                     <a title="Editar instancia"
                                        href="/task-instances/edit/<?php echo $item['ins_id'] ?>"
@@ -48,6 +57,7 @@
                                         <i class="mdi mdi-delete"></i>
                                     </a>
                                 </div>
+                            -->
                             </td>
 
 

@@ -1,9 +1,9 @@
 <div class="card">
     <div class="card-body">
-        <h4 class="card-title">Instancias</h4>
+        <h4 class="card-title">Archivos del proyecto</h4>
         <div class="card-description">
             <div class="actions">
-            <a class="btn btn-primary" href="/task-instances/create">CREAR NUEVO</a>
+            <a class="btn btn-primary" href="/task-instances/create">AGREGAR NUEVO</a>
         </div>
         </p>
         <div class="table-responsive">

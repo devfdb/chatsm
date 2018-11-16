@@ -1,4 +1,5 @@
 <?php
+
 class Task_instance extends CI_Model
 {
     function __construct()
@@ -48,12 +49,7 @@ class Task_instance extends CI_Model
     {
         $this->db->where('ins_id', $id);
         $this->db->update('task_instance', $data);
-
-        if ($this->db->affected_rows() > 0) {
-            return $this->db->insert_id();
-        } else {
-            return null;
-        }
+        return $this->read($id);
     }
 
     public function delete($id)
@@ -73,7 +69,7 @@ class Task_instance extends CI_Model
 
     }
 
-    public  function parse_to_form($data)
+    public function parse_to_form($data)
     {
 
     }
