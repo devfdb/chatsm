@@ -80,23 +80,23 @@ class Processes extends CI_Controller
             if ($this->form_validation->run()) {
                 $data = array(
                     'prc_name' => $this->input->post('name'),
-                    'prc_owner' => '1',
+                    'prc_owner' => $this->session->userdata('userId'),
                     'prc_input' => $this->input->post('input_id')
                 );
                 $result = $this->process->insert($data);
                 if ($result == TRUE) {
                     $data['message'] = json_encode(array('title' => 'Proceso creado exitosamente', 'type' => 'success'));
                     $data['file_list'] = $this->file->table_select();
-                    $this->template->load('layout_admin', 'instances/instance_create', $data);
+                    $this->template->load('layout_admin', 'processes/process_create', $data);
                 } else {
                     $data['message'] = json_encode(array('title' => 'No se pudo crear el proceso', 'type' => 'error'));
                     $data['file_list'] = $this->file->table_select();
-                    $this->template->load('layout_admin', 'instances/instance_create', $data);
+                    $this->template->load('layout_admin', 'processes/process_create', $data);
                 }
             } else {
                 $data['message_display'] = validation_errors();
                 $data['file_list'] = $this->file->table_select();
-                $this->template->load('layout_admin', 'instances/instance_create', $data);
+                $this->template->load('layout_admin', 'processes/process_create', $data);
             }
         }
     }

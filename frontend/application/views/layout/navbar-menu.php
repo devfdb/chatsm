@@ -10,7 +10,7 @@ if (isset($sessdata)) {
         <li class="nav-item nav-profile">
             <div class="nav-link">
                 <?php if (!isset($project_id)) { ?>
-                    <a class="btn btn-success btn-block" href="/projects/define">Seleccionar Proyecto</a>
+                    <a class="btn btn-success btn-block" href="/projects/define">Selecciornar Proyecto</a>
                     <a class="btn btn-default btn-block" href="/projects/create">Nuevo Proyecto</a>
                 <?php } else { ?>
                     <a class="btn btn-success btn-block" href="/projects/create">Nuevo Proyecto</a>
