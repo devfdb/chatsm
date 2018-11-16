@@ -1,4 +1,5 @@
 <?php
+
 class Files extends CI_Controller
 {
 
@@ -14,10 +15,69 @@ class Files extends CI_Controller
 
     }
 
+
+    private function endsWith($haystack, $needle)
+    {
+        $length = strlen($needle);
+        if ($length == 0) {
+            return true;
+        }
+
+        return (substr($haystack, -$length) === $needle);
+    }
+
     public function index()
     {
-        $data['list_files'] = $this->file->table();
-        $this->template->load('layout_admin', 'files/files_table', $data);
+        $project_folder = 'proy';                                       // Nombre de directorio de proyecto
+        $project_dir = '../repository/' . $project_folder . '/';        // Ruta relativa de directorio del proyecto
+
+        $path_query = $this->input->get('path');
+
+        if ($path_query) {
+
+            // TODO: Subir de directorio (evitar que suba más alla del directorio del proyecto)
+            if ($this->endsWith($path_query, '/..')) {
+                echo 'DENEGADO POR SEGURIDAD';
+                return;
+
+            }
+
+            // TODO: Evitar formación de cadenas infinitas de /./././././././././././.
+
+            if ($this->endsWith($path_query, '/.')) {
+                echo 'DENEGADO POR SEGURIDAD';
+                return;
+            }
+
+            // Ruta relativa de archivo ingresado
+            $full_query_path = $project_dir . $this->input->get('path');
+            $query_path = $this->input->get('path');
+            if (is_dir($full_query_path)) {
+                $dir = $query_path . '/';
+                $query_path = $query_path . '/';
+                $full_query_path = $full_query_path . '/';
+            } else {
+                $dir = $query_path;
+            }
+        }else{
+            $full_query_path = $project_dir;
+            $dir = '';
+        }
+
+
+        $file_list = [];
+        if (is_dir($full_query_path)) {
+            if ($dh = opendir($full_query_path)) {
+                while (($file = readdir($dh)) !== false) {
+                    $file_list[] = array('filename' => $file, 'filetype' => filetype($full_query_path . $file));
+                }
+                closedir($dh);
+            }
+        }
+        $data['current_fulldir'] = 0;
+        $data['current_dir'] = $dir;
+        $data['list_files'] = $file_list;
+        $this->template->load('layout_admin', 'files/file_index', $data);
     }
 
     public function create()
@@ -28,7 +88,7 @@ class Files extends CI_Controller
         } else if ($this->input->server('REQUEST_METHOD') == 'POST') {
             $this->form_validation->set_rules('name', 'nombre', 'trim|required');
             $this->form_validation->set_rules('type_id', 'tipo', 'trim|required');
-            $this->form_validation->set_error_delimiters('<div class="alert alert-danger alert-dismissible">','</div>');
+            $this->form_validation->set_error_delimiters('<div class="alert alert-danger alert-dismissible">', '</div>');
 
             if ($this->form_validation->run()) {
                 $data = array(

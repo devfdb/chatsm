@@ -49,8 +49,8 @@ if (isset($sessdata)) {
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/processes">
-                    <i class="menu-icon mdi mdi-file-document"></i>
-                    <span class="menu-title">Archivos</span>
+                    <i class="menu-icon mdi mdi-worker"></i>
+                    <span class="menu-title">Procesos</span>
                 </a>
             </li>
         <?php } ?>

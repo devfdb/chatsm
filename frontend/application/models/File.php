@@ -32,12 +32,23 @@ class File extends CI_Model
     {
         $this->db->select('*');
         $this->db->from('file');
+
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
             return $query->result_array();
         } else {
-            return null;
+            return [];
         }
+    }
+
+    public function table_select()
+    {
+        $instances = $this->table();
+        $arr = array();
+        foreach($instances as $item) {
+            $arr[$item['fil_id']] = $item['fil_filename'];
+        }
+        return $arr;
     }
 
     public function update($id, $data)

@@ -4,10 +4,10 @@
 
     <div class="card">
         <div class="card-body">
-            <h4 class="card-title">Crear instancia</h4>
-            <?php echo form_open(base_url() . 'task-instances/create', array('class', 'email')); ?>
+            <h4 class="card-title">Crear proceso</h4>
+            <?php echo form_open(base_url() . 'processes/create', array('class', 'email')); ?>
             <p class="card-description">
-                Crea una instancia a partir de la configuración de un modelo.
+                Crea un nuevo proyecto
             </p>
             <div class="row">
                 <div class="col-md-6">
@@ -21,10 +21,10 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">Tipo</label>
+                        <label class="col-sm-3 col-form-label">Archivo de entrada</label>
 
                         <div class="col-sm-9">
-                            <?php echo form_dropdown('type_id', $list_types, 'large', array('class'=>'form-control')); ?>
+                            <?php echo form_dropdown('input_id', $file_list, null, array('class'=>'form-control')); ?>
                         </div>
                     </div>
                 </div>

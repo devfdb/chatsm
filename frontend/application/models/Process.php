@@ -1,10 +1,6 @@
 <?php
 class Process extends CI_Model
 {
-    function __construct()
-    {
-    }
-
     public function insert($data)
     {
         $this->db->insert('process', $data);
@@ -48,10 +44,11 @@ class Process extends CI_Model
         $instances = $this->table();
         $arr = array();
         foreach($instances as $item) {
-            $arr[$item['prj_id']] = $item['prj_name'];
+            $arr[$item['prc_id']] = $item['prc_name'];
         }
         return $arr;
     }
+
 
     public function update($id, $data)
     {
