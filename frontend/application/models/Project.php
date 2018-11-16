@@ -20,12 +20,12 @@ class Project extends CI_Model
     public function read($id)
     {
         $this->db->select('*');
-        $this->db->from('Project');
-        $this->db->where('ins_id', $id);
+        $this->db->from('project');
+        $this->db->where('prj_id', $id);
 
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
-            return $query->result_array();
+            return $query->result_array()[0];
         } else {
             return null;
         }

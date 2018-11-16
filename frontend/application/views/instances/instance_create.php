@@ -1,7 +1,4 @@
 <div class="col-12 grid-margin">
-
-
-
     <div class="card">
         <div class="card-body">
             <h4 class="card-title">Crear instancia</h4>
@@ -31,10 +28,9 @@
             </div>
             <div class="row">
                 <?php echo form_submit('submit', 'Crear instancia', array('class'=>'btn btn-success mr-2')) ?>
-                <a href="/task-instances/index" class="btn btn-light">Cancelar</a>
+                <a href="/files/index" class="btn btn-light">Cancelar</a>
             </div>
             <?php echo form_close(); ?>
         </div>
     </div>
 </div>
-<?php $this->load->view('layout/display'); ?>

@@ -9,7 +9,6 @@ class Projects extends CI_Controller
         $this->load->library('Template');
         $this->load->library('form_validation');
         $this->load->helper('form');
-        $this->load->library('form_validation');
         $this->load->model('user');
         $this->load->model('project');
 
@@ -49,6 +48,5 @@ class Projects extends CI_Controller
         //    redirect('users/login');
         //}
     }
-
 
 }
