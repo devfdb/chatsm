@@ -14,11 +14,22 @@ client = MongoClient('localhost',27017)
 db = client.proyecto
 
 
-def load_file(path:str, headers:list, colindex:list):
+def load_file(path:str, col_index: list = None, headers: list = None):
     collection = db[body['filename']]
     with open(path, 'r', encoding='utf8') as csv_file:
         reader = csv.reader(csv_file)
-        for title in headers:
+        for line in reader:
+            if headers: # Si existen cabezales
+                for i, title in enumerate(headers):
+                    entry = {}
+                    entry[title] = line[col_index[i]]
+                    collection.insert_one(entry)
+            else:
+                for i, col in enumerate(col_index):
+                    entry = {}
+                    entry['col_' + i] = line[col]
+
+    return 'Listo'
 
 
 
@@ -26,7 +37,7 @@ def callback(ch, method, props, body):
     body = json.loads(body)
     input = body['input']
     print(input)
-    load_file(body['path'], body['headers'], body['colindex'])
+    load_file(body['path'], body['colindex'], body['headers'])
 
     ch.basic_publish(exchange='',
                      routing_key=props.reply_to,
