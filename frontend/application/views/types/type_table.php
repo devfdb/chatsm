@@ -4,7 +4,7 @@
         <th>Lastname</th>
         <th>Age</th>
     </tr>
-    <?php foreach() {
+    <?php foreach($cookie['hola'] as $item) {
         ?>
     <tr>
         <td>Jill</td>

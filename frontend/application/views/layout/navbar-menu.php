@@ -31,7 +31,7 @@ if (isset($sessdata)) {
         <?php if (isset($project_id)) { ?>
 
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="/dashboard">
                     <i class="menu-icon mdi mdi-television"></i>
                     <span class="menu-title">Dashboard</span>
                 </a>

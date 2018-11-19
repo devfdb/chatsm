@@ -1,7 +1,4 @@
 <div class="col-12 grid-margin">
-
-
-
     <div class="card">
         <div class="card-body">
             <h4 class="card-title">Define un proyecto para trabajar</h4>

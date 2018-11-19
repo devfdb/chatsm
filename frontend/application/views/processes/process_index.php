@@ -14,12 +14,17 @@
                         Nombre
                     </th>
                     <th>
-                        Dueño
-                    </th>
-                    <th>
                         Entrada
                     </th>
-
+                    <th>
+                        Autor
+                    </th>
+                    <th>
+                        Fecha de creación
+                    </th>
+                    <th>
+                        Última modificación
+                    </th>
                     <th>
                         Operaciones
                     </th>
@@ -30,8 +35,10 @@
                     <?php foreach ($process_table as $item) { ?>
                         <tr>
                             <td><?php echo $item['prc_name'] ?></td>
-                            <td><?php echo $item['prc_owner'] ?></td>
                             <td><?php echo $item['prc_input'] ?></td>
+                            <td><?php echo $item['prc_owner'] ?></td>
+                            <td><?php echo $item['prc_created_at'] ?></td>
+                            <td><?php echo $item['prc_last_modified'] ?></td>
                             <td>
                                 <div class="btn-group" role="group" aria-label="Operaciones">
                                     <a title="Ejecuciones del proceso"
@@ -51,12 +58,9 @@
                                     </a> -->
                                 </div>
                             </td>
-
-
                         </tr>
                     <?php }
                 } ?>
-
                 </tbody>
             </table>
         </div>

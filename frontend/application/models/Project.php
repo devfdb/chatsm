@@ -31,10 +31,11 @@ class Project extends CI_Model
         }
     }
 
-    public function table()
+    public function table($userId)
     {
         $this->db->select('*');
         $this->db->from('project');
+        $this->db->where('prj_owner', $userId);
 
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
@@ -44,9 +45,9 @@ class Project extends CI_Model
         }
     }
 
-    public function table_select()
+    public function table_select($userId)
     {
-        $instances = $this->table();
+        $instances = $this->table($userId);
         $arr = array();
         foreach($instances as $item) {
             $arr[$item['prj_id']] = $item['prj_name'];
@@ -56,19 +57,22 @@ class Project extends CI_Model
 
     public function update($id, $data)
     {
-        $this->db->where('ins_id', $id);
-        $this->db->update('task_instance', $data);
+        $this->db->where('prj_id', $id);
+        $this->db->update('project', $data);
+        return $this->read($id);
+    }
+
+
+    public function delete($id)
+    {
+        $this->db->where('prj_id', $id);
+        $this->db->delete('project');
 
         if ($this->db->affected_rows() > 0) {
             return $this->db->insert_id();
         } else {
             return null;
         }
-    }
-
-    public function delete($where)
-    {
-
     }
 
     public function parse_to_db($data)

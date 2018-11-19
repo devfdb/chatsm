@@ -103,7 +103,8 @@ class Files extends CI_Controller
                 $data = array(
                     'fil_filename' => $upload_data['file_name'],
                     'fil_url' => $project['prj_name'].'/'.$upload_data['file_name'],
-                    'fil_associated_project_id' => $this->session->userdata('project_id')
+                    'fil_associated_project_id' => $this->session->userdata('project_id'),
+                    'fil_owner' => $this->session->userdata('userId')
                 );
                 $result = $this->file->insert($data);
                 if ($result == TRUE) {

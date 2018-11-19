@@ -20,7 +20,10 @@
                         Autor
                     </th>
                     <th>
-                        Fecha
+                        Fecha de creación
+                    </th>
+                    <th>
+                        Última modificación
                     </th>
                     <th>
                         Operaciones
@@ -33,8 +36,9 @@
                         <tr>
                             <td><?php echo $item['prj_name'] ?></td>
                             <td><?php echo $item['prj_description'] ?></td>
-                            <td><?php echo $item['prj_creator'] ?></td>
+                            <td><?php echo $item['prj_owner'] ?></td>
                             <td><?php echo $item['prj_created_at'] ?></td>
+                            <td><?php echo $item['prj_last_modified'] ?></td>
                             <td>
                                 <div class="btn-group" role="group" aria-label="Operaciones">
                                     <a title="Editar proyecto"

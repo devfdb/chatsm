@@ -10,6 +10,8 @@ class Users extends CI_Controller
     {
         parent::__construct();
         $this->load->library('form_validation');
+        $this->load->helper('form');
+        $this->load->helper('url');
         $this->load->model('user');
     }
 
@@ -36,9 +38,8 @@ class Users extends CI_Controller
         $data = array();
 
         if ($this->input->server('REQUEST_METHOD') == 'GET') {
-
+            if($this->session->userdata('isUserLoggedIn')) redirect('dashboard', 'location');
             $this->load->view('users/user_login', $data);
-
         } else if ($this->input->server('REQUEST_METHOD') == 'POST') {
 
             $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
@@ -63,7 +64,7 @@ class Users extends CI_Controller
 
                     $this->session->set_userdata('isUserLoggedIn', TRUE);
                     $this->session->set_userdata('userId', $checkLogin['usr_id']);
-                    redirect('task-instances');
+                    redirect('dashboard');
                 } else {
                     $data['error_msg'] = 'Wrong email or password, please try again.';
                 }

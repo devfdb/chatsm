@@ -14,12 +14,17 @@
                         Nombre
                     </th>
                     <th>
-                        Tipo
+                        Dirección
                     </th>
                     <th>
-                        Fecha
+                        Autor
                     </th>
-
+                    <th>
+                        Fecha de creación
+                    </th>
+                    <th>
+                        Última modificación
+                    </th>
                     <th>
                         Operaciones
                     </th>
@@ -40,27 +45,24 @@
                                 }
                                 ?>"></i>
                             </td>
-
                             <td><a href="/files?path=<?php echo $current_dir.$item['filename']; ?>"><?php echo $item['filename'] ?></a></td>
                             <td><?php echo  $item['filetype'] ?></td>
+                            <td></td>
+                            <td></td>
                             <td>
-                            <!--
                                 <div class="btn-group" role="group" aria-label="Operaciones">
                                     <a title="Editar instancia"
-                                       href="/task-instances/edit/<?php echo $item['ins_id'] ?>"
+                                       href="/task-instances/edit/<?php echo '$item[fil_id]' ?>"
                                        class="btn btn-outline-secondary">
                                         <i class="mdi mdi-table-edit"></i>
                                     </a>
                                     <a title="Eliminar instancia"
-                                       href="/task-instances/destroy/<?php echo $item['ins_id'] ?>"
+                                       href="/task-instances/destroy/<?php echo '$item[fil_id]' ?>"
                                        class="btn btn-outline-secondary">
                                         <i class="mdi mdi-delete"></i>
                                     </a>
                                 </div>
-                            -->
                             </td>
-
-
                         </tr>
                     <?php }
                 } ?>
