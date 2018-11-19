@@ -7,7 +7,7 @@
             <h4 class="card-title">Crear proceso</h4>
             <?php echo form_open(base_url() . 'processes/create', array('class', 'email')); ?>
             <p class="card-description">
-                Crea un nuevo proyecto
+                Crea un nuevo proceso
             </p>
             <div class="row">
                 <div class="col-md-6">

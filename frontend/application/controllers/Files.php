@@ -15,7 +15,7 @@ class Files extends CI_Controller
         $this->load->model('file');
         $this->load->model('project');
 
-        $this->url_imagenes = FCPATH . "../repository/";
+        $this->url_imagenes = FCPATH."/../repository/";
     }
 
 
@@ -89,8 +89,9 @@ class Files extends CI_Controller
             $data['project_id'] = $this->session->userdata('project_id');
             $this->template->load('layout_admin', 'files/file_create', $data);
         } else if ($this->input->server('REQUEST_METHOD') == 'POST') {
+            $project = $this->project->read($this->session->userdata('project_id'));
             $upload_config = array(
-                'upload_path' => $this->url_imagenes,
+                'upload_path' => $this->url_imagenes.$project['prj_name'],
                 'allowed_types' => "gif|jpg|png|jpeg|pdf",
                 'overwrite' => TRUE
             );
@@ -99,7 +100,6 @@ class Files extends CI_Controller
             if ($this->upload->do_upload('userfile'))
             {
                 $upload_data = $this->upload->data();
-                $project = $this->project->read($this->session->userdata('project_id'));
                 $data = array(
                     'fil_filename' => $upload_data['file_name'],
                     'fil_url' => $project['prj_name'].'/'.$upload_data['file_name'],

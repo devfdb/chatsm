@@ -8,9 +8,9 @@
                 Sube un archivo.
             </p>
             <div class="row">
-
                 <input type="file" name="userfile" size="20" />
-                <input type="submit" value="Subir" />
+                <input class="btn btn-light" type="submit" value="Subir" />
+                <a href="/files/index" class="btn btn-light">Cancelar</a>
                 </form>
             </div>
             <?php echo form_close(); ?>

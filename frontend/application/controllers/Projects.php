@@ -12,11 +12,13 @@ class Projects extends CI_Controller
         $this->load->model('user');
         $this->load->model('project');
 
+        $this->url_imagenes = FCPATH."/../repository/";
     }
 
     public function index()
     {
-        echo 'no se ha hecho';
+        $data['project_table'] = $this->project->table();
+        $this->template->load('layout_admin', 'projects/project_index', $data);
     }
 
     public function define()
@@ -49,4 +51,37 @@ class Projects extends CI_Controller
         //}
     }
 
+    public function create()
+    {
+        if ($this->input->server('REQUEST_METHOD') == 'GET') {
+            $this->template->load('layout_admin', 'projects/project_create');
+        } else if ($this->input->server('REQUEST_METHOD') == 'POST') {
+            $this->form_validation->set_rules('name', 'nombre', 'trim|required');
+            $this->form_validation->set_rules('description', 'descripción', 'trim|required');
+            $this->form_validation->set_error_delimiters('<div class="alert alert-danger alert-dismissible">','</div>');
+
+            if ($this->form_validation->run()) {
+                $data = array(
+                    'prj_name' => $this->input->post('name'),
+                    'prj_description' => $this->input->post('description'),
+                    'prj_creator' => $this->session->userdata('userId')
+                );
+                $result = $this->project->insert($data);
+                if ($result == TRUE) {
+                    if (!file_exists($this->url_imagenes.$data['prj_name']))
+                    {
+                        mkdir($this->url_imagenes.$data['prj_name'], 0777, true);
+                    }
+                    $data['message'] = json_encode(array('title'=> 'Proyecto creado exitosamente', 'type' => 'success' ));
+                    $this->template->load('layout_admin', 'projects/project_create', $data);
+                } else {
+                    $data['message'] = json_encode(array('title'=> 'No se pudo crear el proyecto', 'type' => 'error' ));
+                    $this->template->load('layout_admin', 'projects/project_create', $data);
+                }
+            } else {
+                $data['message_display'] = validation_errors();
+                $this->template->load('layout_admin', 'projects/project_create', $data);
+            }
+        }
+    }
 }

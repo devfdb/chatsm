@@ -8,7 +8,7 @@ class Project extends CI_Model
 
     public function insert($data)
     {
-        $this->db->insert('Project', $data);
+        $this->db->insert('project', $data);
 
         if ($this->db->affected_rows() > 0) {
             return $this->db->insert_id();
