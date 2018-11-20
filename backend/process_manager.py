@@ -4,7 +4,11 @@ import Services.services as service
 import os
 from calendar import timegm
 from time import gmtime
+import uuid
+import time
 connection = None
+
+uid = ''
 
 try:
     # Establece la conexión con el servidor RabbitMQ.
@@ -81,8 +85,31 @@ def process(proc, epoch, project, _input, first):
             # Si existen hijos, se llama a si misma, con el nuevo _input como _input y con el subjson del hijo como proc
             for child in proc['children']:
                 process(child, epoch, project, _input, False)
+
         return proc
 
+
+def send(message, uid):
+    message = {
+        'id': uid,
+        'message': message
+    }
+
+    try:
+        # Establece la conexión con el servidor RabbitMQ.
+        reply_connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+    except Exception as e:
+        print("Error de conexion", e)
+        exit(2)
+
+    reply_channel = reply_connection.channel()
+
+    reply_channel.queue_declare(queue='reply')
+
+    reply_channel.basic_publish(exchange='',
+                          routing_key='reply',
+                          body=json.dumps(message))
+    reply_connection.close()
 
 def callback(ch, method, props, bodys):
     """
@@ -94,47 +121,29 @@ def callback(ch, method, props, bodys):
     :return: nada
     """
 
-    print(bodys)
-    print('HOLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL')
-    parsedbody = str(bodys).replace("\\'", '"')
-    parsedbody = parsedbody[3:]
-    parsedbody = parsedbody[:-2]
-
-
-    print(parsedbody)
-
-    text_file = open("Output.txt", "w")
-    text_file.write(parsedbody)
-    # parsedbody = parsedbody[1:]
-    # parsedbody = parsedbody[:-1]
-
-    text_file.close()
-
-    body = json.loads(parsedbody)
-
-    print('HOLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL')
-    print(body)
-    print('CHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
-    print(type(body))
-    print('chuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu')
+    body = json.loads(bodys)
 
     _input = body['input']
     project = body['project']
-    # print(_input)
+
+    uid = str(uuid.uuid4())
+    response = {
+        'id': uid,
+        'status': 'processing'
+    }
+
+    response = json.dumps(response)
+
+    ch.basic_publish(exchange='',
+                     routing_key=props.reply_to,
+                     properties=pika.BasicProperties(correlation_id=props.correlation_id),
+                     body=response)
+    ch.basic_ack(delivery_tag=method.delivery_tag)
+
     for proc in body['processes']:
         process(proc, timegm(gmtime()), project, _input, True)
     print('Listo')
-    print(body)
-    json_body = json.dumps(str(body))
-    if props:
-        if not props.reply_to:
-            print('require reply_to')
-            props.reply_to = 'tasks'
-        ch.basic_publish(exchange='',
-                         routing_key=props.reply_to,
-                         properties=pika.BasicProperties(correlation_id=props.correlation_id),
-                         body=json_body)
-        ch.basic_ack(delivery_tag=method.delivery_tag)
+    send(body, uid)
 
 
 channel.basic_qos(prefetch_count=1)
