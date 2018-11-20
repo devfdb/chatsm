@@ -38,9 +38,9 @@
 
                         <?php echo form_open(base_url() . 'users/login'); ?>
                         <div class="form-group">
-                            <label class="label">Usuario</label>
+                            <label class="label">Correo</label>
                             <div class="input-group">
-                                <input type="text" name="email" class="form-control" placeholder="Nombre de usuario">
+                                <input type="text" name="email" class="form-control" placeholder="muestra@correo.com">
                                 <div class="input-group-append">
 
                                 </div>
