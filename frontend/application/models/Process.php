@@ -56,6 +56,20 @@ class Process extends CI_Model
         }
     }
 
+    public function read_task($id)
+    {
+        $this->db->select('*');
+        $this->db->from('task_instance');
+        $this->db->where('ins_id', $id);
+
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result_array()[0];
+        } else {
+            return null;
+        }
+    }
+
     public function table()
     {
         $this->db->select('*');

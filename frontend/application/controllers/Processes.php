@@ -134,9 +134,15 @@ class Processes extends CI_Controller
     public function parse_recursive($nodes, $arr, $id)
     {
         foreach($nodes as $item) {
+            $task = $this->process->read_task($item['pcn_task_id']);
             $new_process = array(
                 'id' => $item['pcn_id'],
-                'task' => $item['pcn_task_id']
+                'task' => array(
+                    'name' => $task['ins_name'],
+                    'params' => array(
+                        'x' => 0
+                    )
+                )
             );
             $children = $this->process->select_children($item['pcn_id'], $id);
             if(!$children != null) {
