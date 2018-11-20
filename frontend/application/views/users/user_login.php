@@ -5,7 +5,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Star Admin Free Bootstrap Admin Dashboard Template</title>
+    <title>ChatSM — Iniciar sesión</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="/assets/vendors/iconfonts/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="/assets/vendors/css/vendor.bundle.base.css">
@@ -16,7 +16,7 @@
     <!-- inject:css -->
     <link rel="stylesheet" href="/assets/css/style.css">
     <!-- endinject -->
-    <link rel="shortcut icon" href="/assets/images/favicon.png"/>
+    <link rel="shortcut icon" href="/assets/favicon.ico"/>
 </head>
 
 <body>
@@ -24,39 +24,39 @@
     <div class="container-fluid page-body-wrapper full-page-wrapper auth-page">
         <div class="content-wrapper d-flex align-items-center auth auth-bg-1 theme-one">
             <div class="row w-100">
-                <?php
-                if (!empty($success_msg)) {
-                    echo '<p class="statusMsg">' . $success_msg . '</p>';
-                } elseif (!empty($error_msg)) {
-                    echo '<p class="statusMsg">' . $error_msg . '</p>';
-                }
-                ?>
+
                 <div class="col-lg-4 mx-auto">
                     <div class="auto-form-wrapper">
-                        <?php echo form_open(base_url().'users/login'); ?>
+
+                        <?php
+                        if (!empty($success_msg)) {
+                            echo '<p class="statusMsg">' . $success_msg . '</p>';
+                        } elseif (!empty($error_msg)) {
+                            echo '<p class="statusMsg">' . $error_msg . '</p>';
+                        }
+                        ?>
+
+                        <?php echo form_open(base_url() . 'users/login'); ?>
                         <div class="form-group">
                             <label class="label">Usuario</label>
                             <div class="input-group">
                                 <input type="text" name="email" class="form-control" placeholder="Nombre de usuario">
-                                <?php echo form_error('email', '<span class="help-block">', '</span>'); ?>
                                 <div class="input-group-append">
-                      <span class="input-group-text">
-                        <i class="mdi mdi-check-circle-outline"></i>
-                      </span>
+
                                 </div>
                             </div>
+                            <?php echo form_error('email', '<small style="color: red">', '</small>'); ?>
+
                         </div>
                         <div class="form-group">
                             <label class="label">Contraseña</label>
                             <div class="input-group">
                                 <input type="password" name="password" class="form-control" placeholder="******">
-                                <?php echo form_error('password', '<span class="help-block">', '</span>'); ?>
                                 <div class="input-group-append">
-                      <span class="input-group-text">
-                        <i class="mdi mdi-check-circle-outline"></i>
-                      </span>
                                 </div>
                             </div>
+                            <?php echo form_error('password', '<small style="color: red">', '</small>'); ?>
+
                         </div>
 
                         <div class="form-group">
