@@ -101,6 +101,38 @@ class Processes extends CI_Controller
         }
     }
 
+    public function edit()
+    {
+        $data['file_list'] = $this->file->table_select();
+        $this->template->load('layout_admin', 'processes/process_edit', $data);
+    }
+
+    public function tree_json(){
+        header('Content-Type: application/json');
+        $arr = array(
+            'project' => 'proy',
+            'input' => 'algo.csv',
+            'processes' => array(
+                array('id' => '1',
+                    'task'  => 'clean',
+                    'params' => array(),
+                    'children' => array(
+                        array('id' => '2',
+                            'task'  => 'clean',
+                            'params' => array(),
+                            'children' => array(
+                            ))
+                    ))
+            )
+        );
+
+
+
+
+
+        echo json_encode($arr);
+    }
+
     public function define()
     {
         $data = array();

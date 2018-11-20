@@ -46,11 +46,11 @@
                                        class="btn btn-outline-secondary">
                                         <i class="mdi mdi-run"></i>
                                     </a>
-                                    <!-- <a title="Editar proceso"
+                                     <a title="Editar proceso"
                                        href="/processes/edit/<?php echo $item['prc_id'] ?>"
                                        class="btn btn-outline-secondary">
                                         <i class="mdi mdi-table-edit"></i>
-                                    </a> -->
+                                    </a>
                                     <!-- <a title="Eliminar proceso"
                                        href="/processes/destroy/<?php echo $item['prc_id'] ?>"
                                        class="btn btn-outline-secondary">

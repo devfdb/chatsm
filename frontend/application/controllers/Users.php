@@ -66,7 +66,7 @@ class Users extends CI_Controller
                     $this->session->set_userdata('userId', $checkLogin['usr_id']);
                     redirect('dashboard');
                 } else {
-                    $data['error_msg'] = 'Wrong email or password, please try again.';
+                    $data['error_msg'] = 'Su usuario o contraseña es incorrecto';
                 }
             }
 
