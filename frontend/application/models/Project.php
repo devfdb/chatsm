@@ -41,7 +41,7 @@ class Project extends CI_Model
         if ($query->num_rows() > 0) {
             return $query->result_array();
         } else {
-            return [];
+            return null;
         }
     }
 
@@ -53,6 +53,22 @@ class Project extends CI_Model
             $arr[$item['prj_id']] = $item['prj_name'];
         }
         return $arr;
+    }
+
+    public function cross($userId)
+    {
+        $this->db->select('*');
+        $this->db->from('project_member');
+        $this->db->where('prm_user_id', $userId);
+        $this->db->join('project', 'project_member.prm_project_id = project.prj_id');
+        $this->db->where_not_in('prj_owner', $userId);
+
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result_array();
+        } else {
+            return null;
+        }
     }
 
     public function update($id, $data)

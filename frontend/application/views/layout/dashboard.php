@@ -3,3 +3,4 @@
         <h4 class="card-title">esta cosa nunca existio</h4>
     </div>
 </div>
+<?php $this->load->view('layout/display'); ?>

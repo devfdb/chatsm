@@ -16,11 +16,55 @@ class Process extends CI_Model
     {
         $this->db->select('*');
         $this->db->from('process');
-        $this->db->where('ins_id', $id);
+        $this->db->where('prc_id', $id);
+
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result_array()[0];
+        } else {
+            return null;
+        }
+    }
+
+    public function select_parents($id)
+    {
+        $this->db->select('*');
+        $this->db->from('process_node');
+        $this->db->where('pcn_process_id', $id);
+        $this->db->where('pcn_parent', null);
 
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
             return $query->result_array();
+        } else {
+            return null;
+        }
+    }
+
+    public function select_children($id, $parent)
+    {
+        $this->db->select('*');
+        $this->db->from('process_node');
+        $this->db->where('pcn_process_id', $id);
+        $this->db->where('pcn_parent', $parent);
+
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result_array();
+        } else {
+            return null;
+        }
+    }
+
+    public function read_task($id)
+    {
+        $this->db->select('*');
+        $this->db->from('task_instance');
+        $this->db->where('ins_id', $id);
+
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result_array()[0];
         } else {
             return null;
         }

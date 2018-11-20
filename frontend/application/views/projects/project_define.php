@@ -16,13 +16,13 @@
                         <?php echo form_error('project_id'); ?>
                     </div>
                 </div>
-
             </div>
             <div class="row">
                 <?php echo form_submit('submit', 'Seleccionar proyecto', array('class'=>'btn btn-success mr-2')) ?>
-                <button class="btn btn-light">Crear nuevo proyecto</button>
+                <a href="create" class="btn btn-light">Crear nuevo proyecto</a>
             </div>
             <?php echo form_close(); ?>
         </div>
     </div>
 </div>
+<?php $this->load->view('layout/display'); ?>

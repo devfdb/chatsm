@@ -141,10 +141,10 @@ class Task_instances extends CI_Controller
         } else if ($this->input->server('REQUEST_METHOD') == 'POST') {
             $result = $this->task_instance->delete($id);
             if ($result == TRUE) {
-                $data['message_display'] = 'Instancia eliminada exitosamente.';
+                $data['message'] = json_encode(array('title'=> 'Instancia eliminada exitosamente', 'type' => 'error' ));
                 $this->index();
             } else {
-                $data['message_display'] = 'Error al eliminar instancia.';
+                $data['message'] = json_encode(array('title'=> 'Error al eliminar instancia', 'type' => 'error' ));
                 $this->index();
             }
         }
