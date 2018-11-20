@@ -131,5 +131,31 @@ class Processes extends CI_Controller
         //}
     }
 
+    public function parse_recursive($nodes, $arr, $id)
+    {
+        foreach($nodes as $item) {
+            $new_process = array(
+                'id' => $item['pcn_id'],
+                'task' => $item['pcn_task_id']
+            );
+            $children = $this->process->select_children($item['pcn_id'], $id);
+            if(!$children != null) {
+                $this->parse_recursive($children, $arr, $id);
+            }
+            array_push($arr['processes'], $new_process);
+        }
+    }
 
+    public function parse_to_json($id)
+    {
+        $curr_process = $this->process->read($id);
+        header('Content-Type: application/json');
+        $arr = array(
+            'project' => 'proy',
+            'input' => $curr_process['prc_input']
+        );
+        $nodes = $this->process->select_parents($id);
+        $this->parse_recursive($nodes, $arr, $id);
+        echo json_encode($arr);
+    }
 }
