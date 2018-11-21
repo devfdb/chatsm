@@ -6,7 +6,10 @@
 
 <div class="row">
     <div class="col-6" id="app-tree">
-        <liquor-json-viewer :json="json.processes"></liquor-json-viewer>
+       <!--  <liquor-json-viewer :json="json.processes"></liquor-json-viewer> -->
+
+        <tree :options="treeOptions" >
+        </tree>
         <div class="card">
 
             Proyecto: {{json.project}} <br/><br/>
@@ -73,14 +76,7 @@
             return {
                 selectednode: null,
                 treeData: this.json,
-                treeOptions: {
-                    checkbox: false,
-                    propertyNames: {
-                        text: 'id',
-                        children: 'children',
-                        data: 'task'
-                    }
-                }
+
             }
         },
 
@@ -108,6 +104,18 @@
         el: '#app-tree',
         data: function () {
             return {
+                treeOptions: {
+                    checkbox: false,
+                    propertyNames: {
+                        text: 'id',
+                        children: 'children',
+                        data: 'task'
+                    },
+                    minFetchDelay: 1000,
+                    fetchData(node) {
+                        return axios.get('/processes/tree-json');
+                    }
+                },
                 varx: 'ho',
                 json: {
                     "project": "proy",

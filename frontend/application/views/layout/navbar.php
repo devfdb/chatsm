@@ -1,14 +1,14 @@
 <nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
     <div class="text-center navbar-brand-wrapper d-flex align-items-top justify-content-center">
         <a class="navbar-brand brand-logo" href="/">
-            <img src="/assets/img/logo.fw.png" alt="logo" />
+            <img src="/assets/img/logo.png" alt="logo" />
         </a>
         <a class="navbar-brand brand-logo-mini" href="/">
             <img src="/assets/img/logo-mini.svg" alt="logo" />
         </a>
     </div>
     <div class="navbar-menu-wrapper d-flex align-items-center">
-        <ul class="navbar-nav navbar-nav-left header-links d-none d-md-flex">
+        <!-- <ul class="navbar-nav navbar-nav-left header-links d-none d-md-flex">
             <li class="nav-item">
                 <a href="#" class="nav-link">Schedule
                     <span class="badge badge-primary ml-1">New</span>
@@ -22,7 +22,7 @@
                 <a href="#" class="nav-link">
                     <i class="mdi mdi-bookmark-plus-outline"></i>Score</a>
             </li>
-        </ul>
+        </ul> -->
         <ul class="navbar-nav navbar-nav-right">
             <!--
             <li class="nav-item dropdown">
@@ -140,7 +140,7 @@
             <li class="nav-item dropdown d-none d-xl-inline-block">
                 <a class="nav-link dropdown-toggle" id="UserDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
                     <span class="profile-text">Hola, <?php echo $this->session->userdata('userId') ?>!</span>
-                    <img class="img-xs rounded-circle" src="/assets/img/faces/face1.jpg" alt="Profile image">
+                    <!-- <img class="img-xs rounded-circle" src="/assets/img/faces/face1.jpg" alt="Profile image"> -->
                 </a>
                 <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
                     <a class="dropdown-item p-0">
@@ -156,9 +156,9 @@
                             </div>
                         </div>
                     </a>
-                    <a class="dropdown-item">
+                    <!-- <a class="dropdown-item">
                         Mi perfil
-                    </a>
+                    </a> -->
                     <a href="/users/logout" class="dropdown-item">
                         Cerrar sesión
                     </a>
