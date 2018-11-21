@@ -8,3 +8,33 @@ Analiza datos para la construcción de bots conversacionales, con esta plataform
 - Crear bolsas de palabras (bag of words).
 - Limpiar datos mediante diversas técnicas de preprocesamiento.
 - PRONTO! Generación de gráficos para análisis de datos.
+
+
+## Cambios
+
+### Version 0.5 (Noviembre 23, 2018)
+Primera versión alfa funcional
+- Considera la ejecución de procesos simples.
+- Creación de instancias basadas en tareas.
+
+
+## Instalación
+
+Requiere PHP 5.6, Python 3.6 y RabbitMQ, con extensiones extras:
+
+### Instalación en Windows
+TODO!
+#### Instalación de entorno PHP
+TODO!
+#### Instalación de entorno Python
+TODO!
+#### Ejecución en Windows
+TODO!
+### Instalación en Linux
+TODO!
+#### Instalación de entorno PHP
+TODO!
+#### Instalación de entorno Python
+TODO!
+#### Ejecución en Linux
+TODO!
