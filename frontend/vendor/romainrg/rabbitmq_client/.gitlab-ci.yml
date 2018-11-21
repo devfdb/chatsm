@@ -1,0 +1,52 @@
+image: docker:17.06
+
+stages:
+    - test
+
+before_script:
+    - find . -type d -exec chmod 755 {} +
+    - find . -type f -exec chmod 644 {} +
+    - find ./ci -type f -exec chmod 755 {} +
+
+test-codereview:
+    stage: test
+    environment: testing
+    script:
+        - docker run --rm --tty --volume "$PWD":/code --volume /var/run/docker.sock:/var/run/docker.sock --volume /tmp/cc:/tmp/cc --env CODECLIMATE_CODE="$PWD" --env CONTAINER_TIMEOUT_SECONDS=3600 codeclimate/codeclimate:0.78.1 analyze -e phpmd -e eslint -f html > codereview.html && cat codereview.html | grep -i 'no issue'
+    artifacts:
+        when: on_failure
+        paths: [codereview.html]
+    only:
+        - testing
+
+test-unitary:
+    stage: test
+    environment: testing
+    before_script:
+        - find . -type d -exec chmod 755 {} +
+        - find . -type f -exec chmod 644 {} +
+        - find ./ci -type f -exec chmod 755 {} +
+    script:
+        - docker run --rm --detach --name rabbitmqtest -d -p 5673:5672 -p 15672:15672 rabbitmq:3.6-management
+        - mkdir -v test
+        - cp -pv composer.json test
+        - cp -rpv ci test
+        - docker run --rm --tty --volume $PWD:/app --workdir /app/test composer:1.7 install --ignore-platform-reqs --no-scripts --no-progress
+        - cp -rpv test/vendor/codeigniter/framework/* test
+        - sed -i 's~$config\[\x27composer_autoload\x27\] = FALSE;~$config["composer_autoload"] = FCPATH."vendor/autoload.php";~' test/application/config/config.php
+        - mkdir -p test/vendor/romainrg/rabbitmq_client
+        - cp -rpv libraries test/vendor/romainrg/rabbitmq_client
+        - cp -rpv config test/vendor/romainrg/rabbitmq_client
+        - cp -rpv helpers test/vendor/romainrg/rabbitmq_client
+        - cp -rpv tests test/vendor/romainrg/rabbitmq_client
+        - cp -pv controllers/Unity.php test/application/controllers
+        - cp -rpv config test/application
+        - cp -rpv tests test/application
+        - docker run --rm --tty -e CI_ENV=testing --entrypoint="ci/docker_entrypoint_php.sh" --volume $PWD:/app --workdir /app/test php:7.1 php /app/test/index.php unity runComplete
+    after_script:
+        - docker ps --format '{{.Names}}' | grep "^rabbitmqtest" | awk '{print $1}' | xargs -I {} docker stop {} | xargs -I {} docker rm -v {}
+    artifacts:
+        when: on_failure
+        paths: [test/result_test.html]
+    only:
+        - testing

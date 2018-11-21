@@ -35,6 +35,11 @@
             </div>
 
           </span>
+            <div class="node-controls">
+                <a href="#" @mouseup.stop="editNode(node)">Edit</a>
+                <a href="#" @mouseup.stop="removeNode(node)">Remove</a>
+                <a href="#" @mouseup.stop="addChildNode(node)">Add child</a>
+            </div>
             <!-- <span v-else class="viewer-item__prop">
               <span class="viewer-item__key">{{ node.text }}</span>
               :
@@ -98,10 +103,26 @@
                 }
                 return arr;
             },
-            getData(){
-               return axios.get('/processes/tree-json')
+            getData() {
+                return axios.get('/processes/tree-json')
 
-            }
+            },
+            editNode(node, e) {
+                node.startEditing()
+                console.log(node)
+            },
+
+            removeNode(node) {
+                if (confirm('Are you sure?')) {
+                    node.remove()
+                }
+            },
+
+            addChildNode(node) {
+                if (node.enabled()) {
+                    node.append('New Node')
+                }
+            },
         }
     });
 
