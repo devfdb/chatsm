@@ -2,17 +2,21 @@
 
 class Processes extends CI_Controller
 {
+    public $reply;
 
     function __construct()
     {
         parent::__construct();
         $this->load->library('Template');
         $this->load->library('form_validation');
+        $this->load->library('rabbitmq_client');
         $this->load->helper('form');
         $this->load->library('form_validation');
         $this->load->model('user');
         $this->load->model('process');
         $this->load->model('file');
+
+        $this->reply = array();
 
     }
 
@@ -114,21 +118,19 @@ class Processes extends CI_Controller
             'input' => 'algo.csv',
             'processes' => array(
                 array('id' => '1',
-                    'task'  => 'clean',
-                    'params' => array(),
+                    'task'  => array(
+                        'name' => 'clean',
+                        'params' => array()),
                     'children' => array(
                         array('id' => '2',
-                            'task'  => 'clean',
-                            'params' => array(),
+                            'task'  => array(
+                                'name' =>'clean',
+                                'params' => array()),
                             'children' => array(
                             ))
                     ))
             )
         );
-
-
-
-
 
         echo json_encode($arr);
     }
@@ -195,5 +197,19 @@ class Processes extends CI_Controller
         $nodes = $this->process->select_parents($id);
         $this->parse_recursive($nodes, $arr, $id);
         echo json_encode($arr);
+    }
+
+    public function run_process()
+    {
+        //Todo Completar
+        $this->rabbitmq_client->push_with_response('task', $data, $params);
+    }
+
+    public function process_listen()
+    {
+        $this->rabiitmq_client->pull('task',false,function ($message) {
+
+            array_push($this->reply, $message->body);
+        });
     }
 }
