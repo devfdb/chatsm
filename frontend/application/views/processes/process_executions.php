@@ -47,23 +47,48 @@
                     </tbody>
                 </table>
             </div>
-            <a href="/processes" class="btn btn-primary">Crear nueva ejecución</a>
-            <a href="/processes" class="btn btn-primary">Actualizar ejecuciones</a>
         </div>
     </div>
 </div>
 
+<script src="//cdnjs.cloudflare.com/ajax/libs/vue/2.1.6/vue.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
 <script>
     new Vue({
         el: '#app',
         data: function () {
             return {
-                
+                input: <?php echo $process_id ?>
             }
         },
         methods: {
             run: function () {
-                alert("Ejecutando")
+                alert("Ejecutando...");
+                var self = this;
+                var data = new FormData();
+                data.append('request', this.input);
+                axios.post('/processes/execute', data)
+                    .then(function (res) {
+                        debugger
+                        if (res.data.response) {
+                            self.output = res.data.content;
+                        }
+                        /* if (res.data.result) {
+                            if (res.data.horas.length > 0) {
+                                self.message = null;
+                                self.horarios_disponibles = res.data.horas;
+                            } else {
+                                self.message = "No hay horarios para la hora seleccionada";
+                            }
+                            self.loading_horario = false;
+                            self.progressLoad = 100;
+
+
+                        } else {
+                            alert("Error al recuperar horas");
+                            self.loading_horario = false;
+                        } */
+                    });
             },
             update: function () {
                 

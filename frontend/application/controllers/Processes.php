@@ -30,8 +30,8 @@ class Processes extends CI_Controller
     {
         // Recibe JSON desde cliente
         $request = $this->input->post('request');
-        $json = str_replace(array("\t", "\n"), "", $request);
-        $data = json_decode($json);
+        #$json = str_replace(array("\t", "\n"), "", $request);
+        #$data = json_decode($json);
 
 
         header('Content-Type: application/json');
