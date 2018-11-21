@@ -117,21 +117,23 @@ class Processes extends CI_Controller
     {
         header('Content-Type: application/json');
         $arr = array(
-            'project' => 'proy',
-            'input' => 'algo.csv',
-            'processes' => array(
-                array('id' => '1',
-                    'task'  => array(
-                        'name' => 'clean',
-                        'params' => array()),
-                    'children' => array(
-                        array('id' => '2',
-                            'task'  => array(
-                                'name' =>'clean',
-                                'params' => array()),
-                            'children' => array(
-                            ))
-                    ))
+            'id' => '5',
+            'name' => 'test1',
+            'data' => array('instance_id' => '1'),
+            'children' => array(
+                array(
+                'id' => '1',
+                'name' => 'test2',
+                'data' => array('instance_id' => '3'),
+                'children' => array(
+                    array(
+                    'id' => '2',
+                    'name' => 'clean',
+                    'data' => array('instance_id' => '4'),
+                    'children' => array(),
+                    )
+                )
+                )
             )
         );
 
@@ -210,7 +212,7 @@ class Processes extends CI_Controller
     {
         //Todo Completar
         $this->rabbitmq_client->push_with_response('task', $data, function ($message){
-            
+
         });
         $this->rabbitmq_client->response;
     }
