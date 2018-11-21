@@ -25,8 +25,8 @@ class Processes extends CI_Controller
     public function execute(){
         // Recibe JSON desde cliente
         $request = $this->input->post('request');
-        $json = str_replace(array("\t", "\n"), "", $request);
-        $data = json_decode($json);
+        #$json = str_replace(array("\t", "\n"), "", $request);
+        #$data = json_decode($json);
 
 
         header('Content-Type: application/json');
@@ -110,6 +110,7 @@ class Processes extends CI_Controller
     public function tree_json(){
         header('Content-Type: application/json');
         $arr = array(
+<<<<<<< HEAD
             'project' => 'proy',
             'input' => 'algo.csv',
             'processes' => array(
@@ -123,6 +124,25 @@ class Processes extends CI_Controller
                             'children' => array(
                             ))
                     ))
+=======
+            'id' => '5',
+            'name' => 'test1',
+            'data' => array('instance_id' => '1'),
+            'children' => array(
+                array(
+                'id' => '1',
+                'name' => 'test2',
+                'data' => array('instance_id' => '3'),
+                'children' => array(
+                    array(
+                    'id' => '2',
+                    'name' => 'clean',
+                    'data' => array('instance_id' => '4'),
+                    'children' => array(),
+                    )
+                )
+                )
+>>>>>>> 321a0ff81b34cd93a88ed61325bb148653764de2
             )
         );
 
@@ -199,6 +219,7 @@ class Processes extends CI_Controller
 
     public function parse_recursive_for_view($nodes, &$arr_ref, $id)
     {
+<<<<<<< HEAD
         foreach($nodes as $item) {
             $task = $this->process->read_task($item['pcn_task_id']);
             $new_process = array(
@@ -215,6 +236,13 @@ class Processes extends CI_Controller
             }
             array_push($arr_ref, $new_process);
         }
+=======
+        //Todo Completar
+        $this->rabbitmq_client->push_with_response('task', $data, function ($message){
+
+        });
+        $this->rabbitmq_client->response;
+>>>>>>> 321a0ff81b34cd93a88ed61325bb148653764de2
     }
 
     public function parse_to_json_for_view($id)
