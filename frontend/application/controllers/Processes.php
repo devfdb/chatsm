@@ -181,7 +181,6 @@ class Processes extends CI_Controller
             array_push($arr['processes'], $new_process);
         }
         array_push($arr['processes'], $new_process);
-        }
     }
 
     public function parse_to_json($id)

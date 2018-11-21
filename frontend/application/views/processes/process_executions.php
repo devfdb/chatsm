@@ -7,11 +7,11 @@
                     <thead>
                     <tr>
                         <th>
-                            UID
+                            UUID
                         </th>
 
                         <th>
-                            Progress
+                            Progreso
                         </th>
                         <th>
                             Tiempo transcurrido desde inicio
@@ -26,7 +26,7 @@
                         <td class="font-weight-medium">
                             <?php echo uniqid(); ?>
                         </td>
-                                           <td class="text-danger"> En ejecución
+                        <td class="text-danger">En ejecución
                             <i class="mdi mdi-play-protected-content"></i>
                         </td>
                         <td>
@@ -44,6 +44,8 @@
                     </tbody>
                 </table>
             </div>
+            <a href="/processes" class="btn btn-primary">Crear nueva ejecución</a>
+            <a href="/processes" class="btn btn-primary">Actualizar ejecuciones</a>
         </div>
     </div>
 </div>
