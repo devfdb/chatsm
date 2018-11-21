@@ -158,14 +158,18 @@ class Rabbitmq_client {
      * @param mixed(string/array) $data Data to push
      * @param array $params Additional paramentes
      */
-    public function push_with_response($queue = null, $data = null, $params = array())
+    public function push_with_response($queue = null, $data = null, $callback = array())
     {
 
         $this->corr_id = uniqid();
 
         list($callback_queue, ,) = $this->channel->queue_declare('', false, false, true, false );
 
-        $this->channel->basic_consume($callback_queue, '', false, false, false, false, array($this, 'onResponse'));
+        $this->channel->basic_consume($callback_queue, '', false, false, false, false, function ($response) use ($callback) {
+            if ($response->get('correlation_id') == $this->corr_id) {
+                $callback($response->body);
+            }
+        });
 
         // Extra parammeters to be able to receive a response
         $params = array(
@@ -189,20 +193,13 @@ class Rabbitmq_client {
         ($this->show_output) ? rabbitmq_client_output('Pushing "' . $item->body . '" to "' . $queue . '" queue -> OK', null, '+') : true;
     }
 
-    /**
-     * Verify if the response is the one for the message send
-     *
-     * @author Eduardo Orellana
-     *
-     * @param AMQPMessage $rep response message
-     */
-
-    public function onResponse($rep)
+    function onResponse($rep)
     {
         if ($rep->get('correlation_id') == $this->corr_id) {
             $this->response = $rep->body;
         }
     }
+
 
     /**
      * Stop the consumming of the channel

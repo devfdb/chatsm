@@ -209,7 +209,10 @@ class Processes extends CI_Controller
     public function run_process()
     {
         //Todo Completar
-        $this->rabbitmq_client->push_with_response('task', $data, $params);
+        $this->rabbitmq_client->push_with_response('task', $data, function ($message){
+            
+        });
+        $this->rabbitmq_client->response;
     }
 
     public function process_listen()
