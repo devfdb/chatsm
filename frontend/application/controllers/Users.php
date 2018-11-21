@@ -64,6 +64,7 @@ class Users extends CI_Controller
 
                     $this->session->set_userdata('isUserLoggedIn', TRUE);
                     $this->session->set_userdata('userId', $checkLogin['usr_id']);
+                    $this->session->set_userdata('userName', $checkLogin['usr_name']);
                     redirect('dashboard');
                 } else {
                     $data['error_msg'] = 'Su usuario o contraseña es incorrecto';
@@ -119,6 +120,7 @@ class Users extends CI_Controller
         $this->session->unset_userdata('isUserLoggedIn');
         $this->session->unset_userdata('userId');
         $this->session->unset_userdata('projectId');
+        $this->session->unset_userdata('userName');
         $this->session->sess_destroy();
         redirect('users/login/');
     }

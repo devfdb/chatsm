@@ -159,7 +159,7 @@ class Processes extends CI_Controller
         //}
     }
 
-    public function parse_recursive($nodes, $arr, $id)
+    public function parse_recursive($nodes, &$arr, $id)
     {
         if ($nodes != NULL) {
             foreach ($nodes as $item) {
@@ -180,6 +180,8 @@ class Processes extends CI_Controller
             }
             array_push($arr['processes'], $new_process);
         }
+        array_push($arr['processes'], $new_process);
+        }
     }
 
     public function parse_to_json($id)
@@ -188,7 +190,8 @@ class Processes extends CI_Controller
         header('Content-Type: application/json');
         $arr = array(
             'project' => 'proy',
-            'input' => $curr_process['prc_input']
+            'input' => $curr_process['prc_input'],
+            'processes' => array()
         );
         $nodes = $this->process->select_parents($id);
         $this->parse_recursive($nodes, $arr, $id);
