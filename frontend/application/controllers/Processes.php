@@ -210,11 +210,22 @@ class Processes extends CI_Controller
 
     public function run_process()
     {
-        //Todo Completar
-        $this->rabbitmq_client->push_with_response('task', $data, function ($message){
-
-        });
-        $this->rabbitmq_client->response;
+        foreach($nodes as $item) {
+            $task = $this->process->read_task($item['pcn_task_id']);
+            $new_process = array(
+                'id' => $item['pcn_id'],
+                'name' => $task['ins_name'],
+                'data' => array(
+                    'instance_id' => $task['ins_id']
+                ),
+                'children' => array()
+            );
+            $children = $this->process->select_children($id, $item['pcn_id']);
+            if($children != null) {
+                $this->parse_recursive_for_view($children, $new_process['children'], $id);
+            }
+            array_push($arr_ref, $new_process);
+        }
     }
 
     public function process_listen()
