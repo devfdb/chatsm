@@ -1,7 +1,11 @@
 <div class="col-lg-12 grid-margin">
-    <div class="card">
+    <div id="app" class="card">
         <div class="card-body">
             <h4 class="card-title">Ejecuciones del proceso: Lematización y corrección ortografica 1</h4>
+            <div class="card-body">
+                <button @click="run()">Ejecutar</button>
+                <button @click="update()">Actualizar</button>
+            </div>
             <div class="table-responsive">
                 <table class="table table-bordered">
                     <thead>
@@ -34,7 +38,6 @@
                         </td>
                         <td>
                             <div class="btn-group" role="group" aria-label="Operaciones">
-
                                 <a title="Matar ejecución" href="#" class="btn btn-outline-secondary">
                                     <i class="mdi mdi-delete"></i>
                                 </a>
@@ -49,3 +52,22 @@
         </div>
     </div>
 </div>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                
+            }
+        },
+        methods: {
+            run: function () {
+                alert("Ejecutando")
+            },
+            update: function () {
+                
+            }
+        }
+    })
+</script>

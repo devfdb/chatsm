@@ -5,11 +5,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
 
 <div class="row">
-    <div class="col-6" id="app-tree">
-       <!--  <liquor-json-viewer :json="json.processes"></liquor-json-viewer> -->
-
-        <tree :options="treeOptions" >
-        </tree>
+    <div class="col-6" id="app-tree" v-if="json">
+        <liquor-json-viewer></liquor-json-viewer>
         <div class="card">
 
             Proyecto: {{json.project}} <br/><br/>
@@ -51,7 +48,7 @@
                 <div class="card">
                     <div class="card-content" v-if="selectednode && selectednode.text && selectednode.data">
                         Nodo ID : {{selectednode.text}} <br/>
-                        Nombre de tarea : {{selectednode.data.name}} <br/>
+                        Nombre de tarea : {{ selectednode.data.name }} <br/>
                         Parámetros :
                         <ul>
                             <li v-for="item in toList(selectednode.data.params)">
@@ -70,16 +67,21 @@
     Vue.component('liquor-json-viewer', {
         template: '#liquor-json-viewer',
 
-        props: ['json'],
-
         data() {
             return {
+                json: {},
                 selectednode: null,
-                treeData: this.json,
-
+                treeData: this.getData().then(r => r.data.processes),
+                treeOptions: {
+                    checkbox: false,
+                    propertyNames: {
+                        text: 'id',
+                        children: 'children',
+                        data: 'task'
+                    }
+                }
             }
         },
-
         methods: {
             ss: function (et) {
                 this.selectednode = '111';
@@ -95,69 +97,64 @@
                     arr.push({key: key, value: list[key]})
                 }
                 return arr;
+            },
+            getData(){
+               return axios.get('/processes/tree-json')
+
             }
         }
-    })
+    });
 
 
     new Vue({
         el: '#app-tree',
-        data: function () {
+        data() {
             return {
-                treeOptions: {
-                    checkbox: false,
-                    propertyNames: {
-                        text: 'id',
-                        children: 'children',
-                        data: 'task'
-                    },
-                    minFetchDelay: 1000,
-                    fetchData(node) {
-                        return axios.get('/processes/tree-json');
-                    }
-                },
                 varx: 'ho',
-                json: {
-                    "project": "proy",
-                    "input": "algo.csv",
-                    "processes": [{
-                        "id": 1,
-                        "task": {
-                            "name": "clean",
-                            "params": {}
-                        },
-                        "children": [{
-                            "id": 2,
-                            "task": {
-                                "name": "spellcheck",
-                                "params": {
-                                    "corpus_path": "V1"
-                                }
-                            },
-                            "children": []
-                        },
-                            {
-                                "id": 3,
-                                "task": {
-                                    "name": "replace",
-                                    "params": {
-                                        "file_path": "remplazo2.csv"
-                                    }
-                                },
-                                "children": []
-                            }
-                        ]
-                    }]
-                }
+                // json: {
+                //     "project": "proy",
+                //     "input": "algo.csv",
+                //     "processes": [{
+                //         "id": 1,
+                //         "task": {
+                //             "name": "clean",
+                //             "params": {}
+                //         },
+                //         "children": [{
+                //             "id": 2,
+                //             "task": {
+                //                 "name": "spellcheck",
+                //                 "params": {
+                //                     "corpus_path": "V1"
+                //                 }
+                //             },
+                //             "children": []
+                //         },
+                //             {
+                //                 "id": 3,
+                //                 "task": {
+                //                     "name": "replace",
+                //                     "params": {
+                //                         "file_path": "remplazo2.csv"
+                //                     }
+                //                 },
+                //                 "children": []
+                //             }
+                //         ]
+                //     }]
+                // }
+                json: {}
+
             }
+
+
         },
-        mounted() {
+        beforeMount() {
             // TODO: Hay que recibir el arbol desde método en PHP
 
             var self = this;
             axios.get('/processes/tree-json')
                 .then(function (response) {
-                    // handle success
                     self.json = response.data;
                     console.log(response.data)
                 })

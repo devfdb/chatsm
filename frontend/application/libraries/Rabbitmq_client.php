@@ -42,6 +42,28 @@ class Rabbitmq_client {
     public $show_output;
 
     /**
+     * The following variables are custom made by Eduardo Orellana
+     */
+    /**
+     * Correlation Id of the messages
+     * @var uniqid
+     */
+    private $corr_id;
+
+    /**
+     * The message of the response
+     * @var string
+     */
+    public $response;
+
+    /**
+     * The message from queue
+     * @var AMQPMessage
+     */
+    public $message;
+
+
+    /**
      * Constructor
      *
      * @author Romain GALLIEN <romaingallien.rg@gmail.com>
@@ -128,6 +150,71 @@ class Rabbitmq_client {
     }
 
     /**
+     * Push an element in the specified queue and wait for a response
+     *
+     * @author Eduardo Orellana
+     *
+     * @param string $queue Specified queue
+     * @param mixed(string/array) $data Data to push
+     * @param array $params Additional paramentes
+     */
+    public function push_with_response($queue = null, $data = null, $params = array())
+    {
+
+        $this->corr_id = uniqid();
+
+        list($callback_queue, ,) = $this->channel->queue_declare('', false, false, true, false );
+
+        $this->channel->basic_consume($callback_queue, '', false, false, false, false, array($this, 'onResponse'));
+
+        // Extra parammeters to be able to receive a response
+        $params = array(
+            'correlation_id' => $this->corr_id,
+            'reply_to' => $callback_queue
+        );
+
+        // If the information given are in an array, we convert it in json format
+        $data = (is_array($data)) ? json_encode($data) : $data;
+
+        // Create a new instance of message then push it into the selected queue
+        $item = new PhpAmqpLib\Message\AMQPMessage($data, $params);
+
+
+        // Publish to the queue
+        $this->channel->basic_publish($item, '', $queue);
+        while (!$this->response) {
+            $this->channel->wait();
+        }
+        // Output
+        ($this->show_output) ? rabbitmq_client_output('Pushing "' . $item->body . '" to "' . $queue . '" queue -> OK', null, '+') : true;
+    }
+
+    /**
+     * Verify if the response is the one for the message send
+     *
+     * @author Eduardo Orellana
+     *
+     * @param AMQPMessage $rep response message
+     */
+
+    public function onResponse($rep)
+    {
+        if ($rep->get('correlation_id') == $this->corr_id) {
+            $this->response = $rep->body;
+        }
+    }
+
+    /**
+     * Stop the consumming of the channel
+     * @author Eduardo Orellana
+     */
+    public function stop()
+    {
+        $this->channel->basic_cancel($this->message->delivery_info['consumer_tag']);
+    }
+
+
+    /**
      * Get the items from the specified queue
      *
      * @author Romain GALLIEN <romaingallien.rg@gmail.com>
@@ -158,6 +245,7 @@ class Rabbitmq_client {
         $this->channel->basic_consume($queue, '', false, false, false, false, function ($message) use ($callback, $queue, $permanent, $params) {
             try {
                 // Call application treatment
+                $this->message = $message;
                 $callback($message);
             } catch (Exception $e) {
                 error_log($e->getMessage());
@@ -172,7 +260,11 @@ class Rabbitmq_client {
 
         // Continue the process of CLI command, waiting for others instructions
         while (count($this->channel->callbacks)) {
-            $this->channel->wait($this->config['allowed_methods'], $this->config['non_blocking'], $this->config['timeout']);
+            try {
+                $this->channel->wait($this->config['allowed_methods'], $this->config['non_blocking'], $this->config['timeout']);
+            } catch (\PhpAmqpLib\Exception\AMQPTimeoutException $e) {
+                $this->stop();
+            }
         }
     }
 
