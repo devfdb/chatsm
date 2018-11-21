@@ -22,10 +22,21 @@ if (isset($sessdata)) {
         </li>
 
         <li class="nav-item">
-            <a class="nav-link" href="/projects">
+            <a a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="true" aria-controls="ui-basic">
                 <i class="menu-icon mdi mdi-file"></i>
                 <span class="menu-title">Proyectos</span>
+                <i class="menu-arrow"></i>
             </a>
+            <div class="collapse" id="ui-basic" style="">
+                <ul class="nav flex-column sub-menu">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects">Mis proyectos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/projects/shared">Compartidos conmigo</a>
+                    </li>
+                </ul>
+            </div>
         </li>
 
         <?php if (isset($project_id)) { ?>

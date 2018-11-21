@@ -37,7 +37,7 @@ class Task_instances extends CI_Controller
 
         if($types) {
             foreach($types as $item) {
-                $arr[$item['inst_id']] = $item['inst_name'];
+                $arr[$item['tst_id']] = $item['tst_name'];
             }
         }
         return $arr;
@@ -70,7 +70,7 @@ class Task_instances extends CI_Controller
                 $data = array(
                     'ins_name' => $this->input->post('name'),
                     'ins_type_id' => $this->input->post('type_id'),
-                    'ins_creator_id' => '1'
+                    'ins_owner' => $this->session->userdata('userId')
                 );
                 $result = $this->task_instance->insert($data);
                 if ($result == TRUE) {

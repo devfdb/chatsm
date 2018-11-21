@@ -70,6 +70,42 @@ class Process extends CI_Model
         }
     }
 
+    public function select_name($id)
+    {
+        $this->db->select('tst_name');
+        $this->db->distinct(TRUE);
+        $this->db->from('task_type');
+        $this->db->where('tst_id', $id);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            $result = $query->result_array()[0];
+            if ($result != null) {
+                return $result;
+            }
+        } else {
+            return array();
+        }
+    }
+
+    public function select_params($id)
+    {
+        $this->db->select('itp_name, inp_parameter_value');
+        $this->db->from('task_instance_parameter');
+        $this->db->join('task_type_parameter', 'inp_parameter_type_id=itp_id');
+        $this->db->where('inp_instance_id', $id);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            $results = $query->result_array();
+            $arr = array();
+            foreach ($results as $val){
+                $arr[$val['itp_name']] = $val['inp_parameter_value'];
+                }
+            return $arr;
+        } else {
+            return array();
+        }
+    }
+
     public function table()
     {
         $this->db->select('*');
@@ -79,7 +115,7 @@ class Process extends CI_Model
         if ($query->num_rows() > 0) {
             return $query->result_array();
         } else {
-            return [];
+            return array();
         }
     }
 

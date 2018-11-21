@@ -26,7 +26,8 @@ class Processes extends CI_Controller
         $this->template->load('layout_admin', 'processes/process_index', $data);
     }
 
-    public function execute(){
+    public function execute()
+    {
         // Recibe JSON desde cliente
         $request = $this->input->post('request');
         $json = str_replace(array("\t", "\n"), "", $request);
@@ -45,13 +46,13 @@ class Processes extends CI_Controller
     public function executions($process_id)
     {
         $project_folder = 'proy';
-        $dir = '../repository/'.$project_folder.'/';
+        $dir = '../repository/' . $project_folder . '/';
 
         $file_list = [];
         if (is_dir($dir)) {
             if ($dh = opendir($dir)) {
                 while (($file = readdir($dh)) !== false) {
-                    $file_list[] = array('filename'=> $file, 'filetype' => filetype($dir . $file));
+                    $file_list[] = array('filename' => $file, 'filetype' => filetype($dir . $file));
                 }
                 closedir($dh);
             }
@@ -65,7 +66,8 @@ class Processes extends CI_Controller
     }
 
 
-    private function execute_process(){
+    private function execute_process()
+    {
 
     }
 
@@ -111,7 +113,8 @@ class Processes extends CI_Controller
         $this->template->load('layout_admin', 'processes/process_edit', $data);
     }
 
-    public function tree_json(){
+    public function tree_json()
+    {
         header('Content-Type: application/json');
         $arr = array(
             'project' => 'proy',
@@ -130,7 +133,6 @@ class Processes extends CI_Controller
                             ))
                     ))
             )
-        );
 
         echo json_encode($arr);
     }
@@ -165,24 +167,28 @@ class Processes extends CI_Controller
         //}
     }
 
-    public function parse_recursive($nodes, $arr, $id)
+    public function parse_recursive($nodes, &$arr, $id)
     {
-        foreach($nodes as $item) {
-            $task = $this->process->read_task($item['pcn_task_id']);
-            $new_process = array(
-                'id' => $item['pcn_id'],
-                'task' => array(
-                    'name' => $task['ins_name'],
-                    'params' => array(
-                        'x' => 0
+        if ($nodes != NULL) {
+            foreach ($nodes as $item) {
+                $task = $this->process->read_task($item['pcn_task_id']);
+                $new_process = array(
+                    'id' => $item['pcn_id'],
+                    'task' => array(
+                        'name' => $task['ins_name'],
+                        'params' => array(
+                            'x' => 0
+                        )
                     )
-                )
-            );
+                );
+            }
             $children = $this->process->select_children($item['pcn_id'], $id);
-            if(!$children != null) {
+            if (!$children != null) {
                 $this->parse_recursive($children, $arr, $id);
             }
             array_push($arr['processes'], $new_process);
+        }
+        array_push($arr['processes'], $new_process);
         }
     }
 
@@ -192,7 +198,8 @@ class Processes extends CI_Controller
         header('Content-Type: application/json');
         $arr = array(
             'project' => 'proy',
-            'input' => $curr_process['prc_input']
+            'input' => $curr_process['prc_input'],
+            'processes' => array()
         );
         $nodes = $this->process->select_parents($id);
         $this->parse_recursive($nodes, $arr, $id);

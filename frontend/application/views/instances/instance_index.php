@@ -36,8 +36,8 @@
                         <tr>
                             <td><?php echo $item['ins_name'] ?></td>
                             <td><?php echo $type_table[$item['ins_type_id']] ?></td>
-                            <td><?php echo $item['ins_creator_id'] ?></td>
-                            <td><?php echo $item['ins_created_at'] ?></td>
+                            <td><?php echo $item['ins_owner'] ?></td>
+                            <td><?php echo $item['ins_owner'] ?></td>
                             <td><?php echo $item['ins_last_modified'] ?></td>
                             <td>
                                 <div class="btn-group" role="group" aria-label="Operaciones">

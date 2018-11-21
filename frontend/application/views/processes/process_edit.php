@@ -72,14 +72,7 @@
                 json: {},
                 selectednode: null,
                 treeData: this.getData().then(r => r.data.processes),
-                treeOptions: {
-                    checkbox: false,
-                    propertyNames: {
-                        text: 'id',
-                        children: 'children',
-                        data: 'task'
-                    }
-                }
+
             }
         },
         methods: {
@@ -110,6 +103,18 @@
         el: '#app-tree',
         data: function () {
             return {
+                treeOptions: {
+                    checkbox: false,
+                    propertyNames: {
+                        text: 'id',
+                        children: 'children',
+                        data: 'task'
+                    },
+                    minFetchDelay: 1000,
+                    fetchData(node) {
+                        return axios.get('/processes/tree-json');
+                    }
+                },
                 varx: 'ho',
                 // json: {
                 //     "project": "proy",
