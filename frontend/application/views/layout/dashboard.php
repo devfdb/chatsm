@@ -79,7 +79,7 @@
             <div class="card-body">
                 <div class="weather-date-location">
                     <h3><?php
-                        setlocale(LC_ALL,"es_ES@euro","es_ES","esp");
+                        setlocale(LC_ALL, "esp" ) or die("Not found"); # "es_ES@euro", "esp"
                         echo ucwords(strftime("%A"));
                         ?></h3>
                     <p class="text-gray">

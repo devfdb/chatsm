@@ -2,21 +2,17 @@
 
 class Processes extends CI_Controller
 {
-    public $reply;
 
     function __construct()
     {
         parent::__construct();
         $this->load->library('Template');
         $this->load->library('form_validation');
-        $this->load->library('rabbitmq_client');
         $this->load->helper('form');
         $this->load->library('form_validation');
         $this->load->model('user');
         $this->load->model('process');
         $this->load->model('file');
-
-        $this->reply = array();
 
     }
 
@@ -26,8 +22,7 @@ class Processes extends CI_Controller
         $this->template->load('layout_admin', 'processes/process_index', $data);
     }
 
-    public function execute()
-    {
+    public function execute(){
         // Recibe JSON desde cliente
         $request = $this->input->post('request');
         $json = str_replace(array("\t", "\n"), "", $request);
@@ -46,13 +41,13 @@ class Processes extends CI_Controller
     public function executions($process_id)
     {
         $project_folder = 'proy';
-        $dir = '../repository/' . $project_folder . '/';
+        $dir = '../repository/'.$project_folder.'/';
 
         $file_list = [];
         if (is_dir($dir)) {
             if ($dh = opendir($dir)) {
                 while (($file = readdir($dh)) !== false) {
-                    $file_list[] = array('filename' => $file, 'filetype' => filetype($dir . $file));
+                    $file_list[] = array('filename'=> $file, 'filetype' => filetype($dir . $file));
                 }
                 closedir($dh);
             }
@@ -66,8 +61,7 @@ class Processes extends CI_Controller
     }
 
 
-    private function execute_process()
-    {
+    private function execute_process(){
 
     }
 
@@ -113,27 +107,28 @@ class Processes extends CI_Controller
         $this->template->load('layout_admin', 'processes/process_edit', $data);
     }
 
-    public function tree_json()
-    {
+    public function tree_json(){
         header('Content-Type: application/json');
         $arr = array(
             'project' => 'proy',
             'input' => 'algo.csv',
             'processes' => array(
                 array('id' => '1',
-                    'task'  => array(
-                        'name' => 'clean',
-                        'params' => array()),
+                    'task'  => 'clean',
+                    'params' => array(),
                     'children' => array(
                         array('id' => '2',
-                            'task'  => array(
-                                'name' =>'clean',
-                                'params' => array()),
+                            'task'  => 'clean',
+                            'params' => array(),
                             'children' => array(
                             ))
                     ))
             )
         );
+
+
+
+
 
         echo json_encode($arr);
     }
@@ -168,58 +163,69 @@ class Processes extends CI_Controller
         //}
     }
 
-    public function parse_recursive($nodes, &$arr, $id)
+    public function parse_recursive_for_input($nodes, &$arr_ref, $id)
     {
-        if ($nodes != NULL) {
-            foreach ($nodes as $item) {
-                $task = $this->process->read_task($item['pcn_task_id']);
-                $new_process = array(
-                    'id' => $item['pcn_id'],
-                    'task' => array(
-                        'name' => $task['ins_name'],
-                        'params' => array(
-                            'x' => 0
-                        )
-                    )
-                );
+        foreach($nodes as $item) {
+            $task = $this->process->read_task($item['pcn_task_id']);
+            $new_process = array(
+                'id' => $item['pcn_id'],
+                'task' => array(
+                    'name' => $this->process->select_type_name($task['ins_type_id'])['tst_name'],
+                    'params' => $this->process->select_params($task['ins_id'])
+                ),
+                'children' => array()
+            );
+            $children = $this->process->select_children($id, $item['pcn_id']);
+            if($children != null) {
+                $this->parse_recursive_for_input($children, $new_process['children'], $id);
             }
-            $children = $this->process->select_children($item['pcn_id'], $id);
-            if (!$children != null) {
-                $this->parse_recursive($children, $arr, $id);
+            array_push($arr_ref, $new_process);
             }
-            array_push($arr['processes'], $new_process);
-        }
-        array_push($arr['processes'], $new_process);
     }
 
-    public function parse_to_json($id)
+    public function parse_to_json_for_input($id)
     {
         $curr_process = $this->process->read($id);
         header('Content-Type: application/json');
         $arr = array(
             'project' => 'proy',
             'input' => $curr_process['prc_input'],
-            'processes' => array()
+            'processes' => array(),
         );
         $nodes = $this->process->select_parents($id);
-        $this->parse_recursive($nodes, $arr, $id);
+        $this->parse_recursive_for_view($nodes, $arr['processes'], $id);
         echo json_encode($arr);
     }
 
-    public function run_process()
+    public function parse_recursive_for_view($nodes, &$arr_ref, $id)
     {
-        //Todo Completar
-        $this->rabbitmq_client->push_with_response('task', $data, function ($message){
-            
-        });
-        $this->rabbitmq_client->response;
+        foreach($nodes as $item) {
+            $task = $this->process->read_task($item['pcn_task_id']);
+            $new_process = array(
+                'id' => $item['pcn_id'],
+                'name' => $task['ins_name'],
+                'data' => array(
+                    'instance_id' => $task['ins_id']
+                ),
+                'children' => array()
+            );
+            $children = $this->process->select_children($id, $item['pcn_id']);
+            if($children != null) {
+                $this->parse_recursive_for_view($children, $new_process['children'], $id);
+            }
+            array_push($arr_ref, $new_process);
+        }
     }
 
-    public function process_listen()
+    public function parse_to_json_for_view($id)
     {
-        $this->rabiitmq_client->pull('task',false,function ($message) {
-
-            array_push($this->reply, $message->body);
-        });
+        $curr_process = $this->process->read($id);
+        header('Content-Type: application/json');
+        $arr = array(
+            'input' => array()
+        ); # Array vacio que contendra al padre.
+        $nodes = $this->process->select_parents($id);
+        $this->parse_recursive_for_view($nodes, $arr['input'], $id);
+        echo json_encode($arr);
     }
 }
