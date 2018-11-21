@@ -15,6 +15,7 @@ class Processes extends CI_Controller
         $this->load->model('user');
         $this->load->model('process');
         $this->load->model('file');
+        $this->load->model('execution');
 
         $this->reply = array();
 
@@ -30,9 +31,21 @@ class Processes extends CI_Controller
     {
         // Recibe JSON desde cliente
         $request = $this->input->post('request');
-        #$json = str_replace(array("\t", "\n"), "", $request);
-        #$data = json_decode($json);
-
+        $json = file_get_contents('../backend/testdata.json');
+        $json = str_replace(array("\r", "\n"), "", $json);
+        $self = $this;
+        $this->rabbitmq_client->push_with_response('tasks', $json, function ($message) use ($self, $request){
+            $receive = json_decode($message);
+            echo $receive['result'];
+            if($receive['result'] == 'processing')
+            {
+                $data['exe_id'] = $receive['data']['id_execution'];
+                $data['exe_status'] = $receive['result'];
+                $data['exe_process_id'] = $request;
+                $self->execution->insert($data);
+            }
+        });
+        $this->rabbitmq_client->response;
 
         header('Content-Type: application/json');
         $arr = array(
@@ -40,7 +53,6 @@ class Processes extends CI_Controller
             'content' => array('type' => 'nonaa')
         );
         echo json_encode($arr);
-
     }
 
     public function executions($process_id)
