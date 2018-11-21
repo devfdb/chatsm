@@ -56,28 +56,33 @@ def process(proc, epoch, project, _input, first):
         task = proc['task']
         # Llama la tarea correspondiente a la tarea especificada.
         if task['name'] == 'clean':
+            task['inicio'] = time.time()
             print('Cleaning...')
             c = service.Cleaner(rout, os.path.join(output_route, output_name), task['params'])
             del c
+            task['termino'] = time.time()
             # Adjunta el nombre del archivo generado al json, en el campo 'output'
             task['output'] = output_name
             # Reemplaza la variable _input con el valor de output, en caso de que existiese una tarea hija
             _input = output_name
             print(_input)
         if task['name'] == 'replace':
-            print(os.getcwd())
+            task['inicio'] = time.time()
             print('Replacing...')
             output_name = 'replace_' + str(proc['id']) + '.csv'
             r = service.Replacer(rout, os.path.join(output_route, output_name), project, task['params'])
             del r
+            task['termino'] = time.time()
             task['output'] = output_name
             _input = output_name
             print(_input)
         if task['name'] == 'spellcheck':
+            task['inicio'] = time.time()
             print('Spellchecking...')
             output_name = 'spellcheck_' + str(proc['id']) + '.csv'
             s = service.SpellChecker(rout, os.path.join(output_route, output_name), project, task['params'])
             del s
+            task['termino'] = time.time()
             task['output'] = output_name
             _input = output_name
             print(_input)

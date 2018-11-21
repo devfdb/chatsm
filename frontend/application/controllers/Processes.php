@@ -107,9 +107,10 @@ class Processes extends CI_Controller
         }
     }
 
-    public function edit()
+    public function edit($id)
     {
         $data['file_list'] = $this->file->table_select();
+        $data['id'] = $id;
         $this->template->load('layout_admin', 'processes/process_edit', $data);
     }
 

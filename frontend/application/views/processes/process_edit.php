@@ -5,12 +5,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
 
 <div class="row">
-    <div class="col-6" id="app-tree" v-if="json">
+    <div class="col-6" id="app-tree">
         <liquor-json-viewer></liquor-json-viewer>
-        <div class="card">
-            Proyecto: {{json.project}} <br/><br/>
-            Input: {{json.input}} <br/><br/>
-        </div>
     </div>
 </div>
 
@@ -20,15 +16,16 @@
         <span slot-scope="{ node }" class="viewer-item" :class="[node.data.type]">
           <span class="viewer-item__key">
            <div style="border: 1px solid black; padding: 5px; background: white; border-radius: 5px; width: 350px">
-              {{ node.text }}
-                <span v-if="node.collapsed()">
-              <template v-if="node.data.type == 'array'">
-                [ {{ node.children.length }} ]
-              </template>
-              <template v-else>
-                { {{ node.children.length }} }
-              </template>
-            </span>
+               Id: {{ node.id }} <br>
+               Nombre: {{ node.text }} <br>
+<!--               <span v-if="node.collapsed()">-->
+<!--                  <template v-if="node.data.type == 'array'">-->
+<!--                    [ {{ node.children.length }} ]-->
+<!--                  </template>-->
+<!--                  <template v-else>-->
+<!--                    { {{ node.children.length }} }-->
+<!--                  </template>-->
+<!--                </span>-->
             </div>
           </span>
             <div class="node-controls">
@@ -49,7 +46,7 @@
                     <div class="card-content" v-if="selectednode && selectednode.text && selectednode.data">
                         Nodo ID : {{selectednode.id}} <br/>
                         Nombre de tarea : {{ selectednode.text }} <br/>
-                        Instancia: <select name="instance" id="instance" :data-value="selectednode.data.instanceid" >
+                        Instancia: <select name="instance" id="instance" value="selectednode.data.instanceid" >
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
@@ -71,7 +68,7 @@
             return {
                 json: {},
                 selectednode: null,
-                treeData: this.getData().then(r => r.data),
+                treeData: this.getData().then(r => r.data.input),
                 treeOptions: {
                     checkbox: false,
                     propertyNames: {
@@ -79,7 +76,8 @@
                         children: 'children',
                         data: 'data'
                     }
-                }
+                },
+                instanceList:[]
             }
         },
         methods: {
@@ -99,7 +97,7 @@
                 return arr;
             },
             getData() {
-                return axios.get('/processes/tree-json')
+                return axios.get('/processes/parse-to-json-for-view/<?php echo $id ?>')
 
             },
             editNode(node, e) {
@@ -115,9 +113,23 @@
 
             addChildNode(node) {
                 if (node.enabled()) {
-                    node.append('New Node')
+                    let nnode = {};
+                    let self = this;
+                    //TODO terminar crear funciones en processes deberia enviar un nodo de proceso y recibir el nodo creado en la base de datos
+                    // axios.post('processes/new-node', data).then( response  => {
+                    //         nnode = response.data
+                    //         node.append(nnode)
+                    //     }
+                    // )
+
                 }
             },
+        },
+        mounted(){
+            //TODO terminar crear funciones en processes deberia obtener las instancias del proyecto
+             //axios.get('processes/get-instances/<?php //proyect_id ?>//').then( response =>{
+            //     this.instanceList = response.data()
+            // })
         }
     });
 
@@ -126,62 +138,8 @@
         el: '#app-tree',
         data() {
             return {
-                varx: 'ho',
-                // json: {
-                //     "project": "proy",
-                //     "input": "algo.csv",
-                //     "processes": [{
-                //         "id": 1,
-                //         "task": {
-                //             "name": "clean",
-                //             "params": {}
-                //         },
-                //         "children": [{
-                //             "id": 2,
-                //             "task": {
-                //                 "name": "spellcheck",
-                //                 "params": {
-                //                     "corpus_path": "V1"
-                //                 }
-                //             },
-                //             "children": []
-                //         },
-                //             {
-                //                 "id": 3,
-                //                 "task": {
-                //                     "name": "replace",
-                //                     "params": {
-                //                         "file_path": "remplazo2.csv"
-                //                     }
-                //                 },
-                //                 "children": []
-                //             }
-                //         ]
-                //     }]
-                // }
-                json: {}
-
             }
-
-
         },
-        beforeMount() {
-            // TODO: Hay que recibir el arbol desde método en PHP
-
-            var self = this;
-            axios.get('/processes/tree-json')
-                .then(function (response) {
-                    self.json = response.data;
-                    console.log(response.data)
-                })
-                .catch(function (error) {
-                    // handle error
-                    console.log(error);
-                })
-                .then(function () {
-                    // always executed
-                });
-        }
     })
 </script>
 
