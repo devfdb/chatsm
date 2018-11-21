@@ -49,12 +49,12 @@
                     <div class="card-content" v-if="selectednode && selectednode.text && selectednode.data">
                         Nodo ID : {{selectednode.id}} <br/>
                         Nombre de tarea : {{ selectednode.text }} <br/>
-                        Parámetros :
-                        <ul>
-                            <li v-for="item in toList(selectednode.data.params)">
-                                <b>{{item.key}}</b> : {{item.value}}
-                            </li>
-                        </ul>
+                        Instancia: <select name="instance" id="instance" :data-value="selectednode.data.instanceid" >
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
 
                     </div>
                 </div>
