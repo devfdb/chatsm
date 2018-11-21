@@ -72,7 +72,14 @@
                 json: {},
                 selectednode: null,
                 treeData: this.getData().then(r => r.data.processes),
-
+                treeOptions: {
+                    checkbox: false,
+                    propertyNames: {
+                        text: 'id',
+                        children: 'children',
+                        data: 'task'
+                    }
+                }
             }
         },
         methods: {
@@ -101,20 +108,8 @@
 
     new Vue({
         el: '#app-tree',
-        data: function () {
+        data() {
             return {
-                treeOptions: {
-                    checkbox: false,
-                    propertyNames: {
-                        text: 'id',
-                        children: 'children',
-                        data: 'task'
-                    },
-                    minFetchDelay: 1000,
-                    fetchData(node) {
-                        return axios.get('/processes/tree-json');
-                    }
-                },
                 varx: 'ho',
                 // json: {
                 //     "project": "proy",
@@ -149,7 +144,10 @@
                 //     }]
                 // }
                 json: {}
+
             }
+
+
         },
         beforeMount() {
             // TODO: Hay que recibir el arbol desde método en PHP
