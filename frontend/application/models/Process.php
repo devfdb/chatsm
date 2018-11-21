@@ -70,12 +70,29 @@ class Process extends CI_Model
         }
     }
 
-    public function select_name($id)
+    public function select_type_name($id)
     {
         $this->db->select('tst_name');
         $this->db->distinct(TRUE);
         $this->db->from('task_type');
         $this->db->where('tst_id', $id);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            $result = $query->result_array()[0];
+            if ($result != null) {
+                return $result;
+            }
+        } else {
+            return array();
+        }
+    }
+
+    public function select_instance_name($id)
+    {
+        $this->db->select('ins_name');
+        $this->db->distinct(TRUE);
+        $this->db->from('task_instance');
+        $this->db->where('ins_id', $id);
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
             $result = $query->result_array()[0];

@@ -120,30 +120,53 @@ def callback(ch, method, props, bodys):
     :param body: json recibido del cliente.
     :return: nada
     """
+    if bodys:
 
-    body = json.loads(bodys)
+        uid = str(uuid.uuid4())
 
-    _input = body['input']
-    project = body['project']
+        response = {
+            'result': 'processing',
+            'data': {
+                'id_execution': uid
+            }
+        }
 
-    uid = str(uuid.uuid4())
-    response = {
-        'id': uid,
-        'status': 'processing'
-    }
+        try:
+            body = json.loads(bodys)
+            _input = body['input']
+            project = body['project']
 
-    response = json.dumps(response)
+            response = json.dumps(response)
 
-    ch.basic_publish(exchange='',
-                     routing_key=props.reply_to,
-                     properties=pika.BasicProperties(correlation_id=props.correlation_id),
-                     body=response)
-    ch.basic_ack(delivery_tag=method.delivery_tag)
+            ch.basic_publish(exchange='',
+                             routing_key=props.reply_to,
+                             properties=pika.BasicProperties(correlation_id=props.correlation_id),
+                             body=response)
+            ch.basic_ack(delivery_tag=method.delivery_tag)
 
-    for proc in body['processes']:
-        process(proc, timegm(gmtime()), project, _input, True)
-    print('Listo')
-    send(body, uid)
+            for proc in body['processes']:
+                process(proc, timegm(gmtime()), project, _input, True)
+            print('Listo')
+            send(body, uid)
+
+        except json.decoder.JSONDecodeError as err:
+            print('ERRRRRRRRROOOOOOOOOOORRRRRRRRRR')
+            response = {
+                'result': 'error',
+                'message': err.msg
+            }
+            response = json.dumps(response)
+
+            ch.basic_publish(exchange='',
+                             routing_key=props.reply_to,
+                             properties=pika.BasicProperties(correlation_id=props.correlation_id),
+                             body=response)
+            ch.basic_ack(delivery_tag=method.delivery_tag)
+
+
+
+    else:
+        print('json esta vacio')
 
 
 channel.basic_qos(prefetch_count=1)

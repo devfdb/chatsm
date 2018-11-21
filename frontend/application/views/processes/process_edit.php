@@ -8,15 +8,12 @@
     <div class="col-6" id="app-tree" v-if="json">
         <liquor-json-viewer></liquor-json-viewer>
         <div class="card">
-
             Proyecto: {{json.project}} <br/><br/>
             Input: {{json.input}} <br/><br/>
-
-
         </div>
     </div>
-
 </div>
+
 <template id="liquor-json-viewer">
     <div class="json-viewer">
         <tree :data="treeData" :options="treeOptions" @node:selected="sel">
@@ -33,7 +30,6 @@
               </template>
             </span>
             </div>
-
           </span>
             <div class="node-controls">
                 <a href="#" @mouseup.stop="editNode(node)">Edit</a>
@@ -47,27 +43,26 @@
             </span> -->
         </span>
         </tree>
-
         <div class="row">
             <div class="col-12">
                 <div class="card">
                     <div class="card-content" v-if="selectednode && selectednode.text && selectednode.data">
-                        Nodo ID : {{selectednode.text}} <br/>
-                        Nombre de tarea : {{ selectednode.data.name }} <br/>
-                        Parámetros :
-                        <ul>
-                            <li v-for="item in toList(selectednode.data.params)">
-                                <b>{{item.key}}</b> : {{item.value}}
-                            </li>
-                        </ul>
+                        Nodo ID : {{selectednode.id}} <br/>
+                        Nombre de tarea : {{ selectednode.text }} <br/>
+                        Instancia: <select name="instance" id="instance" :data-value="selectednode.data.instanceid" >
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
 
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
 </template>
+
 <script>
     Vue.component('liquor-json-viewer', {
         template: '#liquor-json-viewer',
@@ -76,26 +71,26 @@
             return {
                 json: {},
                 selectednode: null,
-                treeData: this.getData().then(r => r.data.processes),
+                treeData: this.getData().then(r => r.data),
                 treeOptions: {
                     checkbox: false,
                     propertyNames: {
-                        text: 'id',
+                        text: 'name',
                         children: 'children',
-                        data: 'task'
+                        data: 'data'
                     }
                 }
             }
         },
         methods: {
-            ss: function (et) {
+            ss(et) {
                 this.selectednode = '111';
             },
-            sel: function (et) {
+            sel(et) {
                 this.selectednode = et;
                 console.log(this.selectednode)
             },
-            toList: function (list) {
+            toList(list) {
                 var arr = [];
                 for (var key in list) {
                     // var value = dict[key];
