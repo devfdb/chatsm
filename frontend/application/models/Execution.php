@@ -5,7 +5,6 @@ class Execution extends CI_Model
     public function insert($data)
     {
         $this->db->insert('execution', $data);
-
         if ($this->db->affected_rows() > 0) {
             return $this->db->insert_id();
         } else {

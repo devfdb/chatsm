@@ -163,14 +163,13 @@ class Rabbitmq_client {
 
         $this->corr_id = uniqid();
 
-        list($callback_queue, ,) = $this->channel->queue_declare('', false, false, true, false );
+        list($callback_queue, ,) = $this->channel->queue_declare('', false, false, true, false);
 
         $this->channel->basic_consume($callback_queue, '', false, false, false, false, function ($response) use ($callback) {
             if ($response->get('correlation_id') == $this->corr_id) {
                 $callback($response->body);
             }
         });
-
         // Extra parammeters to be able to receive a response
         $params = array(
             'correlation_id' => $this->corr_id,
@@ -186,11 +185,21 @@ class Rabbitmq_client {
 
         // Publish to the queue
         $this->channel->basic_publish($item, '', $queue);
-        while (!$this->response) {
-            $this->channel->wait();
+        try {
+            while (!$this->response) {
+                $this->channel->wait(null, false, 3);
+            }
+        } catch(Exception $p)    {
+            echo("time-out, continue");
         }
         // Output
-        ($this->show_output) ? rabbitmq_client_output('Pushing "' . $item->body . '" to "' . $queue . '" queue -> OK', null, '+') : true;
+        if ($this->show_output) {
+            return rabbitmq_client_output('Pushing "' . $item->body . '" to "' . $queue . '" queue -> OK', null, '+');
+                }
+        else
+        {
+            return true;
+        }
     }
 
     function onResponse($rep)
@@ -231,19 +240,20 @@ class Rabbitmq_client {
             rabbitmq_client_output('You did not specify the [queue] parameter', 'error', 'x');
             throw new Exception("You did not specify the [queue] parameter");
         }
-
+        echo ("1\n");
         // Declaring the queue again
         $this->channel->queue_declare($queue, false, $permanent, false, false, false, null, null);
-
+        echo ("2\n");
         // Limit the number of unacknowledged
         $this->channel->basic_qos(null, 1, null);
-
+        echo ("3\n");
         // Define consuming with 'process' callback
         $this->channel->basic_consume($queue, '', false, false, false, false, function ($message) use ($callback, $queue, $permanent, $params) {
             try {
                 // Call application treatment
                 $this->message = $message;
-                $callback($message);
+                echo ($message);
+                array_push($callback, $message);
             } catch (Exception $e) {
                 error_log($e->getMessage());
                 $this->unlock($message);
@@ -254,11 +264,12 @@ class Rabbitmq_client {
                 $this->push($queue, json_encode(json_decode($message->body)), $permanent, $params);
             }
         });
-
+        echo ("4\n");
         // Continue the process of CLI command, waiting for others instructions
         while (count($this->channel->callbacks)) {
+            $result = count($this->channel->callbacks);
             try {
-                $this->channel->wait($this->config['allowed_methods'], $this->config['non_blocking'], $this->config['timeout']);
+                $this->channel->wait($this->config['allowed_methods'], $this->config['non_blocking'], 3);
             } catch (\PhpAmqpLib\Exception\AMQPTimeoutException $e) {
                 $this->stop();
             }

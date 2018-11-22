@@ -23,36 +23,37 @@ class Processes extends CI_Controller
 
     public function index()
     {
-        $data['process_table'] = $this->process->table();
+        $data['process_table'] = $this->process->table($this->session->userdata('project_id'));
         $this->template->load('layout_admin', 'processes/process_index', $data);
     }
 
-    public function execute()
+    public function execute($id)
     {
         // Recibe JSON desde cliente
-        $request = $this->input->post('request');
-        $json = file_get_contents('../backend/testdata.json');
+        $json = $this->parse_to_json_for_input($id);
         $json = str_replace(array("\r", "\n"), "", $json);
         $self = $this;
-        $this->rabbitmq_client->push_with_response('tasks', $json, function ($message) use ($self, $request){
+        $this->rabbitmq_client->push_with_response('tasks', $json, function ($message) use ($self, $id){
             $receive = json_decode($message);
-            echo $receive['result'];
-            if($receive['result'] == 'processing')
+            if($receive->result == 'processing')
             {
-                $data['exe_id'] = $receive['data']['id_execution'];
-                $data['exe_status'] = $receive['result'];
-                $data['exe_process_id'] = $request;
+                $data['exe_id'] = $receive->data->id_execution;
+                $data['exe_status'] = $receive->result;
+                $data['exe_process_id'] = $id;
                 $self->execution->insert($data);
-            }
-        });
-        $this->rabbitmq_client->response;
 
-        header('Content-Type: application/json');
-        $arr = array(
-            'response' => true,
-            'content' => array('type' => 'nonaa')
-        );
-        echo json_encode($arr);
+                return("string");
+            }
+            header('Content-Type: application/json');
+            $arr = array(
+                'response' => true,
+                'content' => array('type' => 'nonaa')
+            );
+            echo "end time";
+            echo date("h:i:s", time());
+            echo json_encode($arr);
+            return("string");
+        });
     }
 
     public function executions($process_id)
@@ -60,7 +61,7 @@ class Processes extends CI_Controller
         $project_folder = 'proy';
         $dir = '../repository/' . $project_folder . '/';
 
-        $file_list = [];
+        $file_list = array();
         if (is_dir($dir)) {
             if ($dh = opendir($dir)) {
                 while (($file = readdir($dh)) !== false) {
@@ -70,7 +71,7 @@ class Processes extends CI_Controller
             }
         }
 
-        $data['process_table'] = [];
+        $data['execution_table'] = $this->process->process_execution_table($process_id);
 
         $data['file_list'] = $file_list;
         $data['process_id'] = $process_id;
@@ -81,6 +82,15 @@ class Processes extends CI_Controller
     private function execute_process()
     {
 
+    }
+
+    public function update()
+    {
+        $receiver = array();
+        $this->rabbitmq_client->pull('reply',false, $receiver);
+        foreach ($receiver as $item) {
+            echo $item;
+        }
     }
 
     public function create()
@@ -214,7 +224,7 @@ class Processes extends CI_Controller
         );
         $nodes = $this->process->select_parents($id);
         $this->parse_recursive_for_input($nodes, $arr['processes'], $id);
-        echo json_encode($arr);
+        return json_encode($arr);
     }
 
     public function parse_recursive_for_view($nodes, &$arr_ref, $id)
@@ -264,5 +274,10 @@ class Processes extends CI_Controller
 
             array_push($this->reply, $message->body);
         });
+    }
+
+    public function destroy_ex($id)
+    {
+        # TODO funcion que destruye una ejecucion. Una vez que sea posible cancelarla sin perturbar las demas
     }
 }

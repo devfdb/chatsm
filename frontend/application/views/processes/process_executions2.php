@@ -51,42 +51,6 @@
         el: "#app",
         data() {
             return {
-                input: {
-                    "project": "proy",
-                    "input": "algo.csv",
-                    "processes": [{
-                        "id": 1,
-                        "task":
-                            {
-                                "name": "clean",
-                                "params": {}
-                            },
-                        "children": [
-                            {
-                                "id": 2,
-                                "task": {
-                                    "name": "spellcheck",
-                                    "params": {
-                                        "corpus_path": "V1"
-                                    }
-                                },
-                                "children": []
-                            },
-                            {
-                                "id": 3,
-                                "task": {
-                                    "name": "replace",
-                                    "params": {
-                                        "file_path": "remplazo2.csv"
-                                    }
-                                },
-                                "children": []
-                            }
-                        ]
-                    }]
-                },
-                progressLoad: 0,
-                output: null
             }
         },
         methods: {
@@ -95,7 +59,7 @@
                 var self = this;
                 var data = new FormData();
                 data.append('request', JSON.stringify(this.input));
-                axios.post('/processes/execute/<?php echo $process_id;?>', data)
+                axios.post('/processes/execute/<?php echo $process_id;?>')
                     .then(function (res) {
                         debugger
                         if (res.data.response) {

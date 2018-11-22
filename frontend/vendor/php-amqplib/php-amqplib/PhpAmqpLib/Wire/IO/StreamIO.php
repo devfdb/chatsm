@@ -209,7 +209,6 @@ class StreamIO extends AbstractIO
     public function read($len)
     {
         $this->check_heartbeat();
-
         list($timeout_sec, $timeout_uSec) =
             MiscHelper::splitSecondsMicroseconds($this->read_write_timeout);
 

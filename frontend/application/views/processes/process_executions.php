@@ -1,9 +1,10 @@
+
 <div class="col-lg-12 grid-margin">
     <div id="app" class="card">
         <div class="card-body">
             <h4 class="card-title">Ejecuciones del proceso: Lematización y corrección ortografica 1</h4>
             <div class="card-body">
-                <button @click="run()">Ejecutar</button>
+                <button @click="run(<?php echo $process_id?>)">Ejecutar</button>
                 <button @click="update()">Actualizar</button>
             </div>
             <div class="table-responsive">
@@ -26,24 +27,23 @@
                     </tr>
                     </thead>
                     <tbody>
+                    <?php if ($execution_table) { ?>
+                    <?php foreach ($execution_table as $item) { ?>
                     <tr>
-                        <td class="font-weight-medium">
-                            <?php echo uniqid(); ?>
-                        </td>
-                        <td class="text-danger">En ejecución
-                            <i class="mdi mdi-play-protected-content"></i>
-                        </td>
-                        <td>
-                            5 dias, 7 minutos
-                        </td>
+                        <td><?php echo $item['exe_id'] ?></td>
+                        <td><?php echo $item['exe_status'] ?></td>
+                        <td><?php
+                            echo $item['exe_created_at'] ?></td>
                         <td>
                             <div class="btn-group" role="group" aria-label="Operaciones">
-                                <a title="Matar ejecución" href="#" class="btn btn-outline-secondary">
+                                <a title="Matar ejecución" href="/processes/destroy_ex/<?php echo $item['exe_id'] ?>" class="btn btn-outline-secondary">
                                     <i class="mdi mdi-delete"></i>
                                 </a>
                             </div>
                         </td>
                     </tr>
+                        <?php }
+                    } ?>
                     </tbody>
                 </table>
             </div>
@@ -62,36 +62,44 @@
             }
         },
         methods: {
-            run: function () {
-                alert("Ejecutando...");
+            run: function (id) {
+                swal("Ejecutando...");
                 var self = this;
-                var data = new FormData();
-                data.append('request', this.input);
-                axios.post('/processes/execute', data)
-                    .then(function (res) {
-                        debugger
-                        if (res.data.response) {
-                            self.output = res.data.content;
-                        }
-                        /* if (res.data.result) {
-                            if (res.data.horas.length > 0) {
-                                self.message = null;
-                                self.horarios_disponibles = res.data.horas;
-                            } else {
-                                self.message = "No hay horarios para la hora seleccionada";
+                axios.post('/processes/execute/'+id)
+                    .then(function (arg) {
+                        swal({
+                            title: 'Enviado',
+                            type: 'success',
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.value) {
+                                location.reload();
                             }
-                            self.loading_horario = false;
-                            self.progressLoad = 100;
-
-
-                        } else {
-                            alert("Error al recuperar horas");
-                            self.loading_horario = false;
-                        } */
+                        })
                     });
             },
             update: function () {
-                
+                var self = this;
+                swal('actualizando');
+                axios.post('processes/update/')
+                    .then(function (arg) {
+                        swal({
+                            title: 'Actualizado',
+                            type: 'success',
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.value) {
+                                location.reload();
+                            }
+                        })
+                    });
+            }
+        },
+        computed: {
+            now () {
+                return new Date
             }
         }
     })

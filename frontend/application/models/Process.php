@@ -123,11 +123,24 @@ class Process extends CI_Model
         }
     }
 
-    public function table()
+    public function table($id)
     {
         $this->db->select('*');
         $this->db->from('process');
+        $this->db->where('prc_project_id', $id);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result_array();
+        } else {
+            return array();
+        }
+    }
 
+    public function process_execution_table($id)
+    {
+        $this->db->select('*');
+        $this->db->from('execution');
+        $this->db->where('exe_process_id', $id);
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
             return $query->result_array();
