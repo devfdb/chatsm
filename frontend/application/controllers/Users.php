@@ -65,6 +65,7 @@ class Users extends CI_Controller
                     $this->session->set_userdata('isUserLoggedIn', TRUE);
                     $this->session->set_userdata('userId', $checkLogin['usr_id']);
                     $this->session->set_userdata('userName', $checkLogin['usr_name']);
+                    $this->session->set_userdata('userProfilePhoto', null); # TODO agregar a base de datos direccion relativa de imagen de usuario
                     redirect('dashboard');
                 } else {
                     $data['error_msg'] = 'Su usuario o contraseña es incorrecto';

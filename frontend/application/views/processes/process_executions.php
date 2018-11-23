@@ -2,7 +2,7 @@
 <div class="col-lg-12 grid-margin">
     <div id="app" class="card">
         <div class="card-body">
-            <h4 class="card-title">Ejecuciones del proceso: Lematización y corrección ortografica 1</h4>
+            <h2 class="card-title">Proceso <?php echo $process_name?></h2>
             <div class="card-body">
                 <button @click="run(<?php echo $process_id?>)">Ejecutar</button>
                 <button @click="update()">Actualizar</button>
@@ -14,12 +14,11 @@
                         <th>
                             UUID
                         </th>
-
                         <th>
                             Progreso
                         </th>
                         <th>
-                            Tiempo transcurrido desde inicio
+                            Momento de inicio
                         </th>
                         <th>
                             Acciones
@@ -82,24 +81,30 @@
             update: function () {
                 var self = this;
                 swal('actualizando');
-                axios.post('processes/update/')
+                axios.post('/processes/update_table/')
                     .then(function (arg) {
-                        swal({
-                            title: 'Actualizado',
-                            type: 'success',
-                            confirmButtonColor: '#3085d6',
-                            confirmButtonText: 'OK'
-                        }).then((result) => {
-                            if (result.value) {
-                                location.reload();
-                            }
-                        })
+                        debugger;
+                        if (arg.data) {
+                            swal({
+                                title: 'Se han actualizado los campos',
+                                type: 'success',
+                                confirmButtonColor: '#3085d6',
+                                confirmButtonText: 'OK'
+                            }).then((result) => {
+                                if (result.value) {
+                                    location.reload();
+                                }
+                            })
+                        }
+                        else {
+                            swal({
+                                title: "No hay datos nuevos",
+                                type: 'error',
+                                confirmButtonColor: '#3085d6',
+                                confirmButtonText: 'OK'
+                            })
+                        }
                     });
-            }
-        },
-        computed: {
-            now () {
-                return new Date
             }
         }
     })

@@ -31,68 +31,37 @@ class Files extends CI_Controller
 
     public function index()
     {
-        $project_folder = 'proy';                                       // Nombre de directorio de proyecto
-        $project_dir = '../repository/' . $project_folder . '/';        // Ruta relativa de directorio del proyecto
-
         $path_query = $this->input->get('path');
-
         if ($path_query) {
-
-            // TODO: Subir de directorio (evitar que suba más alla del directorio del proyecto)
-            if ($this->endsWith($path_query, '/..')) {
-                echo 'DENEGADO POR SEGURIDAD';
-                return;
-
-            }
-
-            // TODO: Evitar formación de cadenas infinitas de /./././././././././././.
-
-            if ($this->endsWith($path_query, '/.')) {
-                echo 'DENEGADO POR SEGURIDAD';
-                return;
-            }
-
-            // Ruta relativa de archivo ingresado
-            $full_query_path = $project_dir . $this->input->get('path');
-            $query_path = $this->input->get('path');
-            if (is_dir($full_query_path)) {
-                $dir = $query_path . '/';
-                $query_path = $query_path . '/';
-                $full_query_path = $full_query_path . '/';
-            } else {
-                $dir = $query_path;
-            }
-        }else{
-            $full_query_path = $project_dir;
-            $dir = '';
+            $curr_dir_id = $path_query;
+            $data['last_dir'] = $this->file->last_folder_id($path_query, $this->session->userdata('project_id'));
         }
-
-
-        $file_list = [];
-        if (is_dir($full_query_path)) {
-            if ($dh = opendir($full_query_path)) {
-                while (($file = readdir($dh)) !== false) {
-                    $file_list[] = array('filename' => $file, 'filetype' => filetype($full_query_path . $file));
-                }
-                closedir($dh);
-            }
+        else {
+            $curr_dir_id = $this->file->curr_file_id($this->session->userdata('project_id'));
+            $data['last_dir'] = null;
         }
-        $data['current_fulldir'] = 0;
-        $data['current_dir'] = $dir;
-        $data['list_files'] = $file_list;
+        $file_list = $this->file->table($curr_dir_id, $this->session->userdata('project_id'));
+
+        $data['current_dir'] = $this->file->curr_dir($curr_dir_id, $this->session->userdata('project_id'));
+        $data['current_dir_id'] = $curr_dir_id;
+        $data['file_list'] = $file_list;
         $this->template->load('layout_admin', 'files/file_index', $data);
     }
 
     public function create()
     {
         if ($this->input->server('REQUEST_METHOD') == 'GET') {
+            $data['curr_dir_id'] = $this->input->get('path');
             $data['project_id'] = $this->session->userdata('project_id');
+            $data['error'] = null;
             $this->template->load('layout_admin', 'files/file_create', $data);
-        } else if ($this->input->server('REQUEST_METHOD') == 'POST') {
+        }
+        else if ($this->input->server('REQUEST_METHOD') == 'POST') {
             $project = $this->project->read($this->session->userdata('project_id'));
+            $relative_route = $this->file->curr_dir_path($this->input->post('dir_id'));
             $upload_config = array(
-                'upload_path' => $this->url_imagenes.$project['prj_name'],
-                'allowed_types' => "gif|jpg|png|jpeg|pdf",
+                'upload_path' => '../repository/'.$relative_route,
+                'allowed_types' => "gif|jpg|png|jpeg|pdf|csv|json",
                 'overwrite' => TRUE
             );
             $this->load->library('upload', $upload_config);
@@ -102,14 +71,17 @@ class Files extends CI_Controller
                 $upload_data = $this->upload->data();
                 $data = array(
                     'fil_filename' => $upload_data['file_name'],
-                    'fil_url' => $project['prj_name'].'/'.$upload_data['file_name'],
+                    'fil_url' => $relative_route.'/'.$upload_data['file_name'],
                     'fil_associated_project_id' => $this->session->userdata('project_id'),
-                    'fil_owner' => $this->session->userdata('userId')
+                    'fil_owner' => $this->session->userdata('userId'),
+                    'fil_parent_id' => $this->input->post('dir_id'),
+                    'fil_file_format' => $this->file->file_end($upload_data['file_name'])
                 );
                 $result = $this->file->insert($data);
                 if ($result == TRUE) {
+                    $data['curr_dir_id'] = str_replace("/", "", $this->input->post('dir_id'));
                     $data['project_id'] = $this->session->userdata('project_id');
-                    $data['error'] = $this->upload->display_errors();
+                    $data['error'] = "SUCCESS";
                     $this->template->load('layout_admin', 'files/file_create', $data);
                 } else {
                     $data['project_id'] = $this->session->userdata('project_id');
@@ -124,12 +96,18 @@ class Files extends CI_Controller
         }
     }
 
-    public function destroy()
+    public function image()
     {
+
+    }
+    public function destroy($id)
+    {
+        echo $id;
         if ($this->input->server('REQUEST_METHOD') == 'GET') {
-
+            return true;
         } else if ($this->input->server('REQUEST_METHOD') == 'POST') {
-
+            $var = $this->input->post();
+            return false;
         }
     }
 }

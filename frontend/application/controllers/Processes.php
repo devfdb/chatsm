@@ -58,22 +58,8 @@ class Processes extends CI_Controller
 
     public function executions($process_id)
     {
-        $project_folder = 'proy';
-        $dir = '../repository/' . $project_folder . '/';
-
-        $file_list = array();
-        if (is_dir($dir)) {
-            if ($dh = opendir($dir)) {
-                while (($file = readdir($dh)) !== false) {
-                    $file_list[] = array('filename' => $file, 'filetype' => filetype($dir . $file));
-                }
-                closedir($dh);
-            }
-        }
-
         $data['execution_table'] = $this->process->process_execution_table($process_id);
-
-        $data['file_list'] = $file_list;
+        $data['process_name'] = $this->process->process_name($process_id);
         $data['process_id'] = $process_id;
         $this->template->load('layout_admin', 'processes/process_executions', $data);
     }
@@ -84,12 +70,21 @@ class Processes extends CI_Controller
 
     }
 
-    public function update()
+    public function update_table()
     {
-        $receiver = array();
-        $this->rabbitmq_client->pull('reply',false, $receiver);
-        foreach ($receiver as $item) {
-            echo $item;
+        $this->rabbitmq_client->pull('reply',false,function ($message) {
+
+            array_push($this->reply, $message->body);
+        });
+
+        if (empty($this->reply)) {
+            return;
+        }
+        else {
+            foreach ($this->reply as $item) {
+                echo $item;
+                $this->execution->update($item->id);
+            }
         }
     }
 

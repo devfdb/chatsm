@@ -9,6 +9,7 @@
             </p>
             <div class="row">
                 <input type="file" name="userfile" size="20" />
+                <input type="hidden" name="dir_id" value=<?php echo $curr_dir_id ?>/>
                 <input class="btn btn-light" type="submit" value="Subir" />
                 <a href="/files/index" class="btn btn-light">Cancelar</a>
                 </form>

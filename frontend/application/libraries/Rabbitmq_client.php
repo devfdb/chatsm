@@ -240,20 +240,16 @@ class Rabbitmq_client {
             rabbitmq_client_output('You did not specify the [queue] parameter', 'error', 'x');
             throw new Exception("You did not specify the [queue] parameter");
         }
-        echo ("1\n");
         // Declaring the queue again
         $this->channel->queue_declare($queue, false, $permanent, false, false, false, null, null);
-        echo ("2\n");
         // Limit the number of unacknowledged
         $this->channel->basic_qos(null, 1, null);
-        echo ("3\n");
         // Define consuming with 'process' callback
         $this->channel->basic_consume($queue, '', false, false, false, false, function ($message) use ($callback, $queue, $permanent, $params) {
             try {
                 // Call application treatment
                 $this->message = $message;
-                echo ($message);
-                array_push($callback, $message);
+                $callback($message);
             } catch (Exception $e) {
                 error_log($e->getMessage());
                 $this->unlock($message);
@@ -264,10 +260,8 @@ class Rabbitmq_client {
                 $this->push($queue, json_encode(json_decode($message->body)), $permanent, $params);
             }
         });
-        echo ("4\n");
         // Continue the process of CLI command, waiting for others instructions
         while (count($this->channel->callbacks)) {
-            $result = count($this->channel->callbacks);
             try {
                 $this->channel->wait($this->config['allowed_methods'], $this->config['non_blocking'], 3);
             } catch (\PhpAmqpLib\Exception\AMQPTimeoutException $e) {
@@ -276,6 +270,23 @@ class Rabbitmq_client {
         }
     }
 
+    public function pull_2($queue, &$callback) {
+        $connection = new \PhpAmqpLib\Connection\AMQPStreamConnection('192.168.1.113', 5672, 'test', 'test');
+        $channel = $connection->channel();
+
+        $channel->queue_declare('hello', false, false, false, false);
+
+        echo " [*] Waiting for messages. To exit press CTRL+C\n";
+
+        if ($queue) {
+            $channel->basic_consume($queue, '', false, true, false, false, $callback);
+        }
+
+
+        while (count($channel->callbacks)) {
+            $channel->wait(null, false, 3);
+        }
+    }
     /**
      * Lock a message
      *

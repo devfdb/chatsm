@@ -149,6 +149,18 @@ class Process extends CI_Model
         }
     }
 
+    public function process_name($id)   {
+        $this->db->select('*');
+        $this->db->from('process');
+        $this->db->where('prc_id', $id);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result_array()[0]['prc_name'];
+        } else {
+            return "Nombre simple.";
+        }
+    }
+
     public function table_select()
     {
         $instances = $this->table();
