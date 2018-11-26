@@ -42,6 +42,18 @@ class File extends CI_Model
         }
     }
 
+    public function table_all()
+    {
+        $this->db->select('*');
+        $this->db->from('file');
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result_array();
+        } else {
+            return array();
+        }
+    }
+
     public function curr_file_id($project_id)
     {
         $this->db->select('fil_id');
@@ -98,7 +110,7 @@ class File extends CI_Model
 
     public function table_select()
     {
-        $instances = $this->table();
+        $instances = $this->table_all(); //Todo cambiar por uno que sirva
         $arr = array();
         foreach($instances as $item) {
             $arr[$item['fil_id']] = $item['fil_filename'];

@@ -95,7 +95,7 @@ def process(proc, epoch, project, _input, first):
 
 
 def send(message, uid):
-    message = {
+    body = {
         'id': uid,
         'message': message
     }
@@ -113,7 +113,7 @@ def send(message, uid):
 
     reply_channel.basic_publish(exchange='',
                           routing_key='reply',
-                          body=json.dumps(message))
+                          body=json.dumps(body))
     reply_connection.close()
 
 def callback(ch, method, props, bodys):
@@ -152,6 +152,7 @@ def callback(ch, method, props, bodys):
             for proc in body['processes']:
                 process(proc, timegm(gmtime()), project, _input, True)
             print('Listo')
+
             send(body, uid)
 
         except json.decoder.JSONDecodeError as err:

@@ -19,6 +19,7 @@ class Task_instances extends CI_Controller
         $this->load->helper('form');
         $this->load->model('task_instance');
         $this->load->model('task_type');
+        $this->load->model('task_type_parameter');
     }
 
     public function index()
@@ -29,6 +30,16 @@ class Task_instances extends CI_Controller
         $this->template->load('layout_admin', 'instances/instance_index', $data);
 
     }
+    private function select_task_type_parameter($id)
+    {
+        $params = $this->task_type_parameter->read($id);
+        $arr = array();
+
+        if($params) {
+            array_push($arr, $params);
+        }
+        return $arr;
+    }
 
     private function select_task_type()
     {
@@ -37,7 +48,7 @@ class Task_instances extends CI_Controller
 
         if($types) {
             foreach($types as $item) {
-                $arr[$item['tst_id']] = $item['tst_name'];
+                $arr[$item['tst_id']] = $item;
             }
         }
         return $arr;
@@ -62,17 +73,27 @@ class Task_instances extends CI_Controller
             $data['list_types'] = $this->select_task_type();
             $this->template->load('layout_admin', 'instances/instance_create', $data);
         } else if ($this->input->server('REQUEST_METHOD') == 'POST') {
-            $this->form_validation->set_rules('name', 'nombre', 'trim|required');
-            $this->form_validation->set_rules('type_id', 'tipo', 'trim|required');
-            $this->form_validation->set_error_delimiters('<div class="alert alert-danger alert-dismissible">','</div>');
+//            $this->form_validation->set_rules('name', 'nombre', 'trim|required');
+//            $this->form_validation->set_rules('type_id', 'tipo', 'trim|required');
+//            $this->form_validation->set_error_delimiters('<div class="alert alert-danger alert-dismissible">','</div>');
 
-            if ($this->form_validation->run()) {
+//            if ($this->form_validation->run()) {
+            if(true){
+                $inst = json_decode(file_get_contents('php://input'), true);
+
                 $data = array(
-                    'ins_name' => $this->input->post('name'),
-                    'ins_type_id' => $this->input->post('type_id'),
+                    'ins_name' => $inst['name'],
+                    'ins_type_id' => $inst['type_id'],
                     'ins_owner' => $this->session->userdata('userId')
                 );
                 $result = $this->task_instance->insert($data);
+
+//                foreach (parameter in $inst['params'])
+//                $param = array(
+//                  'inp_instance_id' => $result['ins_id'],
+//                    'inp_parameter_type_id' => $inst[],
+//                    'inp_parameter_value' => $inst[],
+//                );
                 if ($result == TRUE) {
                     $data['message'] = json_encode(array('title'=> 'Instancia creada exitosamente', 'type' => 'success' ));
                     $data['list_types'] = $this->select_task_type();
@@ -148,5 +169,17 @@ class Task_instances extends CI_Controller
                 $this->index();
             }
         }
+    }
+
+    public function get_task_types()
+    {
+        $arg = $this->select_task_type();
+        echo json_encode($arg);
+    }
+
+    public function get_task_parameters($id)
+    {
+        $arg = $this->select_task_type_parameter($id);
+        echo json_encode($arg);
     }
 }
