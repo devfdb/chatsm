@@ -20,13 +20,15 @@ class Task_instances extends CI_Controller
         $this->load->model('task_instance');
         $this->load->model('task_type');
         $this->load->model('task_type_parameter');
+        $this->load->model('user');
     }
 
     public function index()
     {
         //$this->rabbitmq_client->push('hello', 'Hello Worldaaaaaaaaaaaaaaaaaaaaaaaa !');
-        $data['instance_table'] = $this->select_task_instance();
+        $data['instance_table'] = $this->select_task_instance($this->session->userdata('project_id'));
         $data['type_table'] = $this->select_task_type();
+        $data['user_table'] = $this->show_users();
         $this->template->load('layout_admin', 'instances/instance_index', $data);
 
     }
@@ -48,15 +50,18 @@ class Task_instances extends CI_Controller
 
         if($types) {
             foreach($types as $item) {
-                $arr[$item['tst_id']] = $item;
+                array_push($arr, array(
+                    'key' => $item['tst_id'],
+                    'value' => $item['tst_name']
+                ));
             }
         }
         return $arr;
     }
 
-    private function select_task_instance()
+    private function select_task_instance($project_id)
     {
-        $instances = $this->task_instance->table();
+        $instances = $this->task_instance->table($project_id);
         $arr = array();
 
         if($instances) {
@@ -65,6 +70,19 @@ class Task_instances extends CI_Controller
             }
         }
         return $arr;
+    }
+
+    public function show_users()    {
+        $users = $this->user->getRows();
+        $arr = array();
+
+        if($users) {
+            foreach($users as $item) {
+                $arr[$item['usr_id']] = $item['usr_username'];
+            }
+        }
+        return $arr;
+
     }
 
     public function create()

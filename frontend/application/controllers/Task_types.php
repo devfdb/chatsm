@@ -14,12 +14,7 @@ class Task_instances extends CI_Controller
 
     public function index()
     {
-        //$this->rabbitmq_client->push('hello', 'Hello Worldaaaaaaaaaaaaaaaaaaaaaaaa !');
-        $this->db->select('*');
-        $this->db->from('task_instance');
-        $this->db->where('ins_id', $id);
-
-        $this->template->load('layout_admin', 'types/type_table', $data);
+        $this->template->load('layout_admin', 'types/type_table');
     }
 
     public function create()

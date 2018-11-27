@@ -36,7 +36,7 @@
                         <tr>
                             <td><?php echo $item['ins_name'] ?></td>
                             <td><?php echo $type_table[$item['ins_type_id']] ?></td>
-                            <td><?php echo $item['ins_owner'] ?></td>
+                            <td><?php echo $user_table[$item['ins_owner']] ?></td>
                             <td><?php echo $item['ins_owner'] ?></td>
                             <td><?php echo $item['ins_last_modified'] ?></td>
                             <td>

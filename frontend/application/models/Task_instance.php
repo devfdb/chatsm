@@ -32,11 +32,11 @@ class Task_instance extends CI_Model
         }
     }
 
-    public function table()
+    public function table($project_id)
     {
         $this->db->select('*');
         $this->db->from('task_instance');
-
+        $this->db->where('ins_project_id', $project_id);
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
             return $query->result_array();

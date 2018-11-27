@@ -22,8 +22,9 @@
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label">Tipo</label>
                         <div class="col-sm-9">
+                            {{list_types}}
                             <select name="" id="tipo" @change="get_task_parameters" class="form-control" v-model="type">
-                                <option :value="item.tst_id" v-for="item in list_types">{{ item.tst_name }}</option>
+                                <option :value="item.key" v-for="item in list_types">{{ item.value }}</option>
                             </select>
                         </div>
                     </div>
