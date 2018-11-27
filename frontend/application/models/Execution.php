@@ -56,4 +56,8 @@ class Execution extends CI_Model
     {
 
     }
+
+    public function countExecutedProcesses($user)    {
+        return 1;
+    }
 }

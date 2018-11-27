@@ -73,4 +73,7 @@ class Task_instance extends CI_Model
     {
 
     }
+    public function countTaskInstances($user)    {
+        return 1;
+    }
 }

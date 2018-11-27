@@ -128,4 +128,7 @@ class Project extends CI_Model
             return null;
         }
     }
+    public function countProjects($user)    {
+        return 1;
+    }
 }

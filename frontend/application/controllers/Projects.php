@@ -56,7 +56,7 @@ class Projects extends CI_Controller
                 $data['project_id'] = $this->session->userdata('project_id');
                 $data['project_name'] = $this->session->userdata('project_name');
                 $data['message'] = json_encode(array('title'=> 'Proyecto seleccionado', 'type' => 'success' ));
-                $this->template->load('layout_admin', 'layout/dashboard', $data);
+                redirect('dashboard', 'location');
             } else {
                 redirect('projects', 'location');
             }
