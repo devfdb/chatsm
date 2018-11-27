@@ -72,19 +72,20 @@ class Processes extends CI_Controller
 
     public function update_table()
     {
-        $this->rabbitmq_client->pull('reply',false,function ($message) {
 
+        $this->rabbitmq_client->pull('reply',false,function ($message){
             array_push($this->reply, $message->body);
         });
 
         if (empty($this->reply)) {
-            return;
+            echo json_encode($this->reply);
         }
         else {
             foreach ($this->reply as $item) {
-                echo $item;
+                $item = json_decode($item);
                 $this->execution->update($item->id);
             }
+            echo json_encode($this->reply);
         }
     }
 
@@ -104,7 +105,8 @@ class Processes extends CI_Controller
                 $data = array(
                     'prc_name' => $this->input->post('name'),
                     'prc_owner' => $this->session->userdata('userId'),
-                    'prc_input' => $this->input->post('input_id')
+                    'prc_input' => $this->input->post('input_id'),
+                    'prc_project_id' =>  $this->session->userdata('project_id')
                 );
                 $result = $this->process->insert($data);
                 if ($result == TRUE) {

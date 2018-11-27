@@ -250,6 +250,7 @@ class Rabbitmq_client {
                 // Call application treatment
                 $this->message = $message;
                 $callback($message);
+                $this->unlock($message);
             } catch (Exception $e) {
                 error_log($e->getMessage());
                 $this->unlock($message);
@@ -263,9 +264,16 @@ class Rabbitmq_client {
         // Continue the process of CLI command, waiting for others instructions
         while (count($this->channel->callbacks)) {
             try {
-                $this->channel->wait($this->config['allowed_methods'], $this->config['non_blocking'], 3);
+                $this->channel->wait($this->config['allowed_methods'], $this->config['non_blocking'], $this->config['timeout']);
             } catch (\PhpAmqpLib\Exception\AMQPTimeoutException $e) {
-                $this->stop();
+                if(empty($this->message)){
+                    $this->channel->close();
+                }
+                try {
+                    $this->stop();
+                } catch (\PhpAmqpLib\Exception\AMQPChannelClosedException $e) {
+                    echo 'El canal esta cerrado';
+                }
             }
         }
     }
