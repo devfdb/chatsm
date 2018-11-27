@@ -31,7 +31,11 @@ class Files extends CI_Controller
 
     public function index()
     {
-        $path_query = $this->input->get('path');
+        try{
+            $path_query = $this->input->get('path');
+        } catch (Exception $e)   {
+            $path_query = Null;
+        }
         if ($path_query) {
             $curr_dir_id = $path_query;
             $data['last_dir'] = $this->file->last_folder_id($path_query, $this->session->userdata('project_id'));

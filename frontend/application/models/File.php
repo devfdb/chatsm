@@ -52,7 +52,7 @@ class File extends CI_Model
         if ($query->num_rows() > 0) {
             return $query->result_array()[0]['fil_id'];
         } else {
-            return array();
+            return null;
         }
     }
 

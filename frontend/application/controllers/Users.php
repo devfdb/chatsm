@@ -38,8 +38,12 @@ class Users extends CI_Controller
         $data = array();
 
         if ($this->input->server('REQUEST_METHOD') == 'GET') {
-            if($this->session->userdata('isUserLoggedIn')) redirect('dashboard', 'location');
-            $this->load->view('users/user_login', $data);
+            if($this->session->userdata('isUserLoggedIn')) {
+                redirect('dashboard', 'location');
+            }
+            else {
+                $this->load->view('users/user_login', $data);
+            }
         } else if ($this->input->server('REQUEST_METHOD') == 'POST') {
 
             $this->form_validation->set_rules('email', 'Email', 'required|valid_email');

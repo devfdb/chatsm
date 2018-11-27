@@ -11,8 +11,10 @@ class Projects extends CI_Controller
         $this->load->helper('form');
         $this->load->model('user');
         $this->load->model('project');
+        $this->load->model('file');
 
-        $this->url_imagenes = FCPATH."/../repository/";
+
+        $this->base_path = FCPATH."/../repository/";
     }
 
     public function index()
@@ -43,13 +45,16 @@ class Projects extends CI_Controller
         if ($this->input->server('REQUEST_METHOD') == 'GET') {
             $data['list_projects'] = $this->project->table_select($user);
             $data['project_id'] = $this->session->userdata('project_id');
+            $data['project_name'] = $this->session->userdata('project_name');
             $this->template->load('layout_admin', 'projects/project_define', $data);
         } else if ($this->input->server('REQUEST_METHOD') == 'POST') {
             $this->form_validation->set_rules('project_id', 'proyecto', 'trim|required');
             if ($this->form_validation->run() == true) {
                 $data['list_projects'] = $this->project->table_select($user);
                 $this->session->set_userdata('project_id', $this->input->post('project_id'));
+                $this->session->set_userdata('project_name', $this->project->retrieve_project_name($this->input->post('project_id'), $this->session->userdata('userId')));
                 $data['project_id'] = $this->session->userdata('project_id');
+                $data['project_name'] = $this->session->userdata('project_name');
                 $data['message'] = json_encode(array('title'=> 'Proyecto seleccionado', 'type' => 'success' ));
                 $this->template->load('layout_admin', 'layout/dashboard', $data);
             } else {
@@ -78,11 +83,44 @@ class Projects extends CI_Controller
                 );
                 $result = $this->project->insert($data);
                 if ($result == TRUE) {
-                    if (!file_exists($this->url_imagenes.$data['prj_name']))
+                    if (!file_exists($this->base_path.$data['prj_name']))
                     {
-                        mkdir($this->url_imagenes.$data['prj_name'], 0777, true);
+                        mkdir($this->base_path.$data['prj_name'], 0777, true);
+                        mkdir($this->base_path.$data['prj_name'].'/input/', 0777, true);
+                        mkdir($this->base_path.$data['prj_name'].'/output/', 0777, true);
+
                     }
                     $data['message'] = json_encode(array('title'=> 'Proyecto creado exitosamente', 'type' => 'success' ));
+
+                    $base_folder = array(
+                        'fil_filename' => $this->input->post('name'),
+                        'fil_url' => $this->input->post('name').'/',
+                        'fil_owner' => $this->session->userdata('userId'),
+                        'fil_associated_project_id' => $this->project->retrieve_project_id($this->input->post('name'), $this->session->userdata('userId')),
+                        'fil_file_format' => 'folder'
+                    );
+                    $this->file->insert($base_folder);
+
+                    $input_folder = array(
+                        'fil_filename' => 'input',
+                        'fil_url' => $this->input->post('name').'/input/',
+                        'fil_parent_id' => $this->file->curr_file_id($this->project->retrieve_project_id($this->input->post('name'), $this->session->userdata('userId'))),
+                        'fil_owner' => $this->session->userdata('userId'),
+                        'fil_associated_project_id' => $this->project->retrieve_project_id($this->input->post('name'), $this->session->userdata('userId')),
+                        'fil_file_format' => 'folder'
+                    );
+                    $this->file->insert($input_folder);
+
+                    $output_folder = array(
+                        'fil_filename' => 'output',
+                        'fil_url' => $this->input->post('name').'/output/',
+                        'fil_parent_id' => $this->file->curr_file_id($this->project->retrieve_project_id($this->input->post('name'), $this->session->userdata('userId'))),
+                        'fil_owner' => $this->session->userdata('userId'),
+                        'fil_associated_project_id' => $this->project->retrieve_project_id($this->input->post('name'), $this->session->userdata('userId')),
+                        'fil_file_format' => 'folder'
+                    );
+                    $this->file->insert($output_folder);
+
                     $this->template->load('layout_admin', 'projects/project_create', $data);
                 } else {
                     $data['message'] = json_encode(array('title'=> 'No se pudo crear el proyecto', 'type' => 'error' ));

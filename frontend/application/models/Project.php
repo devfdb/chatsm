@@ -100,4 +100,32 @@ class Project extends CI_Model
     {
 
     }
+
+    public function retrieve_project_id($name, $usr_id) {
+        $this->db->select('prj_id');
+        $this->db->from('project');
+        $this->db->where('prj_owner', $usr_id);
+        $this->db->where('prj_name', $name);
+
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result_array()[0]['prj_id'];
+        } else {
+            return null;
+        }
+    }
+
+    public function retrieve_project_name($id, $usr_id) {
+        $this->db->select('prj_name');
+        $this->db->from('project');
+        $this->db->where('prj_owner', $usr_id);
+        $this->db->where('prj_id', $id);
+
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result_array()[0]['prj_name'];
+        } else {
+            return null;
+        }
+    }
 }
