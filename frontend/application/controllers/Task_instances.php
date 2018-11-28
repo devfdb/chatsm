@@ -18,6 +18,7 @@ class Task_instances extends CI_Controller
         $this->load->library('form_validation');
         $this->load->helper('form');
         $this->load->model('task_instance');
+        $this->load->model('task_instance_parameter');
         $this->load->model('task_type');
         $this->load->model('task_type_parameter');
         $this->load->model('user');
@@ -104,10 +105,20 @@ class Task_instances extends CI_Controller
                 $data = array(
                     'ins_name' => $inst['name'],
                     'ins_type_id' => $inst['type_id'],
-                    'ins_owner' => $this->session->userdata('userId')
+                    'ins_owner' => $this->session->userdata('userId'),
+                    'ins_project_id' => $this->session->userdata('project_id')
                 );
                 $result = $this->task_instance->insert($data);
 
+                foreach ($inst['parameters'][0] as $parameter) {
+                    $param_entry = array(
+                        'inp_instance_id' => $result,
+                        'inp_parameter_type_id' => $parameter['itp_id'],
+                        'inp_parameter_value' => $parameter['value']
+                    );
+                    $this->task_instance_parameter->insert($param_entry);
+                }
+                // So, data adds the instance itself
                 // TODO: Agregar parámetros para instancia.
                 // TODO: Los datos para ingresar están en $inst['parameters']
 

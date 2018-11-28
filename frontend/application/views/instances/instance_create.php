@@ -29,7 +29,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6" v-for="(p,index) in parameters">
+                <div class="col-md-6" v-for="(p,index) in parameters[0]">
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label">{{p.itp_name}}</label>
                         <div class="col-sm-9">
