@@ -86,6 +86,12 @@
                                                 </option>
                                             </select>
                                         </div>
+                                        <div class="col-sm-12">
+                                            <br>
+                                            <button @click="addRootNode()" class="btn btn-block btn-success">Agregar nodo a raíz</button>
+
+                                        </div>
+
                                     </div>
 
                                 </form>
@@ -155,15 +161,24 @@
                 }
             },
 
+            addRootNode() {
+                var data = {
+                    process_id: <?php echo $id ?>,
+                    parent: null,
+                    new: this.new_node
+                };
+                axios.post('/processes/new-node', data)
+                    .then(function (response) {
+                            treeData.append(response.data);
+                            treeData.expand();
+                            self.new_node = {};
+                        }
+                    );
+            },
             addChildNode(node) {
+                var self = this;
                 if (node.enabled()) {
                     if (this.new_node.instance_id) {
-                        let nnode = {};
-                        let self = this;
-                        //TODO terminar crear funciones en processes deberia enviar un nodo de proceso y recibir el nodo creado en la base de datos
-
-                        node.identifier = node.id;
-
                         var data = {
                             process_id: <?php echo $id ?>,
                             parent: {
@@ -172,13 +187,10 @@
                             new: this.new_node
                         };
                         axios.post('/processes/new-node', data)
-                            .then(
-                                function (response) {
-                                    debugger;
-                                    nnode = response.data;
-                                    node.append(nnode);
-                                    self.new_node = {};
+                            .then(function (response) {
+                                    node.append(response.data);
                                     node.expand();
+                                    self.new_node = {};
                                 }
                             )
                     }

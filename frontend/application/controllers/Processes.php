@@ -291,27 +291,33 @@ class Processes extends CI_Controller
             'name' => $this->task_instance->getInstance($tree_input['new']['instance_id']),
             'id' => $tree_input['new']['instance_id']
         );
-        $data = array(
-            'pcn_parent' => $parent_data['id'],
-            'pcn_task_id' => $child_data['id'],
-            'pcn_process_id' => $tree_input['process_id']
-        );
-        $result = $this->process->insert_node($data);
-        if($result)
-        {
-            echo json_encode(
-                array(
-                'id' => $result,
-                'text' => $child_data['name'],
-                'data' => array(
-                    'instance_id' => $child_data['id']
-                ),
-                'children' => array()
-                )
+
+        if ($parent_data == null) {
+            $data = array(
+                'pcn_parent' => null,
+                'pcn_task_id' => $child_data['id'],
+                'pcn_process_id' => $tree_input['process_id']
+            );
+        } else {
+            $data = array(
+                'pcn_parent' => $parent_data['id'],
+                'pcn_task_id' => $child_data['id'],
+                'pcn_process_id' => $tree_input['process_id']
             );
         }
-        else
-        {
+        $result = $this->process->insert_node($data);
+        if ($result) {
+            echo json_encode(
+                array(
+                    'id' => $result,
+                    'text' => $child_data['name'],
+                    'data' => array(
+                        'instance_id' => $child_data['id']
+                    ),
+                    'children' => array()
+                )
+            );
+        } else {
             echo json_encode(
                 array(
                     'output' => 'error'
