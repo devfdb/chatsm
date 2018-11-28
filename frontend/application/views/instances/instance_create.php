@@ -14,7 +14,7 @@
                         <label for="name" class="col-sm-3 col-form-label">Nombre</label>
                         <div class="col-sm-9">
                             <input id="name" type="text" v-model="name" class="form-control">
-<!--                            --><?php //echo form_input(array('name' => 'name', 'class' => 'form-control')) ?>
+                            <!--                            --><?php //echo form_input(array('name' => 'name', 'class' => 'form-control')) ?>
                         </div>
                     </div>
                 </div>
@@ -33,27 +33,29 @@
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label">{{p.itp_name}}</label>
                         <div class="col-sm-9">
-                                <input v-if="is_string(p.itp_var_type)" type="text" v-model="param[index].value" class="form-control">
+                            <input v-if="is_string(p.itp_var_type)" type="text" v-model="p.value"
+                                   class="form-control">
                         </div>
                     </div>
                 </div>
+                {{parameters}}
             </div>
             <div class="row">
                 <button class="btn btn-success mr-2" @click="create_instance">Crear</button>
                 <a href="/task-instances/index" class="btn btn-light">Cancelar</a>
             </div>
-<!--            --><?php //echo form_close(); ?>
+            <!--            --><?php //echo form_close(); ?>
         </div>
     </div>
 </div>
 
 <script>
-//    Todo encontrar modo de traspasar la id del tipo de dato a el arreglo de parametros
+    //    Todo encontrar modo de traspasar la id del tipo de dato a el arreglo de parametros
     new Vue({
         el: '#create',
         data() {
             return {
-                name:'',
+                name: '',
                 type: '',
                 list_types: [],
                 parameters: [],
@@ -65,32 +67,43 @@
                 ]
             }
         },
-        methods:{
-            get_task_type(){
-                return axios.get('/task-instances/get-task-types')
+        methods: {
+            /**
+             * Recupera los tipos de tarea
+             * @returns {*}
+             */
+            get_task_type() {
+                return axios.get('/task-instances/get-task-types');
             },
-            get_task_parameters(){
-                return axios.get('/task-instances/get-task-parameters/'+ this.type).then(
-                    response => {
-                        this.parameters = response.data;
-                    }
-                )
+            /**
+             * Recupera los parámetros de las tareas
+             * @returns {*}
+             */
+            get_task_parameters() {
+                var self= this;
+                return axios.get('/task-instances/get-task-parameters/' + this.type)
+                    .then(function (response) {
+                        self.parameters = response.data;
+                    });
             },
-            is_string(type){
-                if(type === 'string'){
+            is_string(type) {
+                if (type === 'string') {
                     return true;
                 }
                 else return false;
             },
-            create_instance(){
-                let data = {
-                    'name': this.name,
-                    'type_id': this.type,
+            create_instance() {
+
+                var taskobj = {
+                    name: this.name,
+                    type_id: this.type,
+                    parameters: this.parameters
                 };
-                axios.post('/task-instances/create', data)
+
+                axios.post('/task-instances/create', taskobj)
             }
         },
-        mounted(){
+        mounted() {
             this.get_task_type().then(resp => {
                 this.list_types = resp.data;
             })

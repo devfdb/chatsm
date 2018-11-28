@@ -35,7 +35,8 @@
                     <?php foreach ($instance_table as $item) { ?>
                         <tr>
                             <td><?php echo $item['ins_name'] ?></td>
-                            <td><?php echo $type_table[$item['ins_type_id']] ?></td>
+                            <td><?php #echo #$type_table[$item['ins_type_id']]
+                                // TODO: Esto no funciona asi con posicion del array, si no segun el valor del key !!!! ?></td>
                             <td><?php echo $user_table[$item['ins_owner']] ?></td>
                             <td><?php echo $item['ins_owner'] ?></td>
                             <td><?php echo $item['ins_last_modified'] ?></td>

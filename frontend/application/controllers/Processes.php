@@ -33,16 +33,15 @@ class Processes extends CI_Controller
         $json = $this->parse_to_json_for_input($id);
         $json = str_replace(array("\r", "\n"), "", $json);
         $self = $this;
-        $this->rabbitmq_client->push_with_response('tasks', $json, function ($message) use ($self, $id){
+        $this->rabbitmq_client->push_with_response('tasks', $json, function ($message) use ($self, $id) {
             $receive = json_decode($message);
-            if($receive->result == 'processing')
-            {
+            if ($receive->result == 'processing') {
                 $data['exe_id'] = $receive->data->id_execution;
                 $data['exe_status'] = $receive->result;
                 $data['exe_process_id'] = $id;
                 $self->execution->insert($data);
 
-                return("string");
+                return ("string");
             }
             header('Content-Type: application/json');
             $arr = array(
@@ -52,7 +51,7 @@ class Processes extends CI_Controller
             echo "end time";
             echo date("h:i:s", time());
             echo json_encode($arr);
-            return("string");
+            return ("string");
         });
     }
 
@@ -73,14 +72,13 @@ class Processes extends CI_Controller
     public function update_table()
     {
 
-        $this->rabbitmq_client->pull('reply',false,function ($message){
+        $this->rabbitmq_client->pull('reply', false, function ($message) {
             array_push($this->reply, $message->body);
         });
 
         if (empty($this->reply)) {
             echo json_encode($this->reply);
-        }
-        else {
+        } else {
             foreach ($this->reply as $item) {
                 $item = json_decode($item);
                 $this->execution->update($item->id);
@@ -106,7 +104,7 @@ class Processes extends CI_Controller
                     'prc_name' => $this->input->post('name'),
                     'prc_owner' => $this->session->userdata('userId'),
                     'prc_input' => $this->input->post('input_id'),
-                    'prc_project_id' =>  $this->session->userdata('project_id')
+                    'prc_project_id' => $this->session->userdata('project_id')
                 );
                 $result = $this->process->insert($data);
                 if ($result == TRUE) {
@@ -142,17 +140,17 @@ class Processes extends CI_Controller
             'data' => array('instance_id' => '1'),
             'children' => array(
                 array(
-                'id' => '1',
-                'name' => 'test2',
-                'data' => array('instance_id' => '3'),
-                'children' => array(
-                    array(
-                    'id' => '2',
-                    'name' => 'clean',
-                    'data' => array('instance_id' => '4'),
-                    'children' => array(),
+                    'id' => '1',
+                    'name' => 'test2',
+                    'data' => array('instance_id' => '3'),
+                    'children' => array(
+                        array(
+                            'id' => '2',
+                            'name' => 'clean',
+                            'data' => array('instance_id' => '4'),
+                            'children' => array(),
+                        )
                     )
-                )
                 )
             )
         );
@@ -192,7 +190,7 @@ class Processes extends CI_Controller
 
     public function parse_recursive_for_input($nodes, &$arr_ref, $id)
     {
-        foreach($nodes as $item) {
+        foreach ($nodes as $item) {
             $task = $this->process->read_task($item['pcn_task_id']);
             $new_process = array(
                 'id' => $item['pcn_id'],
@@ -203,7 +201,7 @@ class Processes extends CI_Controller
                 'children' => array()
             );
             $children = $this->process->select_children($id, $item['pcn_id']);
-            if($children != null) {
+            if ($children != null) {
                 $this->parse_recursive_for_input($children, $new_process['children'], $id);
             }
             array_push($arr_ref, $new_process);
@@ -226,21 +224,25 @@ class Processes extends CI_Controller
 
     public function parse_recursive_for_view($nodes, &$arr_ref, $id)
     {
-        foreach($nodes as $item) {
-            $task = $this->process->read_task($item['pcn_task_id']);
-            $new_process = array(
-                'id' => $item['pcn_id'],
-                'name' => $task['ins_name'],
-                'data' => array(
-                    'instance_id' => $task['ins_id']
-                ),
-                'children' => array()
-            );
-            $children = $this->process->select_children($id, $item['pcn_id']);
-            if($children != null) {
-                $this->parse_recursive_for_view($children, $new_process['children'], $id);
+        if (count($nodes) > 0) {
+            foreach ($nodes as $item) {
+                $task = $this->process->read_task($item['pcn_task_id']);
+                $new_process = array(
+                    'id' => $item['pcn_id'],
+                    'name' => $task['ins_name'],
+                    'data' => array(
+                        'instance_id' => $task['ins_id']
+                    ),
+                    'children' => array()
+                );
+                $children = $this->process->select_children($id, $item['pcn_id']);
+                if ($children != null) {
+                    $this->parse_recursive_for_view($children, $new_process['children'], $id);
+                }
+                array_push($arr_ref, $new_process);
             }
-            array_push($arr_ref, $new_process);
+        } else {
+            return [];
         }
     }
 
@@ -259,7 +261,7 @@ class Processes extends CI_Controller
     public function run_process()
     {
         //Todo Completar
-        $this->rabbitmq_client->push_with_response('task', $data, function ($message){
+        $this->rabbitmq_client->push_with_response('task', $data, function ($message) {
 
         });
         $this->rabbitmq_client->response;
@@ -267,7 +269,7 @@ class Processes extends CI_Controller
 
     public function process_listen()
     {
-        $this->rabiitmq_client->pull('task',false,function ($message) {
+        $this->rabiitmq_client->pull('task', false, function ($message) {
 
             array_push($this->reply, $message->body);
         });
@@ -276,5 +278,21 @@ class Processes extends CI_Controller
     public function destroy_ex($id)
     {
         # TODO funcion que destruye una ejecucion. Una vez que sea posible cancelarla sin perturbar las demas
+    }
+
+
+    public function new_node()
+    {
+        // Recupera nodo padre
+        $parent_node = json_decode(file_get_contents('php://input'), true);
+
+        // TODO: Agregar nuevo nodo a base de datos
+
+        echo json_encode(array(
+            'id' => '1222',
+            'text' => 'nodo nuevo',
+            'data' => array('instance_id' => '3'),
+            'children' => array()
+        ));
     }
 }

@@ -11,6 +11,7 @@
 </div>
 
 <template id="liquor-json-viewer">
+
     <div class="json-viewer">
         <tree :data="treeData" :options="treeOptions" @node:selected="sel">
         <span slot-scope="{ node }" class="viewer-item" :class="[node.data.type]">
@@ -18,14 +19,6 @@
            <div style="border: 1px solid black; padding: 5px; background: white; border-radius: 5px; width: 350px">
                Id: {{ node.id }} <br>
                Nombre: {{ node.text }} <br>
-<!--               <span v-if="node.collapsed()">-->
-<!--                  <template v-if="node.data.type == 'array'">-->
-<!--                    [ {{ node.children.length }} ]-->
-<!--                  </template>-->
-<!--                  <template v-else>-->
-<!--                    { {{ node.children.length }} }-->
-<!--                  </template>-->
-<!--                </span>-->
             </div>
           </span>
             <div class="node-controls">
@@ -42,19 +35,68 @@
         </tree>
         <div class="row">
             <div class="col-12">
-                <div class="card">
-                    <div class="card-content" v-if="selectednode && selectednode.text && selectednode.data">
-                        Nodo ID : {{selectednode.id}} <br/>
-                        Nombre de tarea : {{ selectednode.text }} <br/>
-                        Instancia: <select name="instance" id="instance" value="selectednode.data.instanceid" >
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
 
+                <div class="row flex-grow">
+
+
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body" v-if="selectednode && selectednode.text && selectednode.data">
+                                Información del nodo
+                                <hr/>
+                                <form class="forms-sample">
+                                    <div class="form-group row">
+                                        <label for="exampleInputEmail2" class="col-sm-3 col-form-label">ID</label>
+                                        <div class="col-sm-9">
+                                            {{selectednode.id}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="exampleInputEmail2" class="col-sm-3 col-form-label">Tarea</label>
+                                        <div class="col-sm-9">
+                                            {{selectednode.text}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="exampleInputEmail2"
+                                               class="col-sm-3 col-form-label">Instancia</label>
+                                        <div class="col-sm-9">
+                                            {{selectednode.text}}
+                                        </div>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12" style="margin-top: 30px">
+                        <div class="card">
+                            <div class="card-body">
+                                Nuevo nodo
+                                <hr/>
+                                <form class="forms-sample">
+                                    <div class="form-group row">
+                                        <label for="exampleInputEmail2"
+                                               class="col-sm-3 col-form-label">Instancia</label>
+                                        <div class="col-sm-9">
+                                            <select name="" id="tipo" class="form-control"
+                                                    v-model="new_node.instance_id">
+                                                <option :value="item.key" v-for="item in list_types">{{ item.value }}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </form>
+
+                            </div>
+
+
+                        </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
@@ -66,6 +108,7 @@
 
         data() {
             return {
+                list_types: [],
                 json: {},
                 selectednode: null,
                 treeData: this.getData().then(r => r.data.input),
@@ -77,7 +120,8 @@
                         data: 'data'
                     }
                 },
-                instanceList:[]
+                instanceList: [],
+                new_node: {}
             }
         },
         methods: {
@@ -113,23 +157,50 @@
 
             addChildNode(node) {
                 if (node.enabled()) {
-                    let nnode = {};
-                    let self = this;
-                    //TODO terminar crear funciones en processes deberia enviar un nodo de proceso y recibir el nodo creado en la base de datos
-                    // axios.post('processes/new-node', data).then( response  => {
-                    //         nnode = response.data
-                    //         node.append(nnode)
-                    //     }
-                    // )
 
+                    if (this.new_node.instance_id) {
+                        let nnode = {};
+                        let self = this;
+                        //TODO terminar crear funciones en processes deberia enviar un nodo de proceso y recibir el nodo creado en la base de datos
+
+                        var data = {
+                            parent: node,
+                            new: this.new_node
+                        };
+
+                        axios.post('/processes/new-node', data)
+                            .then(function (response) {
+                                    nnode = response.data;
+                                    node.append(nnode);
+                                    self.new_node = {};
+                                    node.expand();
+                                }
+                            )
+                    }
+                    else {
+                        swal({
+                            type: "warning",
+                            title: "Selecciona un tipo de nodo",
+                            text: "Se requiere seleccionar la instancia"
+                        })
+                    }
                 }
             },
+            get_task_type() {
+                var self = this
+                return axios.get('/task-instances/get_instances_of_project')
+                    .then(function (r) {
+                        self.list_types = r.data;
+                    })
+            }
         },
-        mounted(){
+        mounted() {
             //TODO terminar crear funciones en processes deberia obtener las instancias del proyecto
-             //axios.get('processes/get-instances/<?php //proyect_id ?>//').then( response =>{
+            //axios.get('processes/get-instances/<?php //proyect_id ?>//').then( response =>{
             //     this.instanceList = response.data()
             // })
+
+            this.get_task_type();
         }
     });
 
@@ -137,8 +208,7 @@
     new Vue({
         el: '#app-tree',
         data() {
-            return {
-            }
+            return {}
         },
     })
 </script>

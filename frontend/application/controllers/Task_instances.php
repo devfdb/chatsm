@@ -32,12 +32,13 @@ class Task_instances extends CI_Controller
         $this->template->load('layout_admin', 'instances/instance_index', $data);
 
     }
+
     private function select_task_type_parameter($id)
     {
         $params = $this->task_type_parameter->read($id);
         $arr = array();
 
-        if($params) {
+        if ($params) {
             array_push($arr, $params);
         }
         return $arr;
@@ -48,8 +49,8 @@ class Task_instances extends CI_Controller
         $types = $this->task_type->table();
         $arr = array();
 
-        if($types) {
-            foreach($types as $item) {
+        if ($types) {
+            foreach ($types as $item) {
                 array_push($arr, array(
                     'key' => $item['tst_id'],
                     'value' => $item['tst_name']
@@ -64,20 +65,21 @@ class Task_instances extends CI_Controller
         $instances = $this->task_instance->table($project_id);
         $arr = array();
 
-        if($instances) {
-            foreach($instances as $item) {
+        if ($instances) {
+            foreach ($instances as $item) {
                 $arr[$item['ins_id']] = $item;
             }
         }
         return $arr;
     }
 
-    public function show_users()    {
+    public function show_users()
+    {
         $users = $this->user->getRows();
         $arr = array();
 
-        if($users) {
-            foreach($users as $item) {
+        if ($users) {
+            foreach ($users as $item) {
                 $arr[$item['usr_id']] = $item['usr_username'];
             }
         }
@@ -96,7 +98,7 @@ class Task_instances extends CI_Controller
 //            $this->form_validation->set_error_delimiters('<div class="alert alert-danger alert-dismissible">','</div>');
 
 //            if ($this->form_validation->run()) {
-            if(true){
+            if (true) {
                 $inst = json_decode(file_get_contents('php://input'), true);
 
                 $data = array(
@@ -106,6 +108,10 @@ class Task_instances extends CI_Controller
                 );
                 $result = $this->task_instance->insert($data);
 
+                // TODO: Agregar parámetros para instancia.
+                // TODO: Los datos para ingresar están en $inst['parameters']
+
+
 //                foreach (parameter in $inst['params'])
 //                $param = array(
 //                  'inp_instance_id' => $result['ins_id'],
@@ -113,11 +119,11 @@ class Task_instances extends CI_Controller
 //                    'inp_parameter_value' => $inst[],
 //                );
                 if ($result == TRUE) {
-                    $data['message'] = json_encode(array('title'=> 'Instancia creada exitosamente', 'type' => 'success' ));
+                    $data['message'] = json_encode(array('title' => 'Instancia creada exitosamente', 'type' => 'success'));
                     $data['list_types'] = $this->select_task_type();
                     $this->template->load('layout_admin', 'instances/instance_create', $data);
                 } else {
-                    $data['message'] = json_encode(array('title'=> 'No se pudo crear la instancia', 'type' => 'error' ));
+                    $data['message'] = json_encode(array('title' => 'No se pudo crear la instancia', 'type' => 'error'));
                     $data['list_types'] = $this->select_task_type();
                     $this->template->load('layout_admin', 'instances/instance_create', $data);
                 }
@@ -135,13 +141,13 @@ class Task_instances extends CI_Controller
             $data['instance'] = $this->task_instance->read($id);
             $data['list_types'] = $this->select_task_type();
 
-            if(!$data['instance']) redirect('/task-instances/index', 'location');
+            if (!$data['instance']) redirect('/task-instances/index', 'location');
             else $this->template->load('layout_admin', 'instances/instance_edit', $data);
 
         } else if ($this->input->server('REQUEST_METHOD') == 'POST') {
             $this->form_validation->set_rules('name', 'nombre', 'trim|required');
             $this->form_validation->set_rules('type_id', 'tipo', 'trim|required');
-            $this->form_validation->set_error_delimiters('<div class="alert alert-danger alert-dismissible">','</div>');
+            $this->form_validation->set_error_delimiters('<div class="alert alert-danger alert-dismissible">', '</div>');
 
             if ($this->form_validation->run()) {
                 $data = array(
@@ -150,12 +156,12 @@ class Task_instances extends CI_Controller
                 );
                 $result = $this->task_instance->update($id, $data);
                 if ($result == TRUE) {
-                    $data['message'] = json_encode(array('title'=> 'Instancia actualizada exitosamente', 'type' => 'success' ));
+                    $data['message'] = json_encode(array('title' => 'Instancia actualizada exitosamente', 'type' => 'success'));
                     $data['instance'] = $this->task_instance->read($id);
                     $data['list_types'] = $this->select_task_type();
                     $this->template->load('layout_admin', 'instances/instance_edit', $data);
                 } else {
-                    $data['message'] = json_encode(array('title'=> 'Error al actualizar instancia', 'type' => 'error' ));
+                    $data['message'] = json_encode(array('title' => 'Error al actualizar instancia', 'type' => 'error'));
                     $data['instance'] = $this->task_instance->read($id);
                     $data['list_types'] = $this->select_task_type();
                     $this->template->load('layout_admin', 'instances/instance_edit', $data);
@@ -174,19 +180,35 @@ class Task_instances extends CI_Controller
         if ($this->input->server('REQUEST_METHOD') == 'GET') {
             $data['instance'] = $this->task_instance->read($id);
 
-            if(!$data['instance']) redirect('/task-instances/index', 'location');
+            if (!$data['instance']) redirect('/task-instances/index', 'location');
             else $this->template->load('layout_admin', 'instances/instance_destroy', $data);
 
         } else if ($this->input->server('REQUEST_METHOD') == 'POST') {
             $result = $this->task_instance->delete($id);
             if ($result == TRUE) {
-                $data['message'] = json_encode(array('title'=> 'Instancia eliminada exitosamente', 'type' => 'error' ));
+                $data['message'] = json_encode(array('title' => 'Instancia eliminada exitosamente', 'type' => 'error'));
                 $this->index();
             } else {
-                $data['message'] = json_encode(array('title'=> 'Error al eliminar instancia', 'type' => 'error' ));
+                $data['message'] = json_encode(array('title' => 'Error al eliminar instancia', 'type' => 'error'));
                 $this->index();
             }
         }
+    }
+
+    public function get_instances_of_project()
+    {
+        $project_id = $this->session->userdata('project_id');
+        $instances = $this->task_instance->table($project_id);
+        $arr = array();
+        if ($instances) {
+            foreach ($instances as $item) {
+                array_push($arr, array(
+                    'key' => $item['ins_id'],
+                    'value' => $item['ins_name']
+                ));
+            }
+        }
+        echo json_encode($arr);
     }
 
     public function get_task_types()
