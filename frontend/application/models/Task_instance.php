@@ -76,4 +76,15 @@ class Task_instance extends CI_Model
     public function countTaskInstances($user)    {
         return 1;
     }
+    public function getInstance($id)    {
+        $this->db->select('ins_name');
+        $this->db->from('task_instance');
+        $this->db->where('ins_id', $id);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result_array()[0]['ins_name'];
+        } else {
+            return null;
+        }
+    }
 }

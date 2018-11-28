@@ -157,19 +157,24 @@
 
             addChildNode(node) {
                 if (node.enabled()) {
-
                     if (this.new_node.instance_id) {
                         let nnode = {};
                         let self = this;
                         //TODO terminar crear funciones en processes deberia enviar un nodo de proceso y recibir el nodo creado en la base de datos
 
+                        node.identifier = node.id;
+
                         var data = {
-                            parent: node,
+                            process_id: <?php echo $id ?>,
+                            parent: {
+                                id: node.id
+                            },
                             new: this.new_node
                         };
-
                         axios.post('/processes/new-node', data)
-                            .then(function (response) {
+                            .then(
+                                function (response) {
+                                    debugger;
                                     nnode = response.data;
                                     node.append(nnode);
                                     self.new_node = {};

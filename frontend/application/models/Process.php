@@ -12,6 +12,15 @@ class Process extends CI_Model
         }
     }
 
+    public function insert_node($data)  {
+        $this->db->insert('process_node', $data);
+
+        if ($this->db->affected_rows() > 0) {
+            return $this->db->insert_id();
+        } else {
+            return null;
+        }
+    }
     public function read($id)
     {
         $this->db->select('*');

@@ -15,6 +15,7 @@ class Processes extends CI_Controller
         $this->load->model('user');
         $this->load->model('process');
         $this->load->model('file');
+        $this->load->model('task_instance');
         $this->load->model('execution');
 
         $this->reply = array();
@@ -284,15 +285,40 @@ class Processes extends CI_Controller
     public function new_node()
     {
         // Recupera nodo padre
-        $parent_node = json_decode(file_get_contents('php://input'), true);
-
+        $tree_input = json_decode(file_get_contents('php://input'), true);
+        $parent_data = $tree_input['parent'];
+        $child_data = array(
+            'name' => $this->task_instance->getInstance($tree_input['new']['instance_id']),
+            'id' => $tree_input['new']['instance_id']
+        );
+        $data = array(
+            'pcn_parent' => $parent_data['id'],
+            'pcn_task_id' => $child_data['id'],
+            'pcn_process_id' => $tree_input['process_id']
+        );
+        $result = $this->process->insert_node($data);
+        if($result)
+        {
+            echo json_encode(
+                array(
+                'id' => $result,
+                'text' => $child_data['name'],
+                'data' => array(
+                    'instance_id' => $child_data['id']
+                ),
+                'children' => array()
+                )
+            );
+        }
+        else
+        {
+            echo json_encode(
+                array(
+                    'output' => 'error'
+                )
+            );
+        }
         // TODO: Agregar nuevo nodo a base de datos
 
-        echo json_encode(array(
-            'id' => '1222',
-            'text' => 'nodo nuevo',
-            'data' => array('instance_id' => '3'),
-            'children' => array()
-        ));
     }
 }
