@@ -5,15 +5,85 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
 
 <div class="row">
-    <div class="col-6" id="app-tree">
+    <div id="app-tree">
         <liquor-json-viewer></liquor-json-viewer>
     </div>
 </div>
 
 <template id="liquor-json-viewer">
+    <div class="row">
+        <div class="col-md-6">
 
-    <div class="json-viewer">
-        <tree :data="treeData" :options="treeOptions" @node:selected="sel">
+            <div class="row flex-grow">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body"
+                             v-if="selectednode && selectednode.text && selectednode.data">
+                            Información del nodo
+                            <hr/>
+                            <form class="forms-sample">
+                                <div class="form-group row">
+                                    <label for="exampleInputEmail2"
+                                           class="col-sm-3 col-form-label">ID</label>
+                                    <div class="col-sm-9">
+                                        {{selectednode.id}}
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="exampleInputEmail2"
+                                           class="col-sm-3 col-form-label">Tarea</label>
+                                    <div class="col-sm-9">
+                                        {{selectednode.text}}
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="exampleInputEmail2"
+                                           class="col-sm-3 col-form-label">Instancia</label>
+                                    <div class="col-sm-9">
+                                        {{selectednode.text}}
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12" style="margin-top: 30px">
+                    <div class="card">
+                        <div class="card-body">
+                            Nuevo nodo
+                            <hr/>
+                            <form class="forms-sample">
+                                <div class="form-group row">
+                                    <label for="exampleInputEmail2"
+                                           class="col-sm-3 col-form-label">Instancia</label>
+                                    <div class="col-sm-9">
+                                        <select name="" id="tipo" class="form-control"
+                                                v-model="new_node.instance_id">
+                                            <option :value="item.key" v-for="item in list_types">{{
+                                                item.value
+                                                }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <br>
+                                        <button @click="addRootNode()" class="btn btn-block btn-success">
+                                            Agregar
+                                            nodo a raíz
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="col-md-6">
+            <div class="json-viewer">
+                <tree :data="treeData" :options="treeOptions" @node:selected="sel">
         <span slot-scope="{ node }" class="viewer-item" :class="[node.data.type]">
           <span class="viewer-item__key">
            <div style="border: 1px solid black; padding: 5px; background: white; border-radius: 5px; width: 350px">
@@ -22,9 +92,8 @@
             </div>
           </span>
             <div class="node-controls">
-                <a href="#" @mouseup.stop="editNode(node)">Edit</a>
-                <a href="#" @mouseup.stop="removeNode(node)">Remove</a>
-                <a href="#" @mouseup.stop="addChildNode(node)">Add child</a>
+                <a href="#" @mouseup.stop="removeNode(node)">Eliminar nodo</a>
+                <a href="#" @mouseup.stop="addChildNode(node)">Agregar nodo</a>
             </div>
             <!-- <span v-else class="viewer-item__prop">
               <span class="viewer-item__key">{{ node.text }}</span>
@@ -32,79 +101,13 @@
               <span class="viewer-item__value">{{ node.data.objectKey }}</span>
             </span> -->
         </span>
-        </tree>
-        <div class="row">
-            <div class="col-12">
-
-                <div class="row flex-grow">
-
-
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-body" v-if="selectednode && selectednode.text && selectednode.data">
-                                Información del nodo
-                                <hr/>
-                                <form class="forms-sample">
-                                    <div class="form-group row">
-                                        <label for="exampleInputEmail2" class="col-sm-3 col-form-label">ID</label>
-                                        <div class="col-sm-9">
-                                            {{selectednode.id}}
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="exampleInputEmail2" class="col-sm-3 col-form-label">Tarea</label>
-                                        <div class="col-sm-9">
-                                            {{selectednode.text}}
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="exampleInputEmail2"
-                                               class="col-sm-3 col-form-label">Instancia</label>
-                                        <div class="col-sm-9">
-                                            {{selectednode.text}}
-                                        </div>
-                                    </div>
-                                </form>
-
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-12" style="margin-top: 30px">
-                        <div class="card">
-                            <div class="card-body">
-                                Nuevo nodo
-                                <hr/>
-                                <form class="forms-sample">
-                                    <div class="form-group row">
-                                        <label for="exampleInputEmail2"
-                                               class="col-sm-3 col-form-label">Instancia</label>
-                                        <div class="col-sm-9">
-                                            <select name="" id="tipo" class="form-control"
-                                                    v-model="new_node.instance_id">
-                                                <option :value="item.key" v-for="item in list_types">{{ item.value }}
-                                                </option>
-                                            </select>
-                                        </div>
-                                        <div class="col-sm-12">
-                                            <br>
-                                            <button @click="addRootNode()" class="btn btn-block btn-success">Agregar nodo a raíz</button>
-
-                                        </div>
-
-                                    </div>
-
-                                </form>
-
-                            </div>
-
-
-                        </div>
-                    </div>
-                </div>
+                </tree>
 
             </div>
+
         </div>
+
+
     </div>
 </template>
 
@@ -150,11 +153,6 @@
                 return axios.get('/processes/parse-to-json-for-view/<?php echo $id ?>')
 
             },
-            editNode(node, e) {
-                node.startEditing()
-                console.log(node)
-            },
-
             removeNode(node) {
                 if (confirm('Are you sure?')) {
                     node.remove()
