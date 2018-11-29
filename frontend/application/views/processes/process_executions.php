@@ -29,7 +29,11 @@
                     <?php if ($execution_table) { ?>
                     <?php foreach ($execution_table as $item) { ?>
                     <tr>
-                        <td><?php echo $item['exe_id'] ?></td>
+                        <td>
+                            <a href="/processes/">
+                                <?php echo $item['exe_id'] ?>
+                            </a>
+                        </td>
                         <td><?php echo $item['exe_status'] ?></td>
                         <td><?php
                             echo $item['exe_created_at'] ?></td>

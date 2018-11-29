@@ -6,13 +6,15 @@ class Process extends CI_Model
         $this->db->insert('process', $data);
 
         if ($this->db->affected_rows() > 0) {
-            return $this->db->insert_id();
+            $a = $this->db->insert_id();
+            return $a;
         } else {
             return null;
         }
     }
 
-    public function insert_node($data)  {
+    public function insert_node($data)
+    {
         $this->db->insert('process_node', $data);
 
         if ($this->db->affected_rows() > 0) {
@@ -21,6 +23,18 @@ class Process extends CI_Model
             return null;
         }
     }
+
+    public function insert_execution_node($data)
+    {
+        $this->db->insert('execution_node', $data);
+
+        if ($this->db->affected_rows() > 0) {
+            return $this->db->insert_id();
+        } else {
+            return null;
+        }
+    }
+
     public function read($id)
     {
         $this->db->select('*');
@@ -65,6 +79,31 @@ class Process extends CI_Model
         }
     }
 
+    public function replicate_process_tree($id, $parent_id, $exec_id)
+    {
+        $level_nodes = $this->select_children($id, $parent_id);
+        if ($level_nodes) {
+            foreach ($level_nodes as $node) {
+                $this->create_execution_node($node, $exec_id);
+                $this->replicate_process_tree($id, $node['pcn_id'], $exec_id);
+            }
+        } else {
+            return null;
+        }
+    }
+
+    public function create_execution_node($node, $exec_id)
+    {
+        $data = array(
+            'ejn_parent' => $node['pcn_parent'],
+            'ejn_task_id' => $node['pcn_task_id'],
+            'ejn_execution_id' => $exec_id
+        );
+        $this->insert_execution_node($data);
+
+        return null;
+    }
+
     public function read_task($id)
     {
         $this->db->select('*');
@@ -91,6 +130,10 @@ class Process extends CI_Model
             if ($result != null) {
                 return $result;
             }
+            else
+            {
+                return null;
+            }
         } else {
             return array();
         }
@@ -104,11 +147,17 @@ class Process extends CI_Model
         $this->db->where('ins_id', $id);
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
-            $result = $query->result_array()[0];
+            $result = $query->result_array();
+            $first_result = $result[0];
             if ($result != null) {
-                return $result;
+                return $first_result;
             }
-        } else {
+            else
+            {
+                return array();
+            }
+        }
+        else {
             return array();
         }
     }
@@ -136,7 +185,9 @@ class Process extends CI_Model
     {
         $this->db->select('*');
         $this->db->from('process');
-        $this->db->where('prc_project_id', $id);
+        if ($id) {
+            $this->db->where('prc_project_id', $id);
+        }
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
             return $query->result_array();
@@ -170,9 +221,9 @@ class Process extends CI_Model
         }
     }
 
-    public function table_select()
+    public function table_select($user_id)
     {
-        $instances = $this->table();
+        $instances = $this->table($user_id);
         $arr = array();
         foreach($instances as $item) {
             $arr[$item['prc_id']] = $item['prc_name'];

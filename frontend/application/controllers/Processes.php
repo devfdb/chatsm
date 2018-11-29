@@ -40,8 +40,12 @@ class Processes extends CI_Controller
                 $data['exe_id'] = $receive->data->id_execution;
                 $data['exe_status'] = $receive->result;
                 $data['exe_process_id'] = $id;
-                $self->execution->insert($data);
+                $result = $self->execution->insert($data);
+                if ($result)
+                {
+                    $this->process->replicate_process_tree($id, null, $result);
 
+                }
                 return ("string");
             }
             header('Content-Type: application/json');
@@ -81,8 +85,10 @@ class Processes extends CI_Controller
             echo json_encode($this->reply);
         } else {
             foreach ($this->reply as $item) {
+                $item_json = $item;
                 $item = json_decode($item);
-                $this->execution->update($item->id);
+                $this->execution->update($item->id, $item_json);
+                $this->execution->update_execution_table($item->message->processes, $item->id);
             }
             echo json_encode($this->reply);
         }
@@ -243,7 +249,7 @@ class Processes extends CI_Controller
                 array_push($arr_ref, $new_process);
             }
         } else {
-            return [];
+            return array();
         }
     }
 
