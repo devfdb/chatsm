@@ -107,6 +107,10 @@
 
         </div>
 
+        <div class="col-md-6">
+            <pre>{{treeData}}</pre>
+        </div>
+
 
     </div>
 </template>
