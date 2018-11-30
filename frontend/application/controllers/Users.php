@@ -38,8 +38,12 @@ class Users extends CI_Controller
         $data = array();
 
         if ($this->input->server('REQUEST_METHOD') == 'GET') {
-            if($this->session->userdata('isUserLoggedIn')) redirect('dashboard', 'location');
-            $this->load->view('users/user_login', $data);
+            if($this->session->userdata('isUserLoggedIn')) {
+                redirect('dashboard', 'location');
+            }
+            else {
+                $this->load->view('users/user_login', $data);
+            }
         } else if ($this->input->server('REQUEST_METHOD') == 'POST') {
 
             $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
@@ -65,6 +69,7 @@ class Users extends CI_Controller
                     $this->session->set_userdata('isUserLoggedIn', TRUE);
                     $this->session->set_userdata('userId', $checkLogin['usr_id']);
                     $this->session->set_userdata('userName', $checkLogin['usr_name']);
+                    $this->session->set_userdata('userProfilePhoto', null); # TODO agregar a base de datos direccion relativa de imagen de usuario
                     redirect('dashboard');
                 } else {
                     $data['error_msg'] = 'Su usuario o contraseña es incorrecto';

@@ -9,7 +9,7 @@
                     <div class="float-right">
                         <p class="mb-0 text-right">Proyectos</p>
                         <div class="fluid-container">
-                            <h3 class="font-weight-medium text-right mb-0">?</h3>
+                            <h3 class="font-weight-medium text-right mb-0"><?php echo $projects; ?></h3>
                         </div>
                     </div>
                 </div>
@@ -26,7 +26,7 @@
                     <div class="float-right">
                         <p class="mb-0 text-right">Ejecuciones</p>
                         <div class="fluid-container">
-                            <h3 class="font-weight-medium text-right mb-0">?</h3>
+                            <h3 class="font-weight-medium text-right mb-0"><?php echo $executions; ?></h3>
                         </div>
                     </div>
                 </div>
@@ -45,7 +45,7 @@
                     <div class="float-right">
                         <p class="mb-0 text-right">Instancias</p>
                         <div class="fluid-container">
-                            <h3 class="font-weight-medium text-right mb-0">?</h3>
+                            <h3 class="font-weight-medium text-right mb-0"><?php echo $instances; ?></h3>
                         </div>
                     </div>
                 </div>

@@ -139,8 +139,21 @@
             -->
             <li class="nav-item dropdown d-none d-xl-inline-block">
                 <a class="nav-link dropdown-toggle" id="UserDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
-                    <span class="profile-text">Hola, <?php echo $this->session->userdata('userId') ?>!</span>
-                    <img class="img-xs rounded-circle" src="/assets/img/faces/face1.jpg" alt="Profile image">
+                    <span class="profile-text">Hola, <?php
+                        if ($this->session->userdata('userName') != null)
+                        {
+                            echo $this->session->userdata('userName');
+                        }
+                        else
+                        {
+                            echo 'invitado';
+                        }?>!</span>
+                    <?php if ($this->session->userdata('image') != null) {?>
+                        <img class="img-xs rounded-circle" src="<?php echo $this->session->userdata('userProfilePhoto');?>" alt="Profile image">
+                    <?php }
+                    else {?>
+                        <img class="img-xs rounded-circle" src="/assets/img/faces/face1.jpg" alt="Profile image">
+                    <?php }?>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
                     <a class="dropdown-item p-0">

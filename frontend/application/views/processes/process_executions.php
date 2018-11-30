@@ -1,51 +1,85 @@
-
 <div class="col-lg-12 grid-margin">
-    <div id="app" class="card">
-        <div class="card-body">
-            <h4 class="card-title">Ejecuciones del proceso: Lematización y corrección ortografica 1</h4>
-            <div class="card-body">
-                <button @click="run(<?php echo $process_id?>)">Ejecutar</button>
-                <button @click="update()">Actualizar</button>
+    <div id="app">
+        <div class="row">
+            <div class="col-md-6 ">
+                <div class="card">
+                    <div class="card-body">
+                        <pre>{{treeExecution | json}}</pre>
+                    </div>
+                </div>
             </div>
-            <div class="table-responsive">
-                <table class="table table-bordered">
-                    <thead>
-                    <tr>
-                        <th>
-                            UUID
-                        </th>
+            <div class="col-md-6">
+                <div class="card">
 
-                        <th>
-                            Progreso
-                        </th>
-                        <th>
-                            Tiempo transcurrido desde inicio
-                        </th>
-                        <th>
-                            Acciones
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php if ($execution_table) { ?>
-                    <?php foreach ($execution_table as $item) { ?>
-                    <tr>
-                        <td><?php echo $item['exe_id'] ?></td>
-                        <td><?php echo $item['exe_status'] ?></td>
-                        <td><?php
-                            echo $item['exe_created_at'] ?></td>
-                        <td>
-                            <div class="btn-group" role="group" aria-label="Operaciones">
-                                <a title="Matar ejecución" href="/processes/destroy_ex/<?php echo $item['exe_id'] ?>" class="btn btn-outline-secondary">
-                                    <i class="mdi mdi-delete"></i>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                        <?php }
-                    } ?>
-                    </tbody>
-                </table>
+                    <div class="card-body">
+                        <div>
+                            <button type="button" class="btn btn-outline-primary btn-lg"
+                                    @click="run(<?php echo $process_id ?>)">
+                                <img src="/assets/img/play-48.png" style="height: 24px; width: 24px"/>Ejecutar
+                            </button>
+
+                            <button type="button" class="btn btn-outline-primary btn-lg" @click="update()">
+                                <img src="/assets/img/update-48.png" style="height: 24px; width: 24px"/>Actualizar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th>
+                                    UUID
+                                </th>
+                                <th>
+                                    Progreso
+                                </th>
+                                <th>
+                                    Momento de inicio
+                                </th>
+                                <th>
+                                    Acciones
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?php if ($execution_table) { ?>
+                                <?php foreach ($execution_table as $item) { ?>
+                                    <tr>
+                                        <td>
+                                            <a href="/processes/">
+                                                <?php echo $item['exe_id'] ?>
+                                            </a>
+                                        </td>
+                                        <td><?php if ($item['exe_status'] == 'processing') { ?>
+                                                <img src="/assets/img/loading.gif"/>
+                                            <?php } else if ($item['exe_status'] == 'terminado') { ?>
+                                                <img src="/assets/img/icon-ready.png"/>
+                                            <?php } ?>
+
+                                        </td>
+                                        <td><?php
+                                            echo $item['exe_created_at'] ?></td>
+                                        <td>
+                                            <div class="btn-group" role="group" aria-label="Operaciones">
+                                                <button title="Ver resultados" @click="selectExecution('<?php echo $item['exe_id'] ?>')">
+                                                    <i class="mdi mdi-view-week"></i>
+                                                </button>
+                                                <!--
+                                                <a title="Matar ejecución"
+                                                   href="/processes/destroy_ex/<?php echo $item['exe_id'] ?>"
+                                                   class="btn btn-outline-secondary">
+                                                    <i class="mdi mdi-delete"></i>
+                                                </a>
+                                                -->
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <?php }
+                            } ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -58,48 +92,53 @@
         el: '#app',
         data: function () {
             return {
-                input: <?php echo $process_id ?>
+                id: <?php echo $process_id ?>,
+                input: <?php echo $process_id ?>,
+                toast: null,
+                treeExecution: {}
             }
+        },
+        created() {
+            this.toast = swal.mixin({
+                toast: true,
+                type: 'success',
+                title: 'Signed in successfully',
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            })
         },
         methods: {
             run: function (id) {
-                swal("Ejecutando...");
                 var self = this;
-                axios.post('/processes/execute/'+id)
+                this.toast({type: 'info', title: 'Iniciando ejecución de proceso ...'});
+                axios.post('/processes/execute/' + id)
                     .then(function (arg) {
-                        swal({
-                            title: 'Enviado',
-                            type: 'success',
-                            confirmButtonColor: '#3085d6',
-                            confirmButtonText: 'OK'
-                        }).then((result) => {
-                            if (result.value) {
-                                location.reload();
-                            }
-                        })
+                        self.toast({type: 'info', title: 'Procesando ejecución ...'});
+                        location.reload();
                     });
             },
             update: function () {
                 var self = this;
-                swal('actualizando');
-                axios.post('processes/update/')
+                this.toast({type: 'info', title: 'Actualizando estados de proceso ...'});
+                axios.post('/processes/update_table/')
                     .then(function (arg) {
-                        swal({
-                            title: 'Actualizado',
-                            type: 'success',
-                            confirmButtonColor: '#3085d6',
-                            confirmButtonText: 'OK'
-                        }).then((result) => {
-                            if (result.value) {
-                                location.reload();
-                            }
-                        })
+                        self.toast({type: 'info', title: '¡Estados de proceso actualizados!'});
+                        if (arg.data) {
+                            location.reload();
+                        }
+                        else {
+                            self.toast({type: 'info', title: 'No hay estados nuevos'});
+                        }
                     });
-            }
-        },
-        computed: {
-            now () {
-                return new Date
+            },
+            selectExecution: function (execution_id) {
+                var self = this;
+                 axios.get('/processes/parse-to-json-for-view/' + this.id)
+                    .then(function (r) {
+                        debugger;
+                        self.treeExecution = r.data.input;
+                    })
             }
         }
     })
