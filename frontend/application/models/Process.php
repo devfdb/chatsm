@@ -43,7 +43,8 @@ class Process extends CI_Model
 
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
-            return $query->result_array()[0];
+            $a = $query->result_array();
+            return $a[0];
         } else {
             return null;
         }
@@ -79,13 +80,14 @@ class Process extends CI_Model
         }
     }
 
-    public function replicate_process_tree($id, $parent_id, $exec_id)
+    public function replicate_process_tree($process_id, $parent_node_id, $exec_id)
     {
-        $level_nodes = $this->select_children($id, $parent_id);
+        # Recopila los nodos a replicar por nivel
+        $level_nodes = $this->select_children($process_id, $parent_node_id);
         if ($level_nodes) {
             foreach ($level_nodes as $node) {
                 $this->create_execution_node($node, $exec_id);
-                $this->replicate_process_tree($id, $node['pcn_id'], $exec_id);
+                $this->replicate_process_tree($process_id, $node['pcn_id'], $exec_id);
             }
         } else {
             return null;
@@ -95,9 +97,10 @@ class Process extends CI_Model
     public function create_execution_node($node, $exec_id)
     {
         $data = array(
-            'ejn_parent' => $node['pcn_parent'],
-            'ejn_task_id' => $node['pcn_task_id'],
-            'ejn_execution_id' => $exec_id
+            'exn_id' => $node['pcn_id'],
+            'exn_parent' => $node['pcn_parent'],
+            'exn_task_id' => $node['pcn_task_id'],
+            'exn_execution_id' => $exec_id
         );
         $this->insert_execution_node($data);
 
@@ -112,7 +115,8 @@ class Process extends CI_Model
 
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
-            return $query->result_array()[0];
+            $a = $query->result_array();
+            return $a[0];
         } else {
             return null;
         }
@@ -126,7 +130,8 @@ class Process extends CI_Model
         $this->db->where('tst_id', $id);
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
-            $result = $query->result_array()[0];
+            $a = $query->result_array();
+            $result = $a[0];
             if ($result != null) {
                 return $result;
             }
@@ -215,7 +220,8 @@ class Process extends CI_Model
         $this->db->where('prc_id', $id);
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
-            return $query->result_array()[0]['prc_name'];
+            $a = $query->result_array();
+            return $a[0]['prc_name'];
         } else {
             return "Nombre simple.";
         }
