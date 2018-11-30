@@ -86,6 +86,66 @@ def process(proc, epoch, project, _input, first):
             task['output'] = output_name
             _input = output_name
             print(_input)
+        if task['name'] == 'word2vec':
+            task['inicio'] = time.time()
+            print('Creating Word2Vec...')
+            output_name = 'word2vec_' + str(proc['id']) + '.csv'
+            s = service.Word2Vec(rout, os.path.join(output_route, output_name), task['params'])
+            del s
+            task['termino'] = time.time()
+            task['output'] = output_name
+            _input = output_name
+            print(_input)
+        if task['name'] == 'svm_model':
+            task['inicio'] = time.time()
+            print('Creating SVM model...')
+            output_name = 'svm_' + str(proc['id']) + '.csv'
+            s = service.SVM(rout, os.path.join(output_route, output_name), task['params'])
+            del s
+            task['termino'] = time.time()
+            task['output'] = output_name
+            _input = output_name
+            print(_input)
+        if task['name'] == 'mnb_model':
+            task['inicio'] = time.time()
+            print('Creating Multinomial NB model...')
+            output_name = 'mnb_' + str(proc['id']) + '.csv'
+            s = service.MultinomialNB(rout, os.path.join(output_route, output_name), task['params'])
+            del s
+            task['termino'] = time.time()
+            task['output'] = output_name
+            _input = output_name
+            print(_input)
+        if task['name'] == 'mlp_model':
+            task['inicio'] = time.time()
+            print('Creating MLP Network model...')
+            output_name = 'mlp_' + str(proc['id']) + '.csv'
+            s = service.MLPClassifier(rout, os.path.join(output_route, output_name), task['params'])
+            del s
+            task['termino'] = time.time()
+            task['output'] = output_name
+            _input = output_name
+            print(_input)
+        if task['name'] == 'cluster':
+            task['inicio'] = time.time()
+            print('Clustering...')
+            output_name = 'hcluster_' + str(proc['id']) + '.csv'
+            s = service.HierarchicClustering(rout, os.path.join(output_route, output_name), task['params'])
+            del s
+            task['termino'] = time.time()
+            task['output'] = output_name
+            _input = output_name
+            print(_input)
+        if task['name'] == 'extract_cluster':
+            task['inicio'] = time.time()
+            print('Extracting clusters...')
+            output_name = 'clusterextract_' + str(proc['id']) + '.csv'
+            s = service.ClusterExtractor(rout, os.path.join(output_route, output_name), task['params'])
+            del s
+            task['termino'] = time.time()
+            task['output'] = output_name
+            _input = output_name
+            print(_input)
         if 'children' in proc:
             # Si existen hijos, se llama a si misma, con el nuevo _input como _input y con el subjson del hijo como proc
             for child in proc['children']:
