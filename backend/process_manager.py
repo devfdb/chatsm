@@ -55,8 +55,9 @@ def process(proc, epoch, project, _input, first):
         # Dado que proc no se None, obtiene la tarea de este.
         task = proc['task']
         # Llama la tarea correspondiente a la tarea especificada.
-        if task['name'] == 'clean':
+        if task['name'] == 'cleaner':
             task['inicio'] = time.time()
+            print("Time:", task['inicio'])
             print('Cleaning...')
             c = service.Cleaner(rout, os.path.join(output_route, output_name), task['params'])
             del c
@@ -88,13 +89,15 @@ def process(proc, epoch, project, _input, first):
             task['output'] = output_route
             _input = output_name
             print(_input)
-        proc['task'] = task
+        else:
+            print(task['name'])
         if 'children' in proc:
             children_list = []
             # Si existen hijos, se llama a si misma, con el nuevo _input como _input y con el subjson del hijo como proc
             for child in proc['children']:
                 children_list.append(process(child, epoch, project, _input, False))
             proc['children'] = children_list
+            print(proc)
         return proc
 
 
@@ -145,7 +148,6 @@ def callback(ch, method, props, bodys):
             body = json.loads(bodys)
             _input = body['input']
             project = body['project']
-
             response = json.dumps(response)
 
             ch.basic_publish(exchange='',
