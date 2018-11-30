@@ -1,5 +1,4 @@
 <?php
-
 class Processes extends CI_Controller
 {
     public $reply;
@@ -88,6 +87,7 @@ class Processes extends CI_Controller
             foreach ($this->reply as $item) {
                 $item_json = $item;
                 $item = json_decode($item);
+                # id = process_id
                 $this->execution->update($item->id, $item_json);
                 $this->execution->update_execution_table($item->message->processes, $item->id);
             }
@@ -229,7 +229,9 @@ class Processes extends CI_Controller
         );
         $nodes = $this->process->select_parents($id);
         $this->parse_recursive_for_input($nodes, $arr['processes'], $id);
-        return json_encode($arr);
+
+        header('Content-Type: application/json');
+        echo json_encode($arr);
     }
 
     public function parse_recursive_for_view($nodes, &$arr_ref, $id)
