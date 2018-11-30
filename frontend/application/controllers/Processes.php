@@ -226,7 +226,9 @@ class Processes extends CI_Controller
         );
         $nodes = $this->process->select_parents($id);
         $this->parse_recursive_for_input($nodes, $arr['processes'], $id);
-        return json_encode($arr);
+
+        header('Content-Type: application/json');
+        echo json_encode($arr);
     }
 
     public function parse_recursive_for_view($nodes, &$arr_ref, $id)

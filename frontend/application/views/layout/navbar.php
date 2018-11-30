@@ -1,14 +1,53 @@
+<?php
+$sessdata = $this->session->userdata('project_name');
+if (isset($sessdata)) {
+    $project_name = $sessdata;
+}
+
+?>
 <nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
     <div class="text-center navbar-brand-wrapper d-flex align-items-top justify-content-center">
         <a class="navbar-brand brand-logo" href="/">
-            <img src="/assets/img/logo.fw.png" alt="logo" />
+            <img src="/assets/img/logo.fw.png" alt="logo"/>
         </a>
         <a class="navbar-brand brand-logo-mini" href="/">
-            <img src="/assets/img/logo-mini.svg" alt="logo" />
+            <img src="/assets/img/logo-mini.svg" alt="logo"/>
         </a>
     </div>
     <div class="navbar-menu-wrapper d-flex align-items-center">
+        <p><?php
+            if (isset($project_name)) {
+            ?>
         <ul class="navbar-nav navbar-nav-left header-links d-none d-md-flex">
+            <li class="nav-item" style="min-width: 250px">
+                <i class="mdi mdi-worker"></i>
+                <?php
+                echo  $project_name;
+                ?>
+            </li>
+            <li class="nav-item">
+
+                <a class="btn btn-light btn-block" style="margin-left: 20px" href="/projects/define">Cambiar Proyecto</a>
+            </li>
+        </ul>
+        <?php
+            } else {
+                ?>
+            <ul class="navbar-nav navbar-nav-left header-links d-none d-md-flex">
+                <li class="nav-item" style=" min-width: 350px">
+                    <i class="mdi mdi-worker"></i>
+                    No ha definido proyecto de trabajo
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-success btn-block" style="margin-left: 20px" href="/projects/define">Seleccionar Proyecto</a>
+                </li>
+            </ul>
+        <?php
+            }
+        ?>
+        </p>
+
+        <!-- <ul class="navbar-nav navbar-nav-left header-links d-none d-md-flex">
             <li class="nav-item">
                 <a href="#" class="nav-link">Schedule
                     <span class="badge badge-primary ml-1">New</span>
@@ -22,7 +61,7 @@
                 <a href="#" class="nav-link">
                     <i class="mdi mdi-bookmark-plus-outline"></i>Score</a>
             </li>
-        </ul>
+        </ul> -->
         <ul class="navbar-nav navbar-nav-right">
             <!--
             <li class="nav-item dropdown">
@@ -138,22 +177,20 @@
             </li>
             -->
             <li class="nav-item dropdown d-none d-xl-inline-block">
-                <a class="nav-link dropdown-toggle" id="UserDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
+                <a class="nav-link dropdown-toggle" id="UserDropdown" href="#" data-toggle="dropdown"
+                   aria-expanded="false">
                     <span class="profile-text">Hola, <?php
-                        if ($this->session->userdata('userName') != null)
-                        {
+                        if ($this->session->userdata('userName') != null) {
                             echo $this->session->userdata('userName');
-                        }
-                        else
-                        {
+                        } else {
                             echo 'invitado';
-                        }?>!</span>
-                    <?php if ($this->session->userdata('image') != null) {?>
-                        <img class="img-xs rounded-circle" src="<?php echo $this->session->userdata('userProfilePhoto');?>" alt="Profile image">
-                    <?php }
-                    else {?>
+                        } ?>!</span>
+                    <?php if ($this->session->userdata('image') != null) { ?>
+                        <img class="img-xs rounded-circle"
+                             src="<?php echo $this->session->userdata('userProfilePhoto'); ?>" alt="Profile image">
+                    <?php } else { ?>
                         <img class="img-xs rounded-circle" src="/assets/img/faces/face1.jpg" alt="Profile image">
-                    <?php }?>
+                    <?php } ?>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
                     <a class="dropdown-item p-0">
@@ -180,7 +217,8 @@
 
 
         </ul>
-        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+                data-toggle="offcanvas">
             <span class="mdi mdi-menu"></span>
         </button>
     </div>

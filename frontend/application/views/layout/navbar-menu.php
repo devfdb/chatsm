@@ -11,17 +11,7 @@ if (isset($sessdata)) {
     <ul class="nav">
         <li class="nav-item nav-profile">
             <div class="nav-link">
-                <?php if (!isset($project_name)) { ?>
-                    <a class="btn btn-success btn-block" href="/projects/define">Selecciornar Proyecto</a>
-                    <a class="btn btn-default btn-block" href="/projects/create">Nuevo Proyecto</a>
-                <?php } else { ?>
-                    <a class="btn btn-success btn-block" href="/projects/create">Nuevo Proyecto</a>
-                    <a class="btn btn-default btn-block" href="/projects/define">Cambiar
-                        de proyecto </a>
-                    Proyecto actual:
-                    <p><?php echo $project_name; ?></p>
-                <?php } ?>
-
+                <a class="btn btn-success btn-block" href="/projects/create">Nuevo Proyecto</a>
             </div>
         </li>
 
