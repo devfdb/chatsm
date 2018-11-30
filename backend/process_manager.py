@@ -62,35 +62,39 @@ def process(proc, epoch, project, _input, first):
             del c
             task['termino'] = time.time()
             # Adjunta el nombre del archivo generado al json, en el campo 'output'
-            task['output'] = output_name
+            task['output'] = output_route
             # Reemplaza la variable _input con el valor de output, en caso de que existiese una tarea hija
             _input = output_name
             print(_input)
-        if task['name'] == 'replace':
+        elif task['name'] == 'replace':
             task['inicio'] = time.time()
             print('Replacing...')
             output_name = 'replace_' + str(proc['id']) + '.csv'
             r = service.Replacer(rout, os.path.join(output_route, output_name), project, task['params'])
             del r
             task['termino'] = time.time()
-            task['output'] = output_name
+            # Adjunta el nombre del archivo generado al json, en el campo 'output'
+            task['output'] = output_route
             _input = output_name
             print(_input)
-        if task['name'] == 'spellcheck':
+        elif task['name'] == 'spellcheck':
             task['inicio'] = time.time()
             print('Spellchecking...')
             output_name = 'spellcheck_' + str(proc['id']) + '.csv'
             s = service.SpellChecker(rout, os.path.join(output_route, output_name), project, task['params'])
             del s
             task['termino'] = time.time()
-            task['output'] = output_name
+            # Adjunta el nombre del archivo generado al json, en el campo 'output'
+            task['output'] = output_route
             _input = output_name
             print(_input)
+        proc['task'] = task
         if 'children' in proc:
+            children_list = []
             # Si existen hijos, se llama a si misma, con el nuevo _input como _input y con el subjson del hijo como proc
             for child in proc['children']:
-                process(child, epoch, project, _input, False)
-
+                children_list.append(process(child, epoch, project, _input, False))
+            proc['children'] = children_list
         return proc
 
 
@@ -115,6 +119,7 @@ def send(message, uid):
                           routing_key='reply',
                           body=json.dumps(body))
     reply_connection.close()
+
 
 def callback(ch, method, props, bodys):
     """
@@ -148,11 +153,12 @@ def callback(ch, method, props, bodys):
                              properties=pika.BasicProperties(correlation_id=props.correlation_id),
                              body=response)
             ch.basic_ack(delivery_tag=method.delivery_tag)
-
+            result_list = []
             for proc in body['processes']:
-                process(proc, timegm(gmtime()), project, _input, True)
+                # Esto deberia asignarse a una variable
+                result_list.append(process(proc, timegm(gmtime()), project, _input, True))
             print('Listo')
-
+            body['processes'] = result_list
             send(body, uid)
 
         except json.decoder.JSONDecodeError as err:

@@ -1,5 +1,4 @@
 <?php
-
 class Processes extends CI_Controller
 {
     public $reply;
@@ -87,6 +86,7 @@ class Processes extends CI_Controller
             foreach ($this->reply as $item) {
                 $item_json = $item;
                 $item = json_decode($item);
+                # id = process_id
                 $this->execution->update($item->id, $item_json);
                 $this->execution->update_execution_table($item->message->processes, $item->id);
             }

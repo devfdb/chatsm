@@ -21,7 +21,8 @@ class Execution extends CI_Model
 
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
-            return $query->result_array()[0];
+            $a = $query->result_array();
+            return $a[0];
         } else {
             return null;
         }
@@ -56,7 +57,6 @@ class Execution extends CI_Model
     public function update_execution_table($data, $id)
     {
         foreach($data as $item) {
-            echo $item;
             $this->update_execution_row($item, $id);
             $this->update_execution_table($item->children, $id);
         }
@@ -64,9 +64,10 @@ class Execution extends CI_Model
 
     public function update_execution_row($data, $id)
     {
-        $this->db->where('ejn_id', $data->id);
-        $this->db->where('ejn_execution_id', $id);
-        # TODO pasar output en el json para usar esta linea $this->db->update('execution_node', array('ejn_output' => $data->output));
+        $this->db->where('exn_id', $data->id);
+        $this->db->where('exn_execution_id', $id);
+        # TODO pasar output en el json para usar esta linea
+        $this->db->update('execution_node', array('exn_output_id' => 1));
     }
 
     public function delete($where)
