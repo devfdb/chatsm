@@ -55,7 +55,7 @@ def process(proc, epoch, project, _input, first):
         # Dado que proc no se None, obtiene la tarea de este.
         task = proc['task']
         # Llama la tarea correspondiente a la tarea especificada.
-        if task['name'] == 'clean':
+        if task['name'] == 'cleaner':
             task['inicio'] = time.time()
             print('Cleaning...')
             c = service.Cleaner(rout, os.path.join(output_route, output_name), task['params'])

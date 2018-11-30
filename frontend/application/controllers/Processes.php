@@ -12,6 +12,7 @@ class Processes extends CI_Controller
         $this->load->library('rabbitmq_client');
         $this->load->helper('form');
         $this->load->library('form_validation');
+		$this->load->model('project');
         $this->load->model('user');
         $this->load->model('process');
         $this->load->model('file');
@@ -219,9 +220,11 @@ class Processes extends CI_Controller
     {
         $curr_process = $this->process->read($id);
 //        header('Content-Type: application/json');
+		$pid = $this->session->userdata('project_id');
+		$proj_name = $this->project->read($pid)['prj_name'];
         $arr = array(
-            'project' => 'proy',
-            'input' => $curr_process['prc_input'],
+            'project' => $proj_name,
+            'input' => $curr_process['prc_input'].'.csv',
             'processes' => array(),
         );
         $nodes = $this->process->select_parents($id);
