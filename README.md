@@ -48,20 +48,17 @@ Para la versión Windows de RabbitMQ el servicio puede iniciarse y detenerse a t
 
 ### Instalación en Linux
 
-- Actualizar la lista de repositorios:
-
+Actualizar la lista de repositorios:
 ```sh
 # apt-get update
 ```
 
-- Instalar lenguaje Erlang:
-
+Instalar lenguaje Erlang:
 ```sh
 # apt-get install erlang-nox
 ```
 
-- Instalar cliente RabbitMQ Server:
-
+Instalar cliente RabbitMQ Server:
 ```sh
 # apt-get install rabbitmq-server
 ```
