@@ -39,18 +39,64 @@ Requiere PHP 5.6, Python 3.6 y RabbitMQ, con extensiones extras:
 - Ejecutar la siguiente línea de comando para instalar Pika via cmd:
 
 ```sh
-python -m pip install pika
+$ python -m pip install pika
 ```
 
 #### Ejecución en Windows
 
-
+Para la versión Windows de RabbitMQ el servicio puede iniciarse y detenerse a través de los accesos directos `RabbitMQ Service - start` y `RabbitMQ Service - stop`.
 
 ### Instalación en Linux
-TODO!
+
+- Actualizar la lista de repositorios:
+
+```sh
+# apt-get update
+```
+
+- Instalar lenguaje Erlang:
+
+```sh
+# apt-get install erlang-nox
+```
+
+- Instalar cliente RabbitMQ Server:
+
+```sh
+# apt-get install rabbitmq-server
+```
+
 #### Instalación de entorno PHP
-TODO!
+
+- Ejectuar los siguientes comandos para la instalación de PHP 5.6 con Composer:
+
+```sh
+$ php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+$ php -r "if (hash_file('sha384', 'composer-setup.php') === '93b54496392c062774670ac18b134c3b3a95e5a5e5c8f1a9f115f203b75bf9a129d5daa8ba6a13e2cc8a1da0806388a8') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+$ php composer-setup.php
+$ php -r "unlink('composer-setup.php');"
+```
+
+- Instalar las librerías `php-mbstring`, `php-bcmath` y `php-amqplib` (via Composer):
+
+```sh
+# apt install php-bcmath
+# apt-get install php-mbstring
+$ composer require php-amqplib/php-amqplib
+```
+
 #### Instalación de entorno Python
-TODO!
+
+- Ejecutar el siguiente comando para instalar Pika:
+
+```sh
+$ pip install pika
+```
+
 #### Ejecución en Linux
-TODO!
+
+- Reiniciar servidor Apache2:
+
+```sh
+# service apache2 restart
+```
