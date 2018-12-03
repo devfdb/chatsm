@@ -31,14 +31,15 @@ Requiere PHP 5.6, Python 3.6 y RabbitMQ, con extensiones extras:
 - Instalar [PHP versión 5.6](https://windows.php.net/downloads/releases/php-5.6.38-Win32-VC11-x64.zip)
 - Descargar el cliente [php-amqplib](https://windows.php.net/downloads/pecl/releases/amqp/1.4.0/php_amqp-1.4.0-5.6-ts-vc11-x64.zip)
 - Copiar y pegar en la carpeta `C:\xampp\php\ext` el archivo `php_amqp.dll`
-- Hacer lo mismo con el archivo `rabbitmq.1.dll` en la carpeta `C:\Windows\system32` 
+- Hacer lo mismo con el archivo `rabbitmq.1.dll` en la carpeta `C:\Windows\system32`
+- Instalar [Composer](https://getcomposer.org/Composer-Setup.exe)
 
 #### Instalación de entorno Python
 
 - Instalar [Python versión 3.6](https://www.python.org/ftp/python/3.6.7/python-3.6.7-amd64-webinstall.exe)
 - Ejecutar la siguiente línea de comando para instalar Pika via cmd:
 
-```sh
+```console
 $ python -m pip install pika
 ```
 
@@ -49,17 +50,17 @@ Para la versión Windows de RabbitMQ el servicio puede iniciarse y detenerse a t
 ### Instalación en Linux
 
 Actualizar la lista de repositorios:
-```sh
+```console
 # apt-get update
 ```
 
 Instalar lenguaje Erlang:
-```sh
+```console
 # apt-get install erlang-nox
 ```
 
 Instalar cliente RabbitMQ Server:
-```sh
+```console
 # apt-get install rabbitmq-server
 ```
 
@@ -67,7 +68,7 @@ Instalar cliente RabbitMQ Server:
 
 - Ejectuar los siguientes comandos para la instalación de PHP 5.6 con Composer:
 
-```sh
+```console
 $ php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 $ php -r "if (hash_file('sha384', 'composer-setup.php') === '93b54496392c062774670ac18b134c3b3a95e5a5e5c8f1a9f115f203b75bf9a129d5daa8ba6a13e2cc8a1da0806388a8') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
 $ php composer-setup.php
@@ -76,7 +77,7 @@ $ php -r "unlink('composer-setup.php');"
 
 - Instalar las librerías `php-mbstring`, `php-bcmath` y `php-amqplib` (via Composer):
 
-```sh
+```console
 # apt install php-bcmath
 # apt-get install php-mbstring
 $ composer require php-amqplib/php-amqplib
@@ -86,7 +87,7 @@ $ composer require php-amqplib/php-amqplib
 
 - Ejecutar el siguiente comando para instalar Pika:
 
-```sh
+```console
 $ pip install pika
 ```
 
@@ -94,6 +95,6 @@ $ pip install pika
 
 - Reiniciar servidor Apache2:
 
-```sh
+```console
 # service apache2 restart
 ```
