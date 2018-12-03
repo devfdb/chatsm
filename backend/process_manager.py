@@ -34,7 +34,7 @@ def process(proc, epoch, project, _input, first):
     if proc:
         # Manejo de si es padre, determinando la carpeta de obtencion de archivo.
         if first:
-            rout = 'input'
+            rout = ''
         else:
             rout = os.path.join('output', str(epoch))
         # Creacion del directorio objetivo
@@ -235,9 +235,19 @@ def callback(ch, method, props, bodys):
                              body=response)
             ch.basic_ack(delivery_tag=method.delivery_tag)
 
-
-
     else:
+
+        response = {
+            'result': 'error',
+            'message': 'Json esta vacio'
+        }
+        response = json.dumps(response)
+
+        ch.basic_publish(exchange='',
+                         routing_key=props.reply_to,
+                         properties=pika.BasicProperties(correlation_id=props.correlation_id),
+                         body=response)
+        ch.basic_ack(delivery_tag=method.delivery_tag)
         print('json esta vacio')
 
 

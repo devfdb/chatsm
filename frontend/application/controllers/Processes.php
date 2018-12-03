@@ -31,7 +31,7 @@ class Processes extends CI_Controller
     public function execute($id)
     {
         // Recibe JSON desde cliente
-        $json = $this->parse_to_json_for_input($id);
+        $json = $this->parse_to_json_for_input2($id);
         $json = str_replace(array("\r", "\n"), "", $json);
         $self = $this;
         $this->rabbitmq_client->push_with_response('tasks', $json, function ($message) use ($self, $id) {
@@ -232,6 +232,24 @@ class Processes extends CI_Controller
 
         header('Content-Type: application/json');
         echo json_encode($arr);
+    }
+
+    public function parse_to_json_for_input2($id)
+    {
+        $curr_process = $this->process->read($id);
+//        header('Content-Type: application/json');
+        $pid = $this->session->userdata('project_id');
+        $proj_name = $this->project->read($pid)['prj_name'];
+        $arr = array(
+            'project' => $proj_name,
+            'input' => $this->file->read($curr_process['prc_input'])[0]['fil_filename'],
+            'processes' => array(),
+        );
+        $nodes = $this->process->select_parents($id);
+        $this->parse_recursive_for_input($nodes, $arr['processes'], $id);
+
+        header('Content-Type: application/json');
+        return json_encode($arr);
     }
 
     public function parse_recursive_for_view($nodes, &$arr_ref, $id)

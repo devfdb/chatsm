@@ -19,7 +19,7 @@ class File extends CI_Model
     {
         $this->db->select('*');
         $this->db->from('file');
-        $this->db->where('file_id', $id);
+        $this->db->where('fil_id', $id);
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
             return $query->result_array();
@@ -151,6 +151,18 @@ class File extends CI_Model
                     return $format;
                 }
             }
+        }
+    }
+
+    public function get_folders(){
+        $this->db->select('*');
+        $this->db->from('file');
+        $this->db->where('fil_file_format', 'folder');
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result_array()[0]['fil_url'];
+        } else {
+            return "";
         }
     }
 }

@@ -35,6 +35,9 @@
                         <div class="col-sm-9">
                             <input v-if="is_string(p.itp_var_type)" type="text" v-model="p.value"
                                    class="form-control">
+                            <select name="" id="" v-if="is_folder(p.itp_var_type)" v-model="p.value">
+                                <option value=""></option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -88,6 +91,12 @@
             },
             is_string(type) {
                 if (type === 'string') {
+                    return true;
+                }
+                else return false;
+            },
+            is_folder(type) {
+                if (type === 'folder') {
                     return true;
                 }
                 else return false;

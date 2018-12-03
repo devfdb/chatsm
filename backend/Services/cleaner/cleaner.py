@@ -14,7 +14,8 @@ class Cleaner:
         with open(path, 'r', encoding='utf8') as csvfile:
             reader = csv.reader(csvfile)
             for line in reader:
-                text.append(line[0])
+                if line:
+                    text.append(line[0])
         return text
     
     def _is_question(self, string:str):
