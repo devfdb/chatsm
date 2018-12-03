@@ -9,32 +9,92 @@ Analiza datos para la construcción de bots conversacionales, con esta plataform
 - Limpiar datos mediante diversas técnicas de preprocesamiento.
 - PRONTO! Generación de gráficos para análisis de datos.
 
-
 ## Cambios
 
 ### Version 0.5 (Noviembre 23, 2018)
+
 Primera versión alfa funcional
 - Considera la ejecución de procesos simples.
 - Creación de instancias basadas en tareas.
-
 
 ## Instalación
 
 Requiere PHP 5.6, Python 3.6 y RabbitMQ, con extensiones extras:
 
 ### Instalación en Windows
-TODO!
+
+- Prerequisito: instalación de lenguaje [Erlang](http://erlang.org/download/otp_win64_21.1.exe)
+- Instalar [RabbitMQ](https://github.com/rabbitmq/rabbitmq-server/releases/download/v3.7.9/rabbitmq-server-3.7.9.exe)
+
 #### Instalación de entorno PHP
-TODO!
+
+- Instalar [PHP versión 5.6](https://windows.php.net/downloads/releases/php-5.6.38-Win32-VC11-x64.zip)
+- Descargar el cliente [php-amqplib](https://windows.php.net/downloads/pecl/releases/amqp/1.4.0/php_amqp-1.4.0-5.6-ts-vc11-x64.zip)
+- Copiar y pegar en la carpeta `C:\xampp\php\ext` el archivo `php_amqp.dll`
+- Hacer lo mismo con el archivo `rabbitmq.1.dll` en la carpeta `C:\Windows\system32`
+- Instalar [Composer](https://getcomposer.org/Composer-Setup.exe)
+
 #### Instalación de entorno Python
-TODO!
+
+- Instalar [Python versión 3.6](https://www.python.org/ftp/python/3.6.7/python-3.6.7-amd64-webinstall.exe)
+- Ejecutar la siguiente línea de comando para instalar Pika via cmd:
+
+```console
+$ python -m pip install pika
+```
+
 #### Ejecución en Windows
-TODO!
+
+Para la versión Windows de RabbitMQ el servicio puede iniciarse y detenerse a través de los accesos directos `RabbitMQ Service - start` y `RabbitMQ Service - stop`.
+
 ### Instalación en Linux
-TODO!
+
+Actualizar la lista de repositorios:
+```console
+# apt-get update
+```
+
+Instalar lenguaje Erlang:
+```console
+# apt-get install erlang-nox
+```
+
+Instalar cliente RabbitMQ Server:
+```console
+# apt-get install rabbitmq-server
+```
+
 #### Instalación de entorno PHP
-TODO!
+
+- Ejectuar los siguientes comandos para la instalación de PHP 5.6 con Composer:
+
+```console
+$ php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+$ php -r "if (hash_file('sha384', 'composer-setup.php') === '93b54496392c062774670ac18b134c3b3a95e5a5e5c8f1a9f115f203b75bf9a129d5daa8ba6a13e2cc8a1da0806388a8') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+$ php composer-setup.php
+$ php -r "unlink('composer-setup.php');"
+```
+
+- Instalar las librerías `php-mbstring`, `php-bcmath` y `php-amqplib` (via Composer):
+
+```console
+# apt install php-bcmath
+# apt-get install php-mbstring
+$ composer require php-amqplib/php-amqplib
+```
+
 #### Instalación de entorno Python
-TODO!
+
+- Ejecutar el siguiente comando para instalar Pika:
+
+```console
+$ pip install pika
+```
+
 #### Ejecución en Linux
-TODO!
+
+- Reiniciar servidor Apache2:
+
+```console
+# service apache2 restart
+```
