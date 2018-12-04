@@ -83,6 +83,16 @@ $ php -r "unlink('composer-setup.php');"
 $ composer require php-amqplib/php-amqplib
 ```
 
+#### En caso de Error
+
+Asegurarse de que la extencion bcmath de php este instalada en la version de php que corresponda;
+
+```
+apt install phpx.x-bcmath
+```
+
+x.x corresponde a la version de php.
+
 #### Instalación de entorno Python
 
 - Ejecutar el siguiente comando para instalar Pika:
