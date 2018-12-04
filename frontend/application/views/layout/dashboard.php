@@ -78,10 +78,10 @@
         <div class="card card-weather">
             <div class="card-body">
                 <div class="weather-date-location">
-                    <h3><?php
-                        setlocale(LC_ALL, "esp" ) or die("Not found"); # "es_ES@euro", "esp"
-                        echo ucwords(strftime("%A"));
-                        ?></h3>
+<!--                    <h3>--><?php
+//                        setlocale(LC_ALL, "esp" ) or die("Not found"); # "es_ES@euro", "esp"
+//                        echo ucwords(strftime("%A"));
+//                        ?><!--</h3>-->
                     <p class="text-gray">
                         <span class="weather-date"><?php echo strftime("%d de %B, %Y");?></span>
                     </p>
