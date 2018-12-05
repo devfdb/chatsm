@@ -134,7 +134,7 @@
             },
             selectExecution: function (execution_id) {
                 var self = this;
-                 axios.get('/processes/parse-to-json-for-view/' + this.id)
+                 axios.get('/executions/parse-to-json-for-view/' + execution_id)
                     .then(function (r) {
                         debugger;
                         self.treeExecution = r.data.input;

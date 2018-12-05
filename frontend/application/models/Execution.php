@@ -78,4 +78,19 @@ class Execution extends CI_Model
     public function countExecutedProcesses($user)    {
         return 1;
     }
+
+    public function select_parents($id)
+    {
+        $this->db->select('*');
+        $this->db->from('execution_node');
+        $this->db->where('exn_execution_id', $id);
+        $this->db->where('exn_parent', null);
+
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result_array();
+        } else {
+            return null;
+        }
+    }
 }
