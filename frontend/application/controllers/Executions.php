@@ -5,6 +5,7 @@ class Processes extends CI_Controller
     {
         parent::__construct();
         $this->load->library('Template');
+        $this->load->model('process');
         $this->load->model('execution');
     }
 
@@ -76,7 +77,7 @@ class Processes extends CI_Controller
     {
         if (count($nodes) > 0) {
             foreach ($nodes as $item) {
-                $task = $this->process->read_task($item['pcn_task_id']);
+                $task = $this->execution->read_task($item['exn_task_id']);
                 $new_process = array(
                     'id' => $item['pcn_id'],
                     'name' => $task['ins_name'],
@@ -85,7 +86,7 @@ class Processes extends CI_Controller
                     ),
                     'children' => array()
                 );
-                $children = $this->process->select_children($id, $item['pcn_id']);
+                $children = $this->execution->select_children($id, $item['exn_id']);
                 if ($children != null) {
                     $this->parse_recursive_for_view($children, $new_process['children'], $id);
                 }

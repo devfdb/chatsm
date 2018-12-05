@@ -93,4 +93,33 @@ class Execution extends CI_Model
             return null;
         }
     }
+    public function read_task($id)
+    {
+        $this->db->select('*');
+        $this->db->from('task_instance');
+        $this->db->where('ins_id', $id);
+
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            $a = $query->result_array();
+            return $a[0];
+        } else {
+            return null;
+        }
+    }
+
+    public function select_children($id, $parent)
+    {
+        $this->db->select('*');
+        $this->db->from('execution_node');
+        $this->db->where('exn_execution_id', $id);
+        $this->db->where('exn_parent', $parent);
+
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result_array();
+        } else {
+            return null;
+        }
+    }
 }
