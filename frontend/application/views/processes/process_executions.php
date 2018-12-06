@@ -1,10 +1,15 @@
+<script src="//cdnjs.cloudflare.com/ajax/libs/vue/2.1.6/vue.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/liquor-tree/dist/liquor-tree.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
+
+
 <div class="col-lg-12 grid-margin">
     <div id="app">
         <div class="row">
             <div class="col-md-6 ">
                 <div class="card">
-                    <div class="card-body">
-                        <pre>{{treeExecution | json}}</pre>
+                    <div class="card-body" v-if="treeExecution">
+                        <liquor-json-viewer :datos = "treeExecution"></liquor-json-viewer>
                     </div>
                 </div>
             </div>
@@ -85,9 +90,149 @@
     </div>
 </div>
 
-<script src="//cdnjs.cloudflare.com/ajax/libs/vue/2.1.6/vue.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
+<template id="liquor-json-viewer">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="json-viewer">
+                <div v-if="treeData"> {{treeData | json}}</div>
+                <tree></tree>
+
+<!--                <tree :data="treeData" :options="treeOptions">-->
+<!--                    <span slot-scope="{ node }" class="viewer-item" @node:selected="sel">-->
+<!--                        <span class="viewer-item__key">-->
+<!--                            <div style="border: 1px solid black; padding: 5px; background: white; border-radius: 5px; width: 350px">-->
+<!--                                Id: {{ node.id }} <br>-->
+<!--                                Nombre: {{ node.text }} <br>-->
+<!--                            </div>-->
+<!--                        </span>-->
+<!--                        <div class="node-controls">-->
+<!--                            <a href="#" @mouseup.stop="removeNode(node)">Eliminar nodo</a>-->
+<!--                            <a href="#" @mouseup.stop="addChildNode(node)">Agregar nodo</a>-->
+<!--                        </div>-->
+<!--<!--            <!-- <span v-else class="viewer-item__prop">-->-->
+<!--<!--              <span class="viewer-item__key">{{ node.text }}</span>-->-->
+<!--<!--              :-->-->
+<!--<!--              <span class="viewer-item__value">{{ node.data.objectKey }}</span>-->-->
+<!--<!--            </span> -->-->-->
+<!--                    </span>-->
+<!--                </tree>-->
+            </div>
+        </div>
+    </div>
+</template>
+
 <script>
+    Vue.component('liquor-json-viewer', {
+        template: '#liquor-json-viewer',
+
+        data() {
+            return {
+                list_types: [],
+                json: {},
+                selectednode: null,
+                treeData: this.datos,
+                treeOptions: {
+                    checkbox: false,
+                    propertyNames: {
+                        text: 'name',
+                        children: 'children',
+                        data: 'data'
+                    }
+                },
+                instanceList: [],
+                new_node: {},
+                node: {}
+            }
+        },
+        props: {
+            datos: {}
+        },
+        methods: {
+            ss(et) {
+                this.selectednode = '111';
+            },
+            sel(et) {
+                this.selectednode = et;
+                console.log(this.selectednode)
+            },
+            toList(list) {
+                var arr = [];
+                for (var key in list) {
+                    // var value = dict[key];
+                    arr.push({key: key, value: list[key]})
+                }
+                return arr;
+            },
+            // getData(id) {
+            //     return axios.get('/executions/parse-to-json-for-view/'+ id)
+            //
+            // },
+            removeNode(node) {
+                if (confirm('Are you sure?')) {
+                    node.remove()
+                }
+            },
+
+            //addRootNode() {
+            //    var data = {
+            //        process_id: <?php //echo $id ?>//,
+            //        parent: null,
+            //        new: this.new_node
+            //    };
+            //    axios.post('/processes/new-node', data)
+            //        .then(function (response) {
+            //                treeData.append(response.data);
+            //                treeData.expand();
+            //                self.new_node = {};
+            //            }
+            //        );
+            //},
+            //addChildNode(node) {
+            //    var self = this;
+            //    if (node.enabled()) {
+            //        if (this.new_node.instance_id) {
+            //            var data = {
+            //                process_id: <?php //echo $id ?>//,
+            //                parent: {
+            //                    id: node.id
+            //                },
+            //                new: this.new_node
+            //            };
+            //            axios.post('/processes/new-node', data)
+            //                .then(function (response) {
+            //                        node.append(response.data);
+            //                        node.expand();
+            //                        self.new_node = {};
+            //                    }
+            //                )
+            //        }
+            //        else {
+            //            swal({
+            //                type: "warning",
+            //                title: "Selecciona un tipo de nodo",
+            //                text: "Se requiere seleccionar la instancia"
+            //            })
+            //        }
+            //    }
+            //},
+            get_task_type() {
+                var self = this
+                return axios.get('/task-instances/get_instances_of_project')
+                    .then(function (r) {
+                        self.list_types = r.data;
+                    })
+            }
+        },
+        mounted() {
+            //TODO terminar crear funciones en processes deberia obtener las instancias del proyecto
+            //axios.get('processes/get-instances/<?php //proyect_id ?>//').then( response =>{
+            //     this.instanceList = response.data()
+            // })
+
+            this.get_task_type();
+        },
+    });
+
     new Vue({
         el: '#app',
         data: function () {
@@ -95,7 +240,7 @@
                 id: <?php echo $process_id ?>,
                 input: <?php echo $process_id ?>,
                 toast: null,
-                treeExecution: {}
+                treeExecution: null
             }
         },
         created() {
@@ -134,12 +279,13 @@
             },
             selectExecution: function (execution_id) {
                 var self = this;
+                // this.exe_id = execution_id;
+                // this.treeExecution = true;
                  axios.get('/executions/parse-to-json-for-view/' + execution_id)
                     .then(function (r) {
-                        debugger;
-                        self.treeExecution = r.data.input;
+                        self.treeExecution = r.data.input[0];
                     })
-            }
+            },
         }
     })
 </script>

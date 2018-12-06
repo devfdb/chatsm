@@ -1,5 +1,5 @@
 <?php
-class Processes extends CI_Controller
+class Executions extends CI_Controller
 {
     function __construct()
     {
@@ -79,8 +79,10 @@ class Processes extends CI_Controller
             foreach ($nodes as $item) {
                 $task = $this->execution->read_task($item['exn_task_id']);
                 $new_process = array(
-                    'id' => $item['pcn_id'],
+                    'id' => $item['exn_id'],
                     'name' => $task['ins_name'],
+                    'start_time' => $item['exn_start_time'],
+                    'stop_time' => $item['exn_stop_time'],
                     'data' => array(
                         'instance_id' => $task['ins_id']
                     ),
