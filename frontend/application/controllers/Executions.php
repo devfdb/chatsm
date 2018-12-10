@@ -81,10 +81,9 @@ class Executions extends CI_Controller
                 $new_process = array(
                     'id' => $item['exn_id'],
                     'name' => $task['ins_name'],
-                    'start_time' => $item['exn_start_time'],
-                    'stop_time' => $item['exn_stop_time'],
                     'data' => array(
-                        'instance_id' => $task['ins_id']
+                        'instance_id' => $task['ins_id'],
+                        'ex_time' => (strtotime($item['exn_stop_time']) - strtotime($item['exn_start_time'])) . ' segundos',
                     ),
                     'children' => array()
                 );

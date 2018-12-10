@@ -1,4 +1,6 @@
-<script src="//cdnjs.cloudflare.com/ajax/libs/vue/2.1.6/vue.min.js"></script>
+<!-- first import Vue -->
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<!-- import JavaScript -->
 <script src="https://cdn.jsdelivr.net/npm/liquor-tree/dist/liquor-tree.umd.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
 
@@ -94,28 +96,59 @@
     <div class="row">
         <div class="col-md-6">
             <div class="json-viewer">
-                <div v-if="treeData"> {{treeData | json}}</div>
-                <tree></tree>
-
-<!--                <tree :data="treeData" :options="treeOptions">-->
-<!--                    <span slot-scope="{ node }" class="viewer-item" @node:selected="sel">-->
-<!--                        <span class="viewer-item__key">-->
-<!--                            <div style="border: 1px solid black; padding: 5px; background: white; border-radius: 5px; width: 350px">-->
-<!--                                Id: {{ node.id }} <br>-->
-<!--                                Nombre: {{ node.text }} <br>-->
-<!--                            </div>-->
-<!--                        </span>-->
-<!--                        <div class="node-controls">-->
-<!--                            <a href="#" @mouseup.stop="removeNode(node)">Eliminar nodo</a>-->
-<!--                            <a href="#" @mouseup.stop="addChildNode(node)">Agregar nodo</a>-->
-<!--                        </div>-->
-<!--<!--            <!-- <span v-else class="viewer-item__prop">-->-->
-<!--<!--              <span class="viewer-item__key">{{ node.text }}</span>-->-->
-<!--<!--              :-->-->
-<!--<!--              <span class="viewer-item__value">{{ node.data.objectKey }}</span>-->-->
-<!--<!--            </span> -->-->-->
-<!--                    </span>-->
-<!--                </tree>-->
+                <tree :data="treeData" :options="treeOptions" @node:selected="sel"ref="tree">
+                    <span slot-scope="{ node }" class="viewer-item">
+                        <span class="viewer-item__key">
+                            <div style="border: 1px solid black; padding: 5px; background: white; border-radius: 5px; width: 350px">
+                                Id: {{ node.id }} <br>
+                                Nombre: {{ node.text }} <br>
+                            </div>
+                        </span>
+                        <div class="node-controls">
+                            <a href="#" @mouseup.stop="removeNode(node)">Eliminar nodo</a>
+                            <a href="#" @mouseup.stop="addChildNode(node)">Agregar nodo</a>
+                        </div>
+                    </span>
+                </tree>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body"
+                     v-if="selectednode && selectednode.text && selectednode.data">
+                    Información del nodo
+                    <hr/>
+                    <form class="forms-sample">
+                        <div class="form-group row">
+                            <label for="exampleInputEmail2"
+                                   class="col-sm-3 col-form-label">ID</label>
+                            <div class="col-sm-9">
+                                {{selectednode.id}}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="exampleInputEmail2"
+                                   class="col-sm-3 col-form-label">Tarea</label>
+                            <div class="col-sm-9">
+                                {{selectednode.text}}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="exampleInputEmail2"
+                                   class="col-sm-3 col-form-label">Instancia</label>
+                            <div class="col-sm-9">
+                                {{selectednode.text}}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="exampleInputEmail2"
+                                   class="col-sm-3 col-form-label">Tiempo de Ejecuccion</label>
+                            <div class="col-sm-9">
+                                {{selectednode.data.ex_time}}
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -146,6 +179,13 @@
         },
         props: {
             datos: {}
+        },
+        watch: {
+            datos(newDatos){
+                const tree = this.$refs.tree;
+                tree.setModel(newDatos);
+                this.selectednode = null;
+            }
         },
         methods: {
             ss(et) {
@@ -283,7 +323,7 @@
                 // this.treeExecution = true;
                  axios.get('/executions/parse-to-json-for-view/' + execution_id)
                     .then(function (r) {
-                        self.treeExecution = r.data.input[0];
+                        self.treeExecution = r.data.input;
                     })
             },
         }
