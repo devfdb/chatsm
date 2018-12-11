@@ -4,7 +4,7 @@ import logging
 
 # input_path = Ruta del archivo en que se encuentran guardados los datos
 # output_path = Nombre con que se guardará el modelo Word2Vec
-# params['count'] = Umbral de frecuencia para extracción de palabras (cantidad de veces que se repiten)
+# params['frecuency'] = Umbral de frecuencia para extracción de palabras (cantidad de veces que se repiten)
 # params['epoch'] = Cantidad de épocas que se realizan para el entrenamiento
 
 class Word2Vec:
@@ -16,8 +16,8 @@ class Word2Vec:
         self._train_model(output_path, params)
     
     def _load_csv(self, path:str, params:dict):
-        if 'frequency' not in params:
-            params['frequency'] = 300
+        if 'frecuency' not in params:
+            params['frecuency'] = 300
         if 'epoch' not in params:
             params['epoch'] = 100
         with open(path, 'r', encoding='utf8') as infile:
@@ -26,6 +26,6 @@ class Word2Vec:
     
     def _train_model(self, path:str, params:dict):
         logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
-        model = gensim.models.Word2Vec(self.data, min_count=params['frequency'])
+        model = gensim.models.Word2Vec(self.data, min_count=params['frecuency'])
         model.train(self.data, total_examples=len(self.data), epochs=params['epoch'])
         model.save(path + ".model")

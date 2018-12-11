@@ -22,7 +22,6 @@
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label">Tipo</label>
                         <div class="col-sm-9">
-                            {{list_types}}
                             <select name="" id="tipo" @change="get_task_parameters" class="form-control" v-model="type">
                                 <option :value="item.key" v-for="item in list_types">{{ item.value }}</option>
                             </select>
@@ -38,10 +37,11 @@
                             <select name="" id="" v-if="is_folder(p.itp_var_type)" v-model="p.value">
                                 <option value=""></option>
                             </select>
+                            <input v-if="is_int(p.itp_var_type)" type="number" v-model="p.value"
+                                   class="form-control">
                         </div>
                     </div>
                 </div>
-                {{parameters}}
             </div>
             <div class="row">
                 <button class="btn btn-success mr-2" @click="create_instance">Crear</button>
@@ -97,6 +97,12 @@
             },
             is_folder(type) {
                 if (type === 'folder') {
+                    return true;
+                }
+                else return false;
+            },
+            is_int(type) {
+                if (type === 'int') {
                     return true;
                 }
                 else return false;
