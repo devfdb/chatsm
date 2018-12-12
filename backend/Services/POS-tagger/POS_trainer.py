@@ -1,5 +1,5 @@
 from nltk import UnigramTagger as ut
-import nltk.tokenize.TweetTokenizer as tokenizer
+from nltk.tokenize import TweetTokenizer as tokenizer
 from nltk.corpus import conll2002 as conll
 from sklearn.externals import joblib
 
@@ -17,9 +17,12 @@ class POS_tagger:
         else:
             self.uni_tag = ut(conll.tagged_sents())
 
-    def tag(self, sentence:str):
+    def tag(self, sentence: str):
         tokenz = tokenizer.tokenize(sentence)
         return self.uni_tag.tag(tokenz)
 
     def save(self, output_path):
         joblib.dump(self.uni_tag, output_path + 'uni_tag.pkl')
+
+
+pos = POS_tagger(None, './', None)

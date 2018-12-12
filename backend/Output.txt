@@ -1,0 +1,1 @@
+b'{"project": "proy", "input": "algo.csv", "processes": [{"id": 1, "task": {"name": "clean", "params": {}}, "children": [{"id": 2, "task": {"name": "spellcheck", "params": {"corpus_path": "V1"}}, "children": []}, {"id": 3, "task": {"name": "replace", "params": {"file_path": "remplazo2.csv"}}, "children": []}]}]}'
