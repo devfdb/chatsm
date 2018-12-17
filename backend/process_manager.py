@@ -149,6 +149,36 @@ def process(proc, epoch, project, _input, first):
             task['output'] = output_name
             _input = output_name
             print(_input)
+        if task['name'] == 'ner_trainer':
+            task['inicio'] = time.time()
+            print('Training NER...')
+            output_name = 'ner_training_' + str(proc['id']) + '.plk'
+            s = service.NERTrainer(rout, os.path.join(output_route, output_name), task['params'])
+            del s
+            task['termino'] = time.time()
+            task['output'] = output_name
+            _input = output_name
+            print(_input)
+        if task['name'] == 'ner_training_generator':
+            task['inicio'] = time.time()
+            print('Generating Training...')
+            output_name = 'ner_training_dataset_' + str(proc['id']) + '.csv'
+            s = service.NERTrainingGenerator(rout, os.path.join(output_route, output_name), task['params'])
+            del s
+            task['termino'] = time.time()
+            task['output'] = output_name
+            _input = output_name
+            print(_input)
+        if task['name'] == 'pos_tagger_trainer':
+            task['inicio'] = time.time()
+            print('Training POS-Tagger ...')
+            output_name = 'pos_training_' + str(proc['id']) + '.plk'
+            s = service.POStrainer(rout, os.path.join(output_route, output_name), task['params'])
+            del s
+            task['termino'] = time.time()
+            task['output'] = output_name
+            _input = output_name
+            print(_input)
         if 'children' in proc:
             children_list = []
             # Si existen hijos, se llama a si misma, con el nuevo _input como _input y con el subjson del hijo como proc

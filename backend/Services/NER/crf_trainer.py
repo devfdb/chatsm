@@ -50,6 +50,6 @@ class Trainer:
         self.crf.fit(self.X, self.y)
 
     def save(self, output_path:str):
-        joblib.dump(self.crf, output_path + 'crf.pkl')
+        joblib.dump(self.crf, output_path)
 
 

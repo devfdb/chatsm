@@ -69,14 +69,13 @@ class TrainingGenerator:
 
     def save(self, output_path):
 
-        with open(output_path + 'ner.csv', 'w', encoding='utf8', newline='\n') as file:
+        with open(output_path, 'w', encoding='utf8', newline='\n') as file:
             writer = csv.writer(file, quoting=csv.QUOTE_MINIMAL)
             writer.writerow(['Sentence: #', 'Word', 'POS', 'tag'])
             for words in self.done:
                 writer.writerow([words[0], words[1], words[2], words[3]])
         file.close()
 
-tg = TrainingGenerator("./tweets2011-11(3).csv",'./',{'pos_training':'./uni_tag.pkl', 'entities': './entities.csv'} )
 
 
 

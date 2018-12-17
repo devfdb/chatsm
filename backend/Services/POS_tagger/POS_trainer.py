@@ -22,7 +22,4 @@ class POS_tagger:
         return self.uni_tag.tag(tokenz)
 
     def save(self, output_path):
-        joblib.dump(self.uni_tag, output_path + 'uni_tag.pkl')
-
-
-pos = POS_tagger(None, './', None)
+        joblib.dump(self.uni_tag, output_path)
