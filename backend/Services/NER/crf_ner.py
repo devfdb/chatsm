@@ -2,7 +2,7 @@ import nltk.tokenize
 from nltk import UnigramTagger as ut
 from nltk.corpus import conll2002 as conll
 from sklearn.externals import joblib
-import crf_functions
+import .functions
 
 conll_sents = conll.tagged_sents()
 uni_tag = ut(conll_sents)
@@ -28,7 +28,7 @@ def ner_tagger(s):
         if word[1] is None:
             word[1] = 'Unk'
 
-    X = crf_functions.sent2features(s)
+    X = functions.sent2features(s)
     y = crf.predict_single(X)
 
     ent = ''

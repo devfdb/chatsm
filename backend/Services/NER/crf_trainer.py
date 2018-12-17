@@ -1,7 +1,7 @@
 import pandas as pd
 from sklearn_crfsuite import CRF
 from sklearn.externals import joblib
-import crf_functions
+from . import functions
 
 
 class Trainer:
@@ -22,10 +22,10 @@ class Trainer:
 
         self.data = pd.read_csv(input_path, encoding='utf8')
         self.data = self.data.fillna('Unk')
-        self.getter = crf_functions.SentenceGetter(self.data)
+        self.getter = functions.SentenceGetter(self.data)
         self.sentences = self.getter.sentences
-        self.X = [crf_functions.sent2features(s) for s in self.sentences]
-        self.y = [crf_functions.sent2labels(s) for s in self.sentences]
+        self.X = [functions.sent2features(s) for s in self.sentences]
+        self.y = [functions.sent2labels(s) for s in self.sentences]
 
     def _train(self, params: dict):
         try:
