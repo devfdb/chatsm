@@ -18,17 +18,6 @@ class Files extends CI_Controller
         $this->url_imagenes = FCPATH."/../repository/";
     }
 
-
-    private function endsWith($haystack, $needle)
-    {
-        $length = strlen($needle);
-        if ($length == 0) {
-            return true;
-        }
-
-        return (substr($haystack, -$length) === $needle);
-    }
-
     public function index()
     {
         try{
@@ -61,9 +50,11 @@ class Files extends CI_Controller
             $this->template->load('layout_admin', 'files/file_create', $data);
         }
         else if ($this->input->server('REQUEST_METHOD') == 'POST') {
-            $this->form_validation->set_rules('userfile', 'Archivo', 'required');
+            $this->form_validation->set_rules('userfile', 'Archivo', 'required', array(
+                'required' => 'Debe seleccionar un %s.'
+            )
+            );
 
-            $project = $this->project->read($this->session->userdata('project_id'));
             $relative_route = $this->file->curr_dir_path($this->input->post('dir_id'));
             $upload_config = array(
                 'upload_path' => '../repository/' . $relative_route,
@@ -103,7 +94,7 @@ class Files extends CI_Controller
                             'message', json_encode(
                                 array(
                                     "type" => "error",
-                                    "text" => "Error: Inserción no completada."
+                                    "text" => "Error: Inserción a la base de datos no exitosa."
                                 )
                             )
                         );
@@ -114,7 +105,8 @@ class Files extends CI_Controller
                     $data['project_id'] = $this->session->userdata('project_id');
                     $data['curr_dir_id'] = str_replace("/", "", $this->input->post('dir_id'));
                     $this->session->set_flashdata(
-                        'message', json_encode(
+                        'message',
+                        json_encode(
                             array(
                                 "type" => "error",
                                 "text" => "Error: Tipo de archivo incorrecto"
@@ -153,5 +145,7 @@ class Files extends CI_Controller
             $var = $this->input->post();
             return false;
         }
+        echo "Un error inesperado ocurrió, recargue la página.";
+        return false;
     }
 }
