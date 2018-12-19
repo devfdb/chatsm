@@ -69,7 +69,7 @@ class Files extends CI_Controller
                 'overwrite' => TRUE
             );
             $this->load->library('upload', $upload_config);
-            if ($_POST["userfile"] != null) {
+            if ($this->input->server("userfile") != null) {
                 if ($this->upload->do_upload('userfile')) {
                     $upload_data = $this->upload->data();
                     $data = array(
