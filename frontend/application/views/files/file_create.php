@@ -28,6 +28,6 @@
     debugger;
     var message = <?php echo $message; ?>;
     if (message && message.text)  {
-        swal(message.text);
+        swal(message);
     }
 </script>

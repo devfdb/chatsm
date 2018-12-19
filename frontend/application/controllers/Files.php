@@ -103,7 +103,7 @@ class Files extends CI_Controller
                         'message', json_encode(
                             array(
                         "type" => "success",
-                        "text" => "Inserción Exitosa"
+                        "text" => "Error de inserción"
                             )
                         )
                     );
