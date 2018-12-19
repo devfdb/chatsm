@@ -65,7 +65,7 @@ class Files extends CI_Controller
             $relative_route = $this->file->curr_dir_path($this->input->post('dir_id'));
             $upload_config = array(
                 'upload_path' => '../repository/'.$relative_route,
-                'allowed_types' => "gif|jpg|png|jpeg|pdf|csv|json",
+                'allowed_types' => "gif|jpg|png|jpeg|pdf|csv|json|pkl|txt",
                 'overwrite' => TRUE
             );
             $this->load->library('upload', $upload_config);
