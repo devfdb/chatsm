@@ -102,7 +102,7 @@ class Files extends CI_Controller
                     $this->session->set_flashdata(
                         'message', json_encode(
                             array(
-                        "type" => "success",
+                        "type" => "error",
                         "text" => "Error de inserción"
                             )
                         )
@@ -117,7 +117,7 @@ class Files extends CI_Controller
                 $this->session->set_flashdata(
                     'message', json_encode(
                         array(
-                            "type" => "success",
+                            "type" => "error",
                             "text" => "Error de inserción"
                         )
                     )
