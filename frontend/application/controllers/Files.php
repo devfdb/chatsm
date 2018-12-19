@@ -61,6 +61,8 @@ class Files extends CI_Controller
             $this->template->load('layout_admin', 'files/file_create', $data);
         }
         else if ($this->input->server('REQUEST_METHOD') == 'POST') {
+            $this->form_validation->set_rules('userfile', 'Archivo', 'required');
+
             $project = $this->project->read($this->session->userdata('project_id'));
             $relative_route = $this->file->curr_dir_path($this->input->post('dir_id'));
             $upload_config = array(
