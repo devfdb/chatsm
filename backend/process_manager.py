@@ -43,7 +43,7 @@ def process(proc, epoch, project, _input, first):
         if first:
             actual_input_route = base_input_route
         else:
-            actual_input_route = os.path.join('output', str(epoch))
+            actual_input_route = os.path.join(repository_route, project, 'output', str(epoch))
 
         # Creacion del directorio de la ejecución actual.
         # Si no existe la carpeta 'epoch'
@@ -58,6 +58,7 @@ def process(proc, epoch, project, _input, first):
             os.mkdir(base_output_route)
 
         # Definicion de la ruta de obtencion del archivo.
+        print("Proyecto:", project)
         print("Ruta", actual_input_route)
         print("Entrada", _input)
         actual_input_file_location = os.path.join(actual_input_route, _input)
