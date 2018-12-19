@@ -26,8 +26,8 @@
 
 <script>
     debugger;
-    var message = "<?php echo $message; ?>";
-    if (message != "")  {
-        swal(message);
+    var message = <?php echo $message; ?>;
+    if (message && message.text)  {
+        swal(message.text);
     }
 </script>

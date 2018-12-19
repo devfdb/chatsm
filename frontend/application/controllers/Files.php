@@ -92,7 +92,14 @@ class Files extends CI_Controller
                     $data['project_id'] = $this->session->userdata('project_id');
                     $data['error'] = $this->upload->display_errors();
                     $data['curr_dir_id'] = str_replace("/", "", $this->input->post('dir_id'));
-                    $this->session->set_flashdata('message', 'Error de Inserción!');
+                    $this->session->set_flashdata(
+                        'message', json_encode(
+                            array(
+                        "type" => "success",
+                        "text" => "Inserción Exitosa"
+                            )
+                        )
+                    );
                     redirect('/files/create', 'refresh');
                 }
             }
