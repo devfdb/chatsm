@@ -86,7 +86,14 @@ class Files extends CI_Controller
                     $data['curr_dir_id'] = str_replace("/", "", $this->input->post('dir_id'));
                     $data['project_id'] = $this->session->userdata('project_id');
                     $data['error'] = "SUCCESS";
-                    $this->session->set_flashdata('message', 'Archivo agregado exitosamente');
+                    $this->session->set_flashdata(
+                        'message', json_encode(
+                            array(
+                                "type" => "success",
+                                "text" => "Inserción Exitosa"
+                            )
+                        )
+                    );
                     redirect('/files/create', 'refresh');
                 } else {
                     $data['project_id'] = $this->session->userdata('project_id');
