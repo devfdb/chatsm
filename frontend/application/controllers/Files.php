@@ -50,19 +50,21 @@ class Files extends CI_Controller
             $this->template->load('layout_admin', 'files/file_create', $data);
         }
         else if ($this->input->server('REQUEST_METHOD') == 'POST') {
-            $this->form_validation->set_rules('userfile', 'Archivo', 'required', array(
-                'required' => 'Debe seleccionar un %s.'
-            )
-            );
+            $fv = false;
+            if(isset($_FILES['userfile']) and $_FILES['userfile']['name'] != '')
+                $fv = true;
 
             $relative_route = $this->file->curr_dir_path($this->input->post('dir_id'));
+
             $upload_config = array(
                 'upload_path' => '../repository/' . $relative_route,
                 'allowed_types' => "gif|jpg|png|jpeg|pdf|csv|json|pkl|txt",
                 'overwrite' => TRUE
             );
+
             $this->load->library('upload', $upload_config);
-            if ($this->form_validation->run() == TRUE) {
+
+            if ($fv == TRUE) {
                 if ($this->upload->do_upload('userfile')) {
                     $upload_data = $this->upload->data();
                     $data = array(
