@@ -92,9 +92,11 @@ class Files extends CI_Controller
                     $data['error'] = $this->upload->display_errors();
                     $this->template->load('layout_admin', 'files/file_create', $data);
                 }
-            } else {
+            }
+            else {
                 $data['project_id'] = $this->session->userdata('project_id');
                 $data['error'] = $this->upload->display_errors();
+                $data['curr_dir_id'] = str_replace("/", "", $this->input->post('dir_id'));
                 $this->template->load('layout_admin', 'files/file_create', $data);
             }
         }
