@@ -103,7 +103,7 @@ class Files extends CI_Controller
                         'message', json_encode(
                             array(
                         "type" => "error",
-                        "text" => "Error de inserción"
+                        "text" => "Error: Inserción no completada."
                             )
                         )
                     );
@@ -118,7 +118,7 @@ class Files extends CI_Controller
                     'message', json_encode(
                         array(
                             "type" => "error",
-                            "text" => "Error de inserción"
+                            "text" => "Error: No hubo elementos para subir"
                         )
                     )
                 );                redirect('/files/create', 'refresh');
