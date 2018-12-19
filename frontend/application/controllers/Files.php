@@ -60,7 +60,7 @@ class Files extends CI_Controller
             $data['error'] = null;
             $this->template->load('layout_admin', 'files/file_create', $data);
         }
-        else if ($this->input->server('REQUEST_METHOD') == 'POST') {
+        else if ($this->form_validation->run() == TRUE) {
             $project = $this->project->read($this->session->userdata('project_id'));
             $relative_route = $this->file->curr_dir_path($this->input->post('dir_id'));
             $upload_config = array(
@@ -93,7 +93,8 @@ class Files extends CI_Controller
                             )
                         );
                         redirect('/files/create', 'refresh');
-                    } else {
+                    }
+                    else {
                         $data['project_id'] = $this->session->userdata('project_id');
                         $data['curr_dir_id'] = str_replace("/", "", $this->input->post('dir_id'));
                         $this->session->set_flashdata(
@@ -106,7 +107,8 @@ class Files extends CI_Controller
                         );
                         redirect('/files/create', 'refresh');
                     }
-                } else {
+                }
+                else {
                     $data['project_id'] = $this->session->userdata('project_id');
                     $data['curr_dir_id'] = str_replace("/", "", $this->input->post('dir_id'));
                     $this->session->set_flashdata(
