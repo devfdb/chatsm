@@ -31,8 +31,8 @@ def process(proc, epoch, project, _input, first):
     :return: json basado en proc, con los nombres de los archivos generados.
     """
 
-    base_input_route = ''     # Nominal. Primera ruta esta vacia.
     repository_route = os.path.join('..', 'repository')
+    base_input_route = os.path.join(repository_route, project, 'input')     # Nominal. Primera ruta esta vacia.
     # base_extra_files_route = os.path.join(repository_route, project, 'input')
     # Placeholder. Ruta a usar con parametros
     base_output_route = os.path.join(
