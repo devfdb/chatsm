@@ -1,4 +1,19 @@
-<?php $this->load->view('layout/display'); ?>
+<?php
+    $this->load->view('layout/display');
+    $correcto = $this->session->flashdata('correcto');
+    if ($correcto)
+    {
+?>
+    <span id="registroCorrecto"><?php echo $correcto ?></span>
+<?php
+    }
+    else    {
+?>
+    <
+<?php
+    }
+?>
+
 <div class="col-12 grid-margin">
     <div class="card">
         <div class="card-body">
