@@ -5,7 +5,7 @@ import os
 from calendar import timegm
 from time import gmtime
 import uuid
-import time
+import datetime
 
 connection = None
 
@@ -20,14 +20,14 @@ channel = connection.channel()
 channel.queue_declare(queue='tasks')
 
 
-def process(proc, epoch, project, _input, first):
+def process(proc, epoch, project, _input, step):
     """
     Función iterativa que invoca todos los procesos solicitados desde el json de entrada.
     :param proc: json con un arbol o sub_arbol de tareas. Solo toma el superior en una iteración.
     :param epoch: String con la dirección unica para el nuevo directorio de salida
     :param project: String con el nombre del proyecto.
     :param _input: String con la ruta relativa del archivo
-    :param first: boolean que confirma la primera ejecución.
+    :param step: integer que dicta el paso actual
     :return: json basado en proc, con los nombres de los archivos generados.
     """
 
@@ -40,7 +40,7 @@ def process(proc, epoch, project, _input, first):
     )
     if proc:
         # Manejo de si es padre, determinando la carpeta de obtencion de archivo.
-        if first:
+        if step == 1:
             actual_input_route = base_input_route
         else:
             actual_input_route = os.path.join(repository_route, project, 'output', str(epoch))
@@ -71,83 +71,72 @@ def process(proc, epoch, project, _input, first):
         # Del mismo modo, como se sabe el nombre del archivo se pueden fijar parametros para la siguiente iteracion
         task['output'] = output_filename
         children_input = output_filename
+        task['inicio'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         # Llama la tarea correspondiente a la tarea especificada.
         if task['name'] == 'cleaner':
-            task['inicio'] = time.time()
             print("Time:", task['inicio'])
             print('Cleaning...')
             c = service.Cleaner(actual_input_file_location, output_file_location, task['params'])
             del c
-            task['termino'] = time.time()
+            task['termino'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         elif task['name'] == 'replace':
-            task['inicio'] = time.time()
             print('Replacing...')
             r = service.Replacer(actual_input_file_location, output_file_location, project, task['params'])
             del r
-            task['termino'] = time.time()
+            task['termino'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             # Adjunta el nombre del archivo generado al json, en el campo 'output'
         elif task['name'] == 'spellcheck':
-            task['inicio'] = time.time()
             print('Spellchecking...')
             s = service.SpellChecker(actual_input_file_location, output_file_location, project, task['params'])
             del s
-            task['termino'] = time.time()
+            task['termino'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             # Adjunta el nombre del archivo generado al json, en el campo 'output'
         elif task['name'] == 'word2vec':
-            task['inicio'] = time.time()
             print('Creating Word2Vec...')
             s = service.Word2Vec(actual_input_file_location, output_file_location, task['params'])
             del s
-            task['termino'] = time.time()
+            task['termino'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         elif task['name'] == 'svm_model':
-            task['inicio'] = time.time()
             print('Creating SVM model...')
             s = service.SVM(actual_input_file_location, output_file_location, task['params'])
             del s
-            task['termino'] = time.time()
+            task['termino'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         elif task['name'] == 'mnb_model':
-            task['inicio'] = time.time()
             print('Creating Multinomial NB model...')
             s = service.MultinomialNB(actual_input_file_location, output_file_location, task['params'])
             del s
-            task['termino'] = time.time()
+            task['termino'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         elif task['name'] == 'mlp_model':
-            task['inicio'] = time.time()
             print('Creating MLP Network model...')
             s = service.MLPClassifier(actual_input_file_location, output_file_location, task['params'])
             del s
-            task['termino'] = time.time()
+            task['termino'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         elif task['name'] == 'cluster':
-            task['inicio'] = time.time()
             print('Clustering...')
             s = service.HierarchicClustering(actual_input_file_location, output_file_location, task['params'])
             del s
-            task['termino'] = time.time()
+            task['termino'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         elif task['name'] == 'extract_cluster':
-            task['inicio'] = time.time()
             print('Extracting clusters...')
             s = service.ClusterExtractor(actual_input_file_location, output_file_location, task['params'])
             del s
-            task['termino'] = time.time()
+            task['termino'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         elif task['name'] == 'ner_trainer':
-            task['inicio'] = time.time()
             print('Training NER...')
             s = service.NERTrainer(actual_input_file_location, output_file_location, task['params'])
             del s
-            task['termino'] = time.time()
+            task['termino'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         elif task['name'] == 'ner_training_generator':
-            task['inicio'] = time.time()
             print('Generating Training...')
             s = service.NERTrainingGenerator(actual_input_file_location, output_file_location, task['params'])
             del s
-            task['termino'] = time.time()
+            task['termino'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         elif task['name'] == 'pos_tagger_trainer':
-            task['inicio'] = time.time()
             print('Training POS-Tagger ...')
             s = service.POStrainer(actual_input_file_location, output_file_location, task['params'])
             del s
-            task['termino'] = time.time()
+            task['termino'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         print("Generated file:", children_input)
 
@@ -157,7 +146,7 @@ def process(proc, epoch, project, _input, first):
             children_list = []
             # Recorrido como lista ya que hijos en un mismo nivel estan en una lista.
             for child in proc['children']:
-                children_list.append(process(child, epoch, project, children_input, False))
+                children_list.append(process(child, epoch, project, children_input, step+1))
             proc['children'] = children_list
             print(proc)
         # Finalmente, lo que retornado es la misma tarea, con información extra.
@@ -224,7 +213,7 @@ def callback(ch, method, props, bodys):
             result_list = []
             for proc in body['processes']:
                 # Esto deberia asignarse a una variable
-                result_list.append(process(proc, timegm(gmtime()), project, _input, True))
+                result_list.append(process(proc, timegm(gmtime()), project, _input, 1))
             print('Listo')
             body['processes'] = result_list
             send(body, unique_id)
