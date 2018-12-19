@@ -64,46 +64,56 @@ class Files extends CI_Controller
             $project = $this->project->read($this->session->userdata('project_id'));
             $relative_route = $this->file->curr_dir_path($this->input->post('dir_id'));
             $upload_config = array(
-                'upload_path' => '../repository/'.$relative_route,
+                'upload_path' => '../repository/' . $relative_route,
                 'allowed_types' => "gif|jpg|png|jpeg|pdf|csv|json|pkl|txt",
                 'overwrite' => TRUE
             );
             $this->load->library('upload', $upload_config);
-
-            if ($this->upload->do_upload('userfile'))
-            {
-                $upload_data = $this->upload->data();
-                $data = array(
-                    'fil_filename' => $upload_data['file_name'],
-                    'fil_url' => $relative_route.'/'.$upload_data['file_name'],
-                    'fil_associated_project_id' => $this->session->userdata('project_id'),
-                    'fil_owner' => $this->session->userdata('userId'),
-                    'fil_parent_id' => $this->input->post('dir_id'),
-                    'fil_file_format' => $this->file->file_end($upload_data['file_name'])
-                );
-                $result = $this->file->insert($data);
-                if ($result == TRUE) {
-                    $data['curr_dir_id'] = str_replace("/", "", $this->input->post('dir_id'));
-                    $data['project_id'] = $this->session->userdata('project_id');
-                    $data['error'] = "SUCCESS";
-                    $this->session->set_flashdata(
-                        'message', json_encode(
-                            array(
-                                "type" => "success",
-                                "text" => "Inserción Exitosa"
-                            )
-                        )
+            if ($this->input->get('path') != null) {
+                if ($this->upload->do_upload('userfile')) {
+                    $upload_data = $this->upload->data();
+                    $data = array(
+                        'fil_filename' => $upload_data['file_name'],
+                        'fil_url' => $relative_route . '/' . $upload_data['file_name'],
+                        'fil_associated_project_id' => $this->session->userdata('project_id'),
+                        'fil_owner' => $this->session->userdata('userId'),
+                        'fil_parent_id' => $this->input->post('dir_id'),
+                        'fil_file_format' => $this->file->file_end($upload_data['file_name'])
                     );
-                    redirect('/files/create', 'refresh');
+                    $result = $this->file->insert($data);
+                    if ($result == TRUE) {
+                        $data['curr_dir_id'] = str_replace("/", "", $this->input->post('dir_id'));
+                        $data['project_id'] = $this->session->userdata('project_id');
+                        $this->session->set_flashdata(
+                            'message', json_encode(
+                                array(
+                                    "type" => "success",
+                                    "text" => "Inserción Exitosa"
+                                )
+                            )
+                        );
+                        redirect('/files/create', 'refresh');
+                    } else {
+                        $data['project_id'] = $this->session->userdata('project_id');
+                        $data['curr_dir_id'] = str_replace("/", "", $this->input->post('dir_id'));
+                        $this->session->set_flashdata(
+                            'message', json_encode(
+                                array(
+                                    "type" => "error",
+                                    "text" => "Error: Inserción no completada."
+                                )
+                            )
+                        );
+                        redirect('/files/create', 'refresh');
+                    }
                 } else {
                     $data['project_id'] = $this->session->userdata('project_id');
-                    $data['error'] = $this->upload->display_errors();
                     $data['curr_dir_id'] = str_replace("/", "", $this->input->post('dir_id'));
                     $this->session->set_flashdata(
                         'message', json_encode(
                             array(
-                        "type" => "error",
-                        "text" => "Error: Inserción no completada."
+                                "type" => "error",
+                                "text" => "Error: Tipo de archivo incorrecto"
                             )
                         )
                     );
@@ -112,7 +122,6 @@ class Files extends CI_Controller
             }
             else {
                 $data['project_id'] = $this->session->userdata('project_id');
-                $data['error'] = $this->upload->display_errors();
                 $data['curr_dir_id'] = str_replace("/", "", $this->input->post('dir_id'));
                 $this->session->set_flashdata(
                     'message', json_encode(
@@ -121,7 +130,8 @@ class Files extends CI_Controller
                             "text" => "Error: No hubo elementos para subir"
                         )
                     )
-                );                redirect('/files/create', 'refresh');
+                );
+                redirect('/files/create', 'refresh');
             }
         }
     }
