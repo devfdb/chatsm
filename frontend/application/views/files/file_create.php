@@ -25,6 +25,7 @@
 <?php $this->load->view('layout/display'); ?>
 
 <script>
+    debugger;
     let message = <?php echo $correcto; ?>;
     if (message != "")  {
         alert(message);
