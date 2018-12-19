@@ -20,6 +20,7 @@ class Files extends CI_Controller
 
     public function index()
     {
+
         try{
             $path_query = $this->input->get('path');
         } catch (Exception $e)   {
@@ -69,7 +70,7 @@ class Files extends CI_Controller
                     $upload_data = $this->upload->data();
                     $data = array(
                         'fil_filename' => $upload_data['file_name'],
-                        'fil_url' => $relative_route . '/' . $upload_data['file_name'],
+                        'fil_url' => $relative_route .'/'. $upload_data['file_name'],
                         'fil_associated_project_id' => $this->session->userdata('project_id'),
                         'fil_owner' => $this->session->userdata('userId'),
                         'fil_parent_id' => $this->input->post('dir_id'),
@@ -87,7 +88,7 @@ class Files extends CI_Controller
                                 )
                             )
                         );
-                        redirect('/files/create', 'refresh');
+                        redirect('/files/create?path='.$data['curr_dir_id'], 'refresh');
                     }
                     else {
                         $data['project_id'] = $this->session->userdata('project_id');
@@ -100,7 +101,7 @@ class Files extends CI_Controller
                                 )
                             )
                         );
-                        redirect('/files/create', 'refresh');
+                        redirect('/files/create?path='.$data['curr_dir_id'], 'refresh');
                     }
                 }
                 else {
@@ -115,7 +116,7 @@ class Files extends CI_Controller
                             )
                         )
                     );
-                    redirect('/files/create', 'refresh');
+                    redirect('/files/create?path='.$data['curr_dir_id'], 'refresh');
                 }
             }
             else {
@@ -129,7 +130,7 @@ class Files extends CI_Controller
                         )
                     )
                 );
-                redirect('/files/create', 'refresh');
+                redirect('/files/create?path='.$data['curr_dir_id'], 'refresh');
             }
         }
     }

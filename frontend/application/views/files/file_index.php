@@ -62,7 +62,7 @@
                                 <?php
                                 if ($item['fil_file_format'] == 'image') {
                                     ?>
-                                    <a class="example-image-link" data-lightbox="example-1"><img class="example-image" src=<?php echo 'files//image//'.$item['fil_url'] ?>><?php echo $item['fil_filename']?></a>
+                                    <a class="example-image-link" data-lightbox="example-1"><img class="example-image" src=<?php echo '../repository/'.$item['fil_url'] ?>> <?php echo $item['fil_filename']?></a>
                                 <?php
                                 }
                                 else if ($item['fil_file_format'] == 'csv') {
@@ -118,7 +118,7 @@
             el: '#app',
             data: function () {
                 return {
-                    input: <?php echo $current_dir_id ?>;
+                    input: <?php echo $current_dir_id ?>
                 }
             },
             methods: {

@@ -16,7 +16,7 @@
                 <input type="file" name="userfile" size="20" />
                 <input type="hidden" name="dir_id" value=<?php echo $curr_dir_id ?>/>
                 <input class="btn btn-light" type="submit" value="Subir" />
-                <a href="/files/index" class="btn btn-light">Cancelar</a>
+                <a href="<?php echo '/files?path='.$curr_dir_id ?>" class="btn btn-light">Volver</a>
                 </form>
             </div>
             <?php echo form_close(); ?>
