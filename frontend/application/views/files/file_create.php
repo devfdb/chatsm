@@ -26,7 +26,7 @@
 
 <script>
     debugger;
-    let message = <?php echo $correcto; ?>;
+    var message = "<?php echo $correcto; ?>";
     if (message != "")  {
         alert(message);
     }
