@@ -86,15 +86,15 @@ class Projects extends CI_Controller
                     if (!file_exists($this->base_path.$data['prj_name']))
                     {
                         mkdir($this->base_path.$data['prj_name'], 0777, true);
-                        mkdir($this->base_path.$data['prj_name'].'/input/', 0777, true);
-                        mkdir($this->base_path.$data['prj_name'].'/output/', 0777, true);
+                        mkdir($this->base_path.$data['prj_name'].'/input', 0777, true);
+                        mkdir($this->base_path.$data['prj_name'].'/output', 0777, true);
 
                     }
                     $data['message'] = json_encode(array('title'=> 'Proyecto creado exitosamente', 'type' => 'success' ));
 
                     $base_folder = array(
                         'fil_filename' => $this->input->post('name'),
-                        'fil_url' => $this->input->post('name').'/',
+                        'fil_url' => $this->input->post('name'),
                         'fil_owner' => $this->session->userdata('userId'),
                         'fil_associated_project_id' => $this->project->retrieve_project_id($this->input->post('name'), $this->session->userdata('userId')),
                         'fil_file_format' => 'folder'
@@ -103,7 +103,7 @@ class Projects extends CI_Controller
 
                     $input_folder = array(
                         'fil_filename' => 'input',
-                        'fil_url' => $this->input->post('name').'/input/',
+                        'fil_url' => $this->input->post('name').'/input',
                         'fil_parent_id' => $this->file->curr_file_id($this->project->retrieve_project_id($this->input->post('name'), $this->session->userdata('userId'))),
                         'fil_owner' => $this->session->userdata('userId'),
                         'fil_associated_project_id' => $this->project->retrieve_project_id($this->input->post('name'), $this->session->userdata('userId')),
@@ -113,7 +113,7 @@ class Projects extends CI_Controller
 
                     $output_folder = array(
                         'fil_filename' => 'output',
-                        'fil_url' => $this->input->post('name').'/output/',
+                        'fil_url' => $this->input->post('name').'/output',
                         'fil_parent_id' => $this->file->curr_file_id($this->project->retrieve_project_id($this->input->post('name'), $this->session->userdata('userId'))),
                         'fil_owner' => $this->session->userdata('userId'),
                         'fil_associated_project_id' => $this->project->retrieve_project_id($this->input->post('name'), $this->session->userdata('userId')),

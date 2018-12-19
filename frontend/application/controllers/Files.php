@@ -18,19 +18,9 @@ class Files extends CI_Controller
         $this->url_imagenes = FCPATH."/../repository/";
     }
 
-
-    private function endsWith($haystack, $needle)
-    {
-        $length = strlen($needle);
-        if ($length == 0) {
-            return true;
-        }
-
-        return (substr($haystack, -$length) === $needle);
-    }
-
     public function index()
     {
+
         try{
             $path_query = $this->input->get('path');
         } catch (Exception $e)   {
@@ -61,41 +51,86 @@ class Files extends CI_Controller
             $this->template->load('layout_admin', 'files/file_create', $data);
         }
         else if ($this->input->server('REQUEST_METHOD') == 'POST') {
-            $project = $this->project->read($this->session->userdata('project_id'));
+            $fv = false;
+            if(isset($_FILES['userfile']) and $_FILES['userfile']['name'] != '')
+                $fv = true;
+
             $relative_route = $this->file->curr_dir_path($this->input->post('dir_id'));
+
             $upload_config = array(
-                'upload_path' => '../repository/'.$relative_route,
-                'allowed_types' => "gif|jpg|png|jpeg|pdf|csv|json",
+                'upload_path' => '../repository/' . $relative_route,
+                'allowed_types' => "gif|jpg|png|jpeg|pdf|csv|json|pkl|txt",
                 'overwrite' => TRUE
             );
+
             $this->load->library('upload', $upload_config);
 
-            if ($this->upload->do_upload('userfile'))
-            {
-                $upload_data = $this->upload->data();
-                $data = array(
-                    'fil_filename' => $upload_data['file_name'],
-                    'fil_url' => $relative_route.'/'.$upload_data['file_name'],
-                    'fil_associated_project_id' => $this->session->userdata('project_id'),
-                    'fil_owner' => $this->session->userdata('userId'),
-                    'fil_parent_id' => $this->input->post('dir_id'),
-                    'fil_file_format' => $this->file->file_end($upload_data['file_name'])
-                );
-                $result = $this->file->insert($data);
-                if ($result == TRUE) {
-                    $data['curr_dir_id'] = str_replace("/", "", $this->input->post('dir_id'));
-                    $data['project_id'] = $this->session->userdata('project_id');
-                    $data['error'] = "SUCCESS";
-                    $this->template->load('layout_admin', 'files/file_create', $data);
-                } else {
-                    $data['project_id'] = $this->session->userdata('project_id');
-                    $data['error'] = $this->upload->display_errors();
-                    $this->template->load('layout_admin', 'files/file_create', $data);
+            if ($fv == TRUE) {
+                if ($this->upload->do_upload('userfile')) {
+                    $upload_data = $this->upload->data();
+                    $data = array(
+                        'fil_filename' => $upload_data['file_name'],
+                        'fil_url' => $relative_route .'/'. $upload_data['file_name'],
+                        'fil_associated_project_id' => $this->session->userdata('project_id'),
+                        'fil_owner' => $this->session->userdata('userId'),
+                        'fil_parent_id' => $this->input->post('dir_id'),
+                        'fil_file_format' => $this->file->file_end($upload_data['file_name'])
+                    );
+                    $result = $this->file->insert($data);
+                    if ($result == TRUE) {
+                        $data['curr_dir_id'] = str_replace("/", "", $this->input->post('dir_id'));
+                        $data['project_id'] = $this->session->userdata('project_id');
+                        $this->session->set_flashdata(
+                            'message', json_encode(
+                                array(
+                                    "type" => "success",
+                                    "text" => "Inserción Exitosa"
+                                )
+                            )
+                        );
+                        redirect('/files/create?path='.$data['curr_dir_id'], 'refresh');
+                    }
+                    else {
+                        $data['project_id'] = $this->session->userdata('project_id');
+                        $data['curr_dir_id'] = str_replace("/", "", $this->input->post('dir_id'));
+                        $this->session->set_flashdata(
+                            'message', json_encode(
+                                array(
+                                    "type" => "error",
+                                    "text" => "Error: Inserción a la base de datos no exitosa."
+                                )
+                            )
+                        );
+                        redirect('/files/create?path='.$data['curr_dir_id'], 'refresh');
+                    }
                 }
-            } else {
+                else {
+                    $data['project_id'] = $this->session->userdata('project_id');
+                    $data['curr_dir_id'] = str_replace("/", "", $this->input->post('dir_id'));
+                    $this->session->set_flashdata(
+                        'message',
+                        json_encode(
+                            array(
+                                "type" => "error",
+                                "text" => "Error: Tipo de archivo incorrecto"
+                            )
+                        )
+                    );
+                    redirect('/files/create?path='.$data['curr_dir_id'], 'refresh');
+                }
+            }
+            else {
                 $data['project_id'] = $this->session->userdata('project_id');
-                $data['error'] = $this->upload->display_errors();
-                $this->template->load('layout_admin', 'files/file_create', $data);
+                $data['curr_dir_id'] = str_replace("/", "", $this->input->post('dir_id'));
+                $this->session->set_flashdata(
+                    'message', json_encode(
+                        array(
+                            "type" => "error",
+                            "text" => "Error: No hubo elementos para subir"
+                        )
+                    )
+                );
+                redirect('/files/create?path='.$data['curr_dir_id'], 'refresh');
             }
         }
     }
@@ -113,5 +148,7 @@ class Files extends CI_Controller
             $var = $this->input->post();
             return false;
         }
+        echo "Un error inesperado ocurrió, recargue la página.";
+        return false;
     }
 }
