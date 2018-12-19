@@ -60,7 +60,7 @@ class Files extends CI_Controller
             $data['error'] = null;
             $this->template->load('layout_admin', 'files/file_create', $data);
         }
-        else if ($this->form_validation->run() == TRUE) {
+        else if ($this->input->server('REQUEST_METHOD') == 'POST') {
             $project = $this->project->read($this->session->userdata('project_id'));
             $relative_route = $this->file->curr_dir_path($this->input->post('dir_id'));
             $upload_config = array(
@@ -69,7 +69,7 @@ class Files extends CI_Controller
                 'overwrite' => TRUE
             );
             $this->load->library('upload', $upload_config);
-            if ($this->input->server("userfile") != null) {
+            if ($this->form_validation->run() == TRUE) {
                 if ($this->upload->do_upload('userfile')) {
                     $upload_data = $this->upload->data();
                     $data = array(
