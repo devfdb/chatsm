@@ -29,4 +29,7 @@
     if (message != "")  {
         alert(message);
     }
+    else {
+        alert("Errorinho");
+    }
 </script>
