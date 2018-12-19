@@ -65,7 +65,7 @@ def process(proc, epoch, project, _input, step):
 
         # Dado que proc no se None, obtiene la tarea de este, el nombre del archivo de salida y su ruta completa.
         task = proc['task']
-        output_filename = "Tarea_" + int(step) + ' - ' + task['name']
+        output_filename = "Tarea_" + str(step) + ' - ' + task['name']
         output_file_location = os.path.join(base_output_route, output_filename)
 
         # Del mismo modo, como se sabe el nombre del archivo se pueden fijar parametros para la siguiente iteracion
