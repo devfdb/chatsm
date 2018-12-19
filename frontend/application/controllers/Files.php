@@ -86,15 +86,13 @@ class Files extends CI_Controller
                     $data['curr_dir_id'] = str_replace("/", "", $this->input->post('dir_id'));
                     $data['project_id'] = $this->session->userdata('project_id');
                     $data['error'] = "SUCCESS";
-                    $this->session->set_flashdata('correcto', 'Usuario registrado correctamente!');
-                    #$this->template->load('layout_admin', 'files/file_create', $data);
+                    $this->session->set_flashdata('message', 'Archivo agregado exitosamente');
                     redirect('/files/create', 'refresh');
                 } else {
                     $data['project_id'] = $this->session->userdata('project_id');
                     $data['error'] = $this->upload->display_errors();
                     $data['curr_dir_id'] = str_replace("/", "", $this->input->post('dir_id'));
-                    $this->session->set_flashdata('correcto', 'Error!');
-                    #$this->template->load('layout_admin', 'files/file_create', $data);
+                    $this->session->set_flashdata('message', 'Error de Inserción!');
                     redirect('/files/create', 'refresh');
                 }
             }
@@ -102,7 +100,8 @@ class Files extends CI_Controller
                 $data['project_id'] = $this->session->userdata('project_id');
                 $data['error'] = $this->upload->display_errors();
                 $data['curr_dir_id'] = str_replace("/", "", $this->input->post('dir_id'));
-                $this->template->load('layout_admin', 'files/file_create', $data);
+                $this->session->set_flashdata('message', 'Error de Inserción!');
+                redirect('/files/create', 'refresh');
             }
         }
     }

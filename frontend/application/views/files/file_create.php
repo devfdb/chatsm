@@ -1,6 +1,6 @@
 <?php
     $this->load->view('layout/display');
-    $correcto = $this->session->flashdata('correcto');
+    $message = $this->session->flashdata('message');
 ?>
 
 <div class="col-12 grid-margin">
@@ -26,11 +26,8 @@
 
 <script>
     debugger;
-    var message = "<?php echo $correcto; ?>";
+    var message = "<?php echo $message; ?>";
     if (message != "")  {
-        alert(message);
-    }
-    else {
-        alert("Errorinho");
+        swal(message);
     }
 </script>
