@@ -58,6 +58,8 @@ def process(proc, epoch, project, _input, first):
             os.mkdir(base_output_route)
 
         # Definicion de la ruta de obtencion del archivo.
+        print("Ruta", actual_input_route)
+        print("Entrada", _input)
         actual_input_file_location = os.path.join(actual_input_route, _input)
 
         # Dado que proc no se None, obtiene la tarea de este, el nombre del archivo de salida y su ruta completa.
