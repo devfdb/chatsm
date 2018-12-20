@@ -94,7 +94,7 @@ class Processes extends CI_Controller
     {
         if ($this->input->server('REQUEST_METHOD') == 'GET') {
 
-            $data['file_list'] = $this->file->table_select();
+            $data['file_list'] = $this->file->table_select($this->session->userdata('project_id'));
             $this->template->load('layout_admin', 'processes/process_create', $data);
 
         } else if ($this->input->server('REQUEST_METHOD') == 'POST') {
