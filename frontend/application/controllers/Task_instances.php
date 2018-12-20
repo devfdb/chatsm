@@ -93,7 +93,8 @@ class Task_instances extends CI_Controller
         if ($this->input->server('REQUEST_METHOD') == 'GET') {
             $data['list_types'] = $this->select_task_type();
             $this->template->load('layout_admin', 'instances/instance_create', $data);
-        } else if ($this->input->server('REQUEST_METHOD') == 'POST') {
+        }
+        else if ($this->input->server('REQUEST_METHOD') == 'POST') {
 //            $this->form_validation->set_rules('name', 'nombre', 'trim|required');
 //            $this->form_validation->set_rules('type_id', 'tipo', 'trim|required');
 //            $this->form_validation->set_error_delimiters('<div class="alert alert-danger alert-dismissible">','</div>');
@@ -130,13 +131,25 @@ class Task_instances extends CI_Controller
 //                    'inp_parameter_value' => $inst[],
 //                );
                 if ($result == TRUE) {
-                    $data['message'] = json_encode(array('title' => 'Instancia creada exitosamente', 'type' => 'success'));
-                    $data['list_types'] = $this->select_task_type();
-                    $this->template->load('layout_admin', 'instances/instance_create', $data);
+                     $this->session->set_flashdata(
+                        'message', json_encode(
+                            array(
+                                "type" => "success",
+                                "text" => "Instancia creada exitosamente."
+                            )
+                        )
+                    );
+                    redirect('instances/instance_create', 'refresh');
                 } else {
-                    $data['message'] = json_encode(array('title' => 'No se pudo crear la instancia', 'type' => 'error'));
-                    $data['list_types'] = $this->select_task_type();
-                    $this->template->load('layout_admin', 'instances/instance_create', $data);
+                    $this->session->set_flashdata(
+                        'message', json_encode(
+                            array(
+                                "type" => "error",
+                                "text" => "No se pudo crear la instancia"
+                            )
+                        )
+                    );
+                    redirect('instances/instance_create', 'refresh');
                 }
             } else {
                 $data['message_display'] = validation_errors();

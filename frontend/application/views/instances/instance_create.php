@@ -1,6 +1,8 @@
 <script src="https://unpkg.com/vue/dist/vue.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
-
+<?php
+$message = $this->session->flashdata('message');
+?>
 <div class="col-12 grid-margin" id="create">
     <div class="card">
         <div class="card-body">
@@ -44,8 +46,8 @@
                 </div>
             </div>
             <div class="row">
-                <button class="btn btn-success mr-2" @click="create_instance">Crear</button>
-                <a href="/task-instances/index" class="btn btn-light">Cancelar</a>
+                <button class="btn btn-success mr-2" @click="create_instance()">Crear</button>
+                <a href="/task-instances/index" class="btn btn-light">Volver</a>
             </div>
             <!--            --><?php //echo form_close(); ?>
         </div>
@@ -108,6 +110,7 @@
                 else return false;
             },
             create_instance() {
+                console.log("Creando instancia")
 
                 var taskobj = {
                     name: this.name,
@@ -116,12 +119,19 @@
                 };
 
                 axios.post('/task-instances/create', taskobj)
+                    .then(function (resp) {
+                        var message = <?php echo $message ?>;
+                        if (message && message.text)  {
+                            swal(message);
+                        }
+                    });
             }
         },
         mounted() {
             this.get_task_type().then(resp => {
                 this.list_types = resp.data;
             })
+
         }
     });
 </script>

@@ -3,7 +3,7 @@
         <h4 class="card-title">Instancias</h4>
         <div class="card-description">
             <div class="actions">
-            <a class="btn btn-primary" href="/task-instances/create">CREAR NUEVO</a>
+            <a class="btn btn-primary" href="/task-instances/create">Crear Nueva Instancia</a>
         </div>
         </p>
         <div class="table-responsive">
