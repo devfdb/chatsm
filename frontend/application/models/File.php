@@ -42,10 +42,12 @@ class File extends CI_Model
         }
     }
 
-    public function table_all()
+    public function table_all($project_id)
     {
         $this->db->select('*');
         $this->db->from('file');
+        $this->db->where('fil_associated_project_id', $project_id);
+        $this->db->where('fil_file_format != "folder"', null);
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
             return $query->result_array();
@@ -108,12 +110,12 @@ class File extends CI_Model
         }
     }
 
-    public function table_select()
+    public function table_select($project_id)
     {
-        $instances = $this->table_all(); //Todo cambiar por uno que sirva
+        $instances = $this->table_all($project_id); //Todo cambiar por uno que sirva
         $arr = array();
         foreach($instances as $item) {
-            $arr[$item['fil_id']] = $item['fil_filename'];
+            $arr[$item['fil_id']] = $item['fil_url'];
         }
         return $arr;
     }

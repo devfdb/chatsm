@@ -69,11 +69,6 @@ class Processes extends CI_Controller
     }
 
 
-    private function execute_process()
-    {
-
-    }
-
     public function update_table()
     {
 

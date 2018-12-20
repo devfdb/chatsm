@@ -207,54 +207,7 @@
             //     return axios.get('/executions/parse-to-json-for-view/'+ id)
             //
             // },
-            removeNode(node) {
-                if (confirm('Are you sure?')) {
-                    node.remove()
-                }
-            },
 
-            //addRootNode() {
-            //    var data = {
-            //        process_id: <?php //echo $id ?>//,
-            //        parent: null,
-            //        new: this.new_node
-            //    };
-            //    axios.post('/processes/new-node', data)
-            //        .then(function (response) {
-            //                treeData.append(response.data);
-            //                treeData.expand();
-            //                self.new_node = {};
-            //            }
-            //        );
-            //},
-            //addChildNode(node) {
-            //    var self = this;
-            //    if (node.enabled()) {
-            //        if (this.new_node.instance_id) {
-            //            var data = {
-            //                process_id: <?php //echo $id ?>//,
-            //                parent: {
-            //                    id: node.id
-            //                },
-            //                new: this.new_node
-            //            };
-            //            axios.post('/processes/new-node', data)
-            //                .then(function (response) {
-            //                        node.append(response.data);
-            //                        node.expand();
-            //                        self.new_node = {};
-            //                    }
-            //                )
-            //        }
-            //        else {
-            //            swal({
-            //                type: "warning",
-            //                title: "Selecciona un tipo de nodo",
-            //                text: "Se requiere seleccionar la instancia"
-            //            })
-            //        }
-            //    }
-            //},
             get_task_type() {
                 var self = this
                 return axios.get('/task-instances/get_instances_of_project')
