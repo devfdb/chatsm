@@ -97,7 +97,8 @@ class Processes extends CI_Controller
             $data['file_list'] = $this->file->table_select($this->session->userdata('project_id'));
             $this->template->load('layout_admin', 'processes/process_create', $data);
 
-        } else if ($this->input->server('REQUEST_METHOD') == 'POST') {
+        }
+        else if ($this->input->server('REQUEST_METHOD') == 'POST') {
             $this->form_validation->set_rules('name', 'nombre', 'trim|required');
             $this->form_validation->set_rules('input_id', 'archivo de entrada', 'trim|required');
             $this->form_validation->set_error_delimiters('<div style="color: red;">', '</div>');
@@ -112,16 +113,16 @@ class Processes extends CI_Controller
                 $result = $this->process->insert($data);
                 if ($result == TRUE) {
                     $data['message'] = json_encode(array('title' => 'Proceso creado exitosamente', 'type' => 'success'));
-                    $data['file_list'] = $this->file->table_select();
+                    $data['file_list'] = $this->file->table_select($this->session->userdata('project_id'));
                     $this->template->load('layout_admin', 'processes/process_create', $data);
                 } else {
                     $data['message'] = json_encode(array('title' => 'No se pudo crear el proceso', 'type' => 'error'));
-                    $data['file_list'] = $this->file->table_select();
+                    $data['file_list'] = $this->file->table_select($this->session->userdata('project_id'));
                     $this->template->load('layout_admin', 'processes/process_create', $data);
                 }
             } else {
                 $data['message_display'] = validation_errors();
-                $data['file_list'] = $this->file->table_select();
+                $data['file_list'] = $this->file->table_select($this->session->userdata('project_id'));
                 $this->template->load('layout_admin', 'processes/process_create', $data);
             }
         }
@@ -129,7 +130,7 @@ class Processes extends CI_Controller
 
     public function edit($id)
     {
-        $data['file_list'] = $this->file->table_select();
+        $data['file_list'] = $this->file->table_select($this->session->userdata('project_id'));
         $data['id'] = $id;
         $this->template->load('layout_admin', 'processes/process_edit', $data);
     }
