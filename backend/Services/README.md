@@ -5,9 +5,7 @@ CHATBOT SERVICES
 
 ### Elementos en el primer nivel del proyecto
     .
-    └── services.py            # Documentación del sistema (archivo actual)
-
-
+    └── services.py            # Colección de los servicios definidos en sus respectivas carpetas
 
 ### Archivos del motor del chatbot
 
@@ -19,10 +17,10 @@ irían en un directorio `app`.
     .
     ├── ...
     ├── NER                                      # Carpeta de procesamiento interno
-    │   ├── crf_ner.py                           # Generador de datasets en base a clasificación de intenciones realizadas preliminarmente en la base de datos
-    │   ├── crf_trainer.py                       # Algoritmo auxiliar que retorna todas las intenciones del árbol que se encuentran al mismo nivel dada una que sea parte de éste
-    │   ├── functions.py                         # ASFDSG
-    │   └── ner_training_generator.py            # Representación del árbol de intenciones, definiendo los tipos de modelo a construir y sus parámetros
+    │   ├── crf_ner.py                           # Programa de prueba para ejecución del algoritmo NER
+    │   ├── crf_trainer.py                       # Entrenamiento de un modelo NER dadas las oraciones, entidades y etiquetas POS
+    │   ├── functions.py                         # Archivo de funciones generales aplicadas en los distintos procesos
+    │   └── ner_training_generator.py            # Generador de archivo .csv utilizado como datos de entrada para la generación de modelo NER
     └── ...
 
 ### Archivos antiguos
@@ -32,8 +30,8 @@ del proyecto. Se encuentra en el directorio `old_files`.
 
     .
     ├── ...
-    ├── POS_tagger                    # Carpeta de archivos antiguos
-    │   └── POS_trainer.py            # Generador de datasets en base a reglas definidas dentro de la carpeta 'rules' en formato JSON
+    ├── POS_tagger                    # Carpeta de archivos para POS tagging
+    │   └── POS_trainer.py            # Algoritmo de generación de archivo de etiquetas POS
     └── ...
 
 ### Documentación
