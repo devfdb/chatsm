@@ -21,10 +21,11 @@ irían en un directorio `app`.
 
     .
     ├── ...
-    ├── NER                            # Carpeta de procesamiento interno
-    │   ├── dataset_tags.py            # Generador de datasets en base a clasificación de intenciones realizadas preliminarmente en la base de datos
-    │   ├── findlevel.py               # Algoritmo auxiliar que retorna todas las intenciones del árbol que se encuentran al mismo nivel dada una que sea parte de éste
-    │   └── intents.json               # Representación del árbol de intenciones, definiendo los tipos de modelo a construir y sus parámetros
+    ├── NER                                      # Carpeta de procesamiento interno
+    │   ├── crf_ner.py                           # Generador de datasets en base a clasificación de intenciones realizadas preliminarmente en la base de datos
+    │   ├── crf_trainer.py                       # Algoritmo auxiliar que retorna todas las intenciones del árbol que se encuentran al mismo nivel dada una que sea parte de éste
+    │   ├── functions.py                         # ASFDSG
+    │   └── ner_training_generator.py            # Representación del árbol de intenciones, definiendo los tipos de modelo a construir y sus parámetros
     └── ...
 
 ### Archivos antiguos
