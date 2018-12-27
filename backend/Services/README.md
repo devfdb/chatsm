@@ -7,7 +7,7 @@ CHATBOT SERVICES
     .
     └── services.py            # Colección de los servicios definidos en sus respectivas carpetas
 
-### Archivos del motor del chatbot
+### Archivos para reconocimiento de nombres de entidades
 
 Los archivos con el codigo fuente de un proyecto de software se ubican en el 
 directorio `engine`. En el caso que se desarrollase una biblioteca, iran en 
@@ -23,7 +23,7 @@ irían en un directorio `app`.
     │   └── ner_training_generator.py            # Generador de archivo .csv utilizado como datos de entrada para la generación de modelo NER
     └── ...
 
-### Archivos antiguos
+### Archivos para etiquetado gramatical (POS tagging)
 
 Corresponde a los archivos antiguos, que han sido utilizado en etapas experimentales
 del proyecto. Se encuentra en el directorio `old_files`.
