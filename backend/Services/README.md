@@ -34,8 +34,8 @@ del proyecto. Se encuentra en el directorio `old_files`.
 
     .
     ├── ...
-    ├── POS_tagger                       # Carpeta de archivos antiguos
-    │   └── POS_trainer.py               # Generador de datasets en base a reglas definidas dentro de la carpeta 'rules' en formato JSON
+    ├── POS_tagger                    # Carpeta de archivos antiguos
+    │   └── POS_trainer.py            # Generador de datasets en base a reglas definidas dentro de la carpeta 'rules' en formato JSON
     └── ...
 
 ### Documentación
