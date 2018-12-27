@@ -4,6 +4,10 @@ from nltk.corpus import conll2002 as conll
 from sklearn.externals import joblib
 import csv
 
+# input_path = ruta de entrada que contiene las oraciones a utilizar en el modelo
+# output_path = ruta de salida del archivo de entrenamiento
+# pos_training = ruta del modelo de pos_tagger a utlizar
+# entities = ruta dek archivo que contiene las entidades a detectar
 
 class TrainingGenerator:
 

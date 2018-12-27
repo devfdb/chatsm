@@ -3,6 +3,9 @@ from nltk.tokenize import TweetTokenizer as tokenizer
 from nltk.corpus import conll2002 as conll
 from sklearn.externals import joblib
 
+# input_path = ruta del archivo de entrenamiento
+# output_path = ruta donde se guardara el modelo entrenado
+
 class POS_tagger:
 
     uni_tag = None

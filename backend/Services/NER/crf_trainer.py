@@ -3,6 +3,12 @@ from sklearn_crfsuite import CRF
 from sklearn.externals import joblib
 from . import functions
 
+# input_path = ruta del archivo de entrenamiento
+# output_path = ruta donde se guardara el modelo entrenado
+
+# c1 = parametro de modelo crf
+# c2 = parametro del modelo crf
+# max_iterations = cantidad de iteraciones de entrenamiento
 
 class Trainer:
 
