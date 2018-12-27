@@ -25,8 +25,8 @@ irían en un directorio `app`.
 
 ### Archivos para etiquetado gramatical (POS tagging)
 
-Corresponde a los archivos antiguos, que han sido utilizado en etapas experimentales
-del proyecto. Se encuentra en el directorio `old_files`.
+Corresponde a los archivos con el código fuente aplicados en el proceso de POS tagging, que han sido utilizado en etapas experimentales
+del proyecto.
 
     .
     ├── ...
