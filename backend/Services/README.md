@@ -1,14 +1,11 @@
-CHATBOT BACKEND
+CHATBOT SERVICES
 ============================
 
 > Convenciones a cumplir al nombrar y organizar el proyecto.
 
 ### Elementos en el primer nivel del proyecto
     .
-    ├── crf_ner.py                           # Programa principal, indica las intenciones a utilizar, crea los modelos y realiza pruebas con ejemplos definidos
-    ├── crf_trainer.py                       # Genera y entrena modelos para todas las intenciones definidas en el archivo 'intents.json'
-    ├── functions.py                         # Vectoriza una oración y realiza un análisis a través de los modelos generados para clasificar el mensaje entregado
-    └── ner_training_generator.py            # Documentación del sistema (archivo actual)
+    └── services.py            # Documentación del sistema (archivo actual)
 
 
 
