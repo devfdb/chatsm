@@ -3,6 +3,10 @@ import csv
 from .symspell import SymSpell
 from nltk.tokenize import ToktokTokenizer
 
+# input_path = ruta del archivo de entrada con las frases
+# output_path = ruht del archivo de salida
+# corpus_path = ruta de la carpeta con archivos de texto plano
+# dict_path = ruta de la carpeta con los archivos que contienen un diccionario
 
 class SpellChecker:
     tokenizer = ToktokTokenizer()

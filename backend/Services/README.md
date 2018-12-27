@@ -30,3 +30,35 @@ del proyecto. Se ubican en la carpeta `POS_tagger`.
     ├── POS_tagger                    # Carpeta de archivos para POS tagging
     │   └── POS_trainer.py            # Algoritmo de generación de archivo de etiquetas POS
     └── ...
+
+### Ortografia
+
+Corresponde a los archivos que se encuentran en la carpeta `ortografia`.
+
+    .
+    ├── ...
+    ├── ortografia                    # Carpeta de archivos para ortografia
+    │   └── ortografia.py             # Archivo principal que contiene la clase Spellchecker que se encraga de correr el algoritmo
+    │   └── symspell.py               # Archivo que contiene el algoritmo que se encarga de buscar las correciones ortogreficas
+    └── ...
+    
+### Remplazo
+
+Corresponde a los archivos que se encuentran en la carpeta `replacer`.
+    
+    .
+    ├── ...
+    ├── replacer                      # Carpeta de archivos para replacer
+    │   └── word_replacer.py          # Archivo que contiene el algoritmo que se encarga de remplazar las palabras 
+    └── ...
+    
+### Cleaner
+
+Corresponde a los archivos que se encuentran en la carpeta `cleaner`.
+
+    .
+    ├── ...
+    ├── cleaner                     # Carpeta de archivos para cleaner
+    │   └── cleaner.py              # Archivo que contiene el algoritmo que se encarga normalizar la puntucion de las oraciones 
+    └── ...
+    
