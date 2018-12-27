@@ -10,6 +10,7 @@ CHATBOT SERVICES
 ### Archivos para reconocimiento de nombres de entidades
 
 Los archivos con el codigo fuente utilizado para la creación de modelos NER, junto con los datos necesarios para su procesamiento. Se ubican en el directorio `NER`.
+
     .
     ├── ...
     ├── NER                                      # Carpeta de procesamiento interno
@@ -23,6 +24,7 @@ Los archivos con el codigo fuente utilizado para la creación de modelos NER, ju
 
 Corresponde a los archivos con el código fuente aplicados en el proceso de POS tagging, que han sido utilizado en etapas experimentales
 del proyecto. Se ubican en la carpeta `POS_tagger`.
+
     .
     ├── ...
     ├── POS_tagger                    # Carpeta de archivos para POS tagging
