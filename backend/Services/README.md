@@ -9,11 +9,7 @@ CHATBOT SERVICES
 
 ### Archivos para reconocimiento de nombres de entidades
 
-Los archivos con el codigo fuente de un proyecto de software se ubican en el 
-directorio `engine`. En el caso que se desarrollase una biblioteca, iran en 
-un directorio `lib`, y  si no fuese necesario compilar los archivos, estos 
-irían en un directorio `app`.
-
+Los archivos con el codigo fuente utilizado para la creación de modelos NER, junto con los datos necesarios para su procesamiento. Se ubican en el directorio `NER`.
     .
     ├── ...
     ├── NER                                      # Carpeta de procesamiento interno
@@ -26,8 +22,7 @@ irían en un directorio `app`.
 ### Archivos para etiquetado gramatical (POS tagging)
 
 Corresponde a los archivos con el código fuente aplicados en el proceso de POS tagging, que han sido utilizado en etapas experimentales
-del proyecto.
-
+del proyecto. Se ubican en la carpeta `POS_tagger`.
     .
     ├── ...
     ├── POS_tagger                    # Carpeta de archivos para POS tagging
