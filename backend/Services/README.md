@@ -5,10 +5,10 @@ CHATBOT BACKEND
 
 ### Elementos en el primer nivel del proyecto
     .
-    ├── main.py               # Programa principal, indica las intenciones a utilizar, crea los modelos y realiza pruebas con ejemplos definidos
-    ├── trainer.py            # Genera y entrena modelos para todas las intenciones definidas en el archivo 'intents.json'
-    ├── tester.py             # Vectoriza una oración y realiza un análisis a través de los modelos generados para clasificar el mensaje entregado
-    └── README.md             # Documentación del sistema (archivo actual)
+    ├── crf_ner.py                           # Programa principal, indica las intenciones a utilizar, crea los modelos y realiza pruebas con ejemplos definidos
+    ├── crf_trainer.py                       # Genera y entrena modelos para todas las intenciones definidas en el archivo 'intents.json'
+    ├── functions.py                         # Vectoriza una oración y realiza un análisis a través de los modelos generados para clasificar el mensaje entregado
+    └── ner_training_generator.py            # Documentación del sistema (archivo actual)
 
 
 
@@ -21,7 +21,7 @@ irían en un directorio `app`.
 
     .
     ├── ...
-    ├── engine                         # Carpeta de procesamiento interno
+    ├── NER                            # Carpeta de procesamiento interno
     │   ├── dataset_tags.py            # Generador de datasets en base a clasificación de intenciones realizadas preliminarmente en la base de datos
     │   ├── findlevel.py               # Algoritmo auxiliar que retorna todas las intenciones del árbol que se encuentran al mismo nivel dada una que sea parte de éste
     │   └── intents.json               # Representación del árbol de intenciones, definiendo los tipos de modelo a construir y sus parámetros
@@ -34,11 +34,8 @@ del proyecto. Se encuentra en el directorio `old_files`.
 
     .
     ├── ...
-    ├── old_files                        # Carpeta de archivos antiguos
-    │   ├── dataset_rules.py             # Generador de datasets en base a reglas definidas dentro de la carpeta 'rules' en formato JSON
-    │   ├── intents_old.json             # Archivo antiguo de intenciones actualmente despreciadas
-    │   ├── obtain_dataset.py            # Constructor de datasets en base a reglas definidas internamente de forma estática
-    │   └── unused_intent.txt            # Texto de intenciones no implementadas y actualmente despreciadas
+    ├── POS_tagger                       # Carpeta de archivos antiguos
+    │   └── POS_trainer.py               # Generador de datasets en base a reglas definidas dentro de la carpeta 'rules' en formato JSON
     └── ...
 
 ### Documentación
