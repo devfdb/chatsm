@@ -33,16 +33,3 @@ del proyecto. Se encuentra en el directorio `old_files`.
     ├── POS_tagger                    # Carpeta de archivos para POS tagging
     │   └── POS_trainer.py            # Algoritmo de generación de archivo de etiquetas POS
     └── ...
-
-### Documentación
-La documentación detallada del proyecto, se encuentra en el directorio `docs`.
-
-    .
-    ├── ...
-    ├── docs                    # Documentation files (alternatively `doc`)
-    │   ├── TOC.md              # Table of contents
-    │   ├── faq.md              # Frequently asked questions
-    │   ├── misc.md             # Miscellaneous information
-    │   ├── usage.md            # Getting started guide
-    │   └── ...                 # etc.
-    └── ...
